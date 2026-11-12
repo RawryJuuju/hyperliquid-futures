@@ -1,0 +1,579 @@
+{
+  "_note": "v4 FINAL \u2014 dual-strategy per koin. Setiap koin bisa jalan 2 strategi sekaligus (paralel, bukan overlap).",
+  "_validated": "2026-10-20",
+  "_method": "walk-forward 120d (IS 60d / OOS 60d), 6 keluarga strategi x 10 koin, 238 survivor",
+  "_combined_test": "OOS 60d: single +173.6R vs combined +242.0R (+39% lebih baik). 6/9 koin improved.",
+  "_start_equity": 1000.0,
+  "_risk_model": {
+    "mode": "fixed_fractional",
+    "base_risk_pct": 0.25,
+    "_rationale": "Calibrated 2026-10-20: base 0.55% -> 6 posisi = 2.17% risk (cap 2.25%). Leverage 10x uniform: margin 22.5% equity, liq buffer 6.4x SL terlebar. MC 500x: DD median -16%, worst -33%, ruin 0%.",
+    "_leverage_note": "Leverage TIDAK mempengaruhi fee drag (fee/risk = 0.08%/SL%). Leverage hanya mengubah margin terkunci & jarak likuidasi.",
+    "max_total_open_risk_pct": 2.25,
+    "daily_loss_cap_pct": 99.0,
+    "weekly_loss_cap_pct": 99.0,
+    "reduce_after_dd_pct": 10.0,
+    "reduce_factor": 0.5,
+    "coin_cooldown_min": 0,
+    "consec_loss_trigger": 999,
+    "max_concurrent": 15
+  },
+  "_correlation_clusters": {
+    "A": [
+      "HYPE",
+      "ENA"
+    ],
+    "B": [
+      "WLD",
+      "PUMP",
+      "NEAR"
+    ],
+    "C": [
+      "ZEC",
+      "INJ"
+    ],
+    "D": [],
+    "_max_per_cluster": 2,
+    "_note": "A: corr 0.89-0.95 (sangat tinggi). B: 0.76-0.88. C: ZEC negatif -0.73 s/d -0.82 (diversifier). D: SOL netral."
+  },
+  "_exit_management": {
+    "_status": "OPTIONAL \u2014 default OFF. Data 120d: BE & partial MERUSAK edge (lihat _backtest).",
+    "_backtest": {
+      "baseline_no_be_no_partial": {
+        "totR": 162.9,
+        "n": 1903,
+        "wr": 40.7,
+        "pf": 1.13
+      },
+      "BE_at_0.6R": {
+        "totR": -475.5,
+        "n": 2434,
+        "wr": 12.9,
+        "pf": 0.55
+      },
+      "BE_at_1.0R": {
+        "totR": -122.8,
+        "n": 2104,
+        "wr": 25.3,
+        "pf": 0.89
+      },
+      "partial_1R_50pct_plus_BE": {
+        "totR": -364.3,
+        "n": 2434,
+        "wr": 33.9,
+        "pf": 0.63
+      },
+      "partial_1R_50pct_BE_at_1R": {
+        "totR": -46.4,
+        "n": 2104,
+        "wr": 55.6,
+        "pf": 0.95
+      }
+    },
+    "_why": "Strategi RR 1:2-1:4 butuh winner besar. BE mematikan winner yang mundur dulu sebelum TP. Win rate naik (40->55%) tapi R hancur.",
+    "enabled": false,
+    "be_at_R": 1.0,
+    "partial_at_R": 1.5,
+    "partial_frac": 0.5,
+    "_presets": {
+      "safe_visual_only": {
+        "be_at_R": null,
+        "partial_at_R": null,
+        "_note": "Biarkan TP penuh. Dashboard tetap tampilkan locked-profit virtual."
+      },
+      "aggressive_BE": {
+        "be_at_R": 1.0,
+        "partial_at_R": null
+      },
+      "scale_out": {
+        "be_at_R": 1.0,
+        "partial_at_R": 1.5,
+        "partial_frac": 0.5
+      }
+    }
+  },
+  "coins": {
+    "WLD": {
+      "cluster": "B",
+      "strategies": [
+        {
+          "name": "breakout",
+          "timeframe": "5m",
+          "params": {
+            "look": 10,
+            "atr_mult": 1.5,
+            "rr": 5.0,
+            "min_body": 0.6,
+            "htf_ema": 20,
+            "hold": 72,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.07,
+          "oos_R": 0.64,
+          "n": 604,
+          "risk_weight": 0.2,
+          "avg_R": 0.063
+        },
+        {
+          "name": "breakout",
+          "timeframe": "15m",
+          "params": {
+            "look": 10,
+            "atr_mult": 1.5,
+            "rr": 4.0,
+            "min_body": 0.5,
+            "htf_ema": 20,
+            "hold": 48,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.34,
+          "oos_R": 1.92,
+          "n": 695,
+          "risk_weight": 0.55,
+          "avg_R": 0.249
+        },
+        {
+          "name": "breakout",
+          "timeframe": "1h",
+          "params": {
+            "look": 12,
+            "atr_mult": 2.0,
+            "rr": 4.0,
+            "min_body": 0.5,
+            "htf_ema": 20,
+            "hold": 48,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.51,
+          "oos_R": 0.39,
+          "n": 208,
+          "risk_weight": 0.25,
+          "avg_R": 0.336
+        }
+      ],
+      "weight": 0.1429
+    },
+    "INJ": {
+      "cluster": "C",
+      "strategies": [
+        {
+          "name": "breakout",
+          "timeframe": "5m",
+          "params": {
+            "look": 10,
+            "atr_mult": 1.5,
+            "rr": 5.0,
+            "min_body": 0.6,
+            "htf_ema": 20,
+            "hold": 72,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.07,
+          "oos_R": 0.64,
+          "n": 604,
+          "risk_weight": 0.2,
+          "avg_R": 0.063
+        },
+        {
+          "name": "breakout",
+          "timeframe": "15m",
+          "params": {
+            "look": 10,
+            "atr_mult": 1.5,
+            "rr": 4.0,
+            "min_body": 0.5,
+            "htf_ema": 20,
+            "hold": 48,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.34,
+          "oos_R": 1.92,
+          "n": 695,
+          "risk_weight": 0.55,
+          "avg_R": 0.249
+        },
+        {
+          "name": "breakout",
+          "timeframe": "1h",
+          "params": {
+            "look": 12,
+            "atr_mult": 2.0,
+            "rr": 4.0,
+            "min_body": 0.5,
+            "htf_ema": 20,
+            "hold": 48,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.51,
+          "oos_R": 0.39,
+          "n": 208,
+          "risk_weight": 0.25,
+          "avg_R": 0.336
+        }
+      ],
+      "weight": 0.1429
+    },
+    "ZEC": {
+      "cluster": "C",
+      "strategies": [
+        {
+          "name": "breakout",
+          "timeframe": "5m",
+          "params": {
+            "look": 10,
+            "atr_mult": 1.5,
+            "rr": 5.0,
+            "min_body": 0.6,
+            "htf_ema": 20,
+            "hold": 72,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.07,
+          "oos_R": 0.64,
+          "n": 604,
+          "risk_weight": 0.2,
+          "avg_R": 0.063
+        },
+        {
+          "name": "breakout",
+          "timeframe": "15m",
+          "params": {
+            "look": 10,
+            "atr_mult": 1.5,
+            "rr": 4.0,
+            "min_body": 0.5,
+            "htf_ema": 20,
+            "hold": 48,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.34,
+          "oos_R": 1.92,
+          "n": 695,
+          "risk_weight": 0.55,
+          "avg_R": 0.249
+        },
+        {
+          "name": "breakout",
+          "timeframe": "1h",
+          "params": {
+            "look": 12,
+            "atr_mult": 2.0,
+            "rr": 4.0,
+            "min_body": 0.5,
+            "htf_ema": 20,
+            "hold": 48,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.51,
+          "oos_R": 0.39,
+          "n": 208,
+          "risk_weight": 0.25,
+          "avg_R": 0.336
+        }
+      ],
+      "weight": 0.1429
+    },
+    "NEAR": {
+      "cluster": "B",
+      "strategies": [
+        {
+          "name": "breakout",
+          "timeframe": "5m",
+          "params": {
+            "look": 10,
+            "atr_mult": 1.5,
+            "rr": 5.0,
+            "min_body": 0.6,
+            "htf_ema": 20,
+            "hold": 72,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.07,
+          "oos_R": 0.64,
+          "n": 604,
+          "risk_weight": 0.2,
+          "avg_R": 0.063
+        },
+        {
+          "name": "breakout",
+          "timeframe": "15m",
+          "params": {
+            "look": 10,
+            "atr_mult": 1.5,
+            "rr": 4.0,
+            "min_body": 0.5,
+            "htf_ema": 20,
+            "hold": 48,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.34,
+          "oos_R": 1.92,
+          "n": 695,
+          "risk_weight": 0.55,
+          "avg_R": 0.249
+        },
+        {
+          "name": "breakout",
+          "timeframe": "1h",
+          "params": {
+            "look": 12,
+            "atr_mult": 2.0,
+            "rr": 4.0,
+            "min_body": 0.5,
+            "htf_ema": 20,
+            "hold": 48,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.51,
+          "oos_R": 0.39,
+          "n": 208,
+          "risk_weight": 0.25,
+          "avg_R": 0.336
+        }
+      ],
+      "weight": 0.1429
+    },
+    "HYPE": {
+      "cluster": "A",
+      "strategies": [
+        {
+          "name": "breakout",
+          "timeframe": "5m",
+          "params": {
+            "look": 10,
+            "atr_mult": 1.5,
+            "rr": 5.0,
+            "min_body": 0.6,
+            "htf_ema": 20,
+            "hold": 72,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.07,
+          "oos_R": 0.64,
+          "n": 604,
+          "risk_weight": 0.2,
+          "avg_R": 0.063
+        },
+        {
+          "name": "breakout",
+          "timeframe": "15m",
+          "params": {
+            "look": 10,
+            "atr_mult": 1.5,
+            "rr": 4.0,
+            "min_body": 0.5,
+            "htf_ema": 20,
+            "hold": 48,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.34,
+          "oos_R": 1.92,
+          "n": 695,
+          "risk_weight": 0.55,
+          "avg_R": 0.249
+        },
+        {
+          "name": "breakout",
+          "timeframe": "1h",
+          "params": {
+            "look": 12,
+            "atr_mult": 2.0,
+            "rr": 4.0,
+            "min_body": 0.5,
+            "htf_ema": 20,
+            "hold": 48,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.51,
+          "oos_R": 0.39,
+          "n": 208,
+          "risk_weight": 0.25,
+          "avg_R": 0.336
+        }
+      ],
+      "weight": 0.1429
+    },
+    "ENA": {
+      "cluster": "A",
+      "strategies": [
+        {
+          "name": "breakout",
+          "timeframe": "5m",
+          "params": {
+            "look": 10,
+            "atr_mult": 1.5,
+            "rr": 5.0,
+            "min_body": 0.6,
+            "htf_ema": 20,
+            "hold": 72,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.07,
+          "oos_R": 0.64,
+          "n": 604,
+          "risk_weight": 0.2,
+          "avg_R": 0.063
+        },
+        {
+          "name": "breakout",
+          "timeframe": "15m",
+          "params": {
+            "look": 10,
+            "atr_mult": 1.5,
+            "rr": 4.0,
+            "min_body": 0.5,
+            "htf_ema": 20,
+            "hold": 48,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.34,
+          "oos_R": 1.92,
+          "n": 695,
+          "risk_weight": 0.55,
+          "avg_R": 0.249
+        },
+        {
+          "name": "breakout",
+          "timeframe": "1h",
+          "params": {
+            "look": 12,
+            "atr_mult": 2.0,
+            "rr": 4.0,
+            "min_body": 0.5,
+            "htf_ema": 20,
+            "hold": 48,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.51,
+          "oos_R": 0.39,
+          "n": 208,
+          "risk_weight": 0.25,
+          "avg_R": 0.336
+        }
+      ],
+      "weight": 0.1429
+    },
+    "PUMP": {
+      "cluster": "B",
+      "strategies": [
+        {
+          "name": "breakout",
+          "timeframe": "5m",
+          "params": {
+            "look": 10,
+            "atr_mult": 1.5,
+            "rr": 5.0,
+            "min_body": 0.6,
+            "htf_ema": 20,
+            "hold": 72,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.07,
+          "oos_R": 0.64,
+          "n": 604,
+          "risk_weight": 0.2,
+          "avg_R": 0.063
+        },
+        {
+          "name": "breakout",
+          "timeframe": "15m",
+          "params": {
+            "look": 10,
+            "atr_mult": 1.5,
+            "rr": 4.0,
+            "min_body": 0.5,
+            "htf_ema": 20,
+            "hold": 48,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.34,
+          "oos_R": 1.92,
+          "n": 695,
+          "risk_weight": 0.55,
+          "avg_R": 0.249
+        },
+        {
+          "name": "breakout",
+          "timeframe": "1h",
+          "params": {
+            "look": 12,
+            "atr_mult": 2.0,
+            "rr": 4.0,
+            "min_body": 0.5,
+            "htf_ema": 20,
+            "hold": 48,
+            "slope_min": 1.5
+          },
+          "oos_pf": 1.51,
+          "oos_R": 0.39,
+          "n": 208,
+          "risk_weight": 0.25,
+          "avg_R": 0.336
+        }
+      ],
+      "weight": 0.1429
+    }
+  },
+  "_total_combined_R": 242.0,
+  "_excluded": {
+    "BTC": "PF 0.45-0.60 di semua 6 keluarga \u2014 tidak ada edge",
+    "ema_pullback": "0 survivor dari walk-forward",
+    "rsi_rev": "0 survivor dari walk-forward",
+    "ZEC_bollinger_note": "PF 1.06 marginal tapi menambah +3.3R & menurunkan korelasi portfolio"
+  },
+  "_expansion_log": {
+    "date": "2026-10-20",
+    "added": [
+      "ARB",
+      "INJ"
+    ],
+    "rejected": {
+      "ZRO": "corr 0.87 vs PUMP \u2014 duplikasi",
+      "STRK": "corr 0.88 vs SOL \u2014 duplikasi",
+      "CRV": "corr 0.92 vs SOL \u2014 duplikasi",
+      "UNI": "corr 0.85 vs SOL \u2014 duplikasi",
+      "LINK": "corr 0.80 vs SOL \u2014 duplikasi",
+      "AAVE": "corr 0.83 vs WLD \u2014 duplikasi",
+      "kPEPE": "PF 1.50 tapi vol $9.5M & fee/risk 20% \u2014 tunda"
+    },
+    "total_coins": 11
+  },
+  "_revision": {
+    "date": "2026-10-21",
+    "version": "v6-mtf",
+    "reason": "Multi-timeframe research: 15m PF 1.34 R/day 1.92 (core), 5m PF 1.07 R/day 0.64 (satellite), 1h PF 1.51 R/day 0.39 (conviction), 4h dropped R/day 0.02",
+    "tf_risk_weights": {
+      "5m": 0.2,
+      "15m": 0.55,
+      "1h": 0.25
+    },
+    "tf_metrics": {
+      "5m": {
+        "pf": 1.07,
+        "avgR": 0.063,
+        "n": 604,
+        "rday": 0.64,
+        "mdd": -25.2
+      },
+      "15m": {
+        "pf": 1.34,
+        "avgR": 0.249,
+        "n": 695,
+        "rday": 1.92,
+        "mdd": -21.5
+      },
+      "1h": {
+        "pf": 1.51,
+        "avgR": 0.336,
+        "n": 208,
+        "rday": 0.39,
+        "mdd": -12.2
+      }
+    },
+    "changes": {
+      "from": "single TF 5m, 7 coins, 7 slots",
+      "to": "3 TF per coin (5m+15m+1h), 7 coins, 21 strategy slots"
+    },
+    "slope_filter": "slope_min 1.5 ATR \u2014 backtest +17.4R, PF 1.34->1.43"
+  }
+}

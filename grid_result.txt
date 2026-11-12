@@ -1,0 +1,44 @@
+Fetching 60d...
+  ETH ok
+  SOL ok
+
+========================================================================================================
+MODE                ENTRY     ATR   RR    BE     TotR    N   PFavg
+========================================================================================================
+sweep_fade          market    2.0  3.0  None     +8.5  131    1.09
+sweep_fade          market    2.0  3.0   1.0     +6.4  149    1.09
+sweep_fade          market    2.0  2.0  None     +3.4  152    1.04
+sweep_fade          market    2.0  1.5  None     +1.2  162    1.02
+sweep_fade          market    1.5  2.0  None     +0.9  168    1.01
+trend_continuation  market    2.0  3.0  None     -0.5  139    1.00
+sweep_fade          market    2.0  2.0   1.0     -1.2  169    1.02
+trend_continuation  market    2.0  2.0  None     -2.4  155    0.98
+sweep_fade          market    1.5  3.0  None     -4.7  152    0.97
+sweep_fade          market    2.0  1.5   1.0     -8.6  173    0.93
+sweep_fade          limit     1.5  3.0  None    -11.5  125    0.91
+sweep_fade          market    1.5  1.5  None    -14.2  180    0.88
+sweep_fade          market    1.0  3.0  None    -14.5  188    0.92
+trend_continuation  limit     2.0  1.5  None    -16.8  133    0.81
+sweep_fade          market    1.5  3.0   1.0    -17.2  172    0.87
+trend_continuation  limit     1.5  3.0  None    -18.5  125    0.84
+trend_continuation  market    2.0  1.5  None    -19.1  171    0.84
+sweep_fade          limit     2.0  3.0  None    -19.5  113    0.80
+trend_continuation  limit     2.0  2.0  None    -20.3  117    0.78
+breakout            market    2.0  3.0  None    -20.6  207    0.89
+
+--- WORST 5 ---
+breakout            limit     1.0  1.5   1.0   -231.2  359    0.29
+breakout            market    1.0  1.5  None   -232.6  443    0.44
+breakout            market    1.0  3.0   1.0   -241.5  411    0.42
+breakout            market    1.0  2.0   1.0   -288.2  446    0.34
+breakout            market    1.0  1.5   1.0   -329.7  464    0.25
+
+Total configs tested: 108
+Configs with POSITIVE total R: 5
+
+=== POSITIVE CONFIGS ===
+  sweep_fade          market   ATR=2.0 RR=3.0 BE=None  TotR=+8.5  N=131  PF=1.09
+  sweep_fade          market   ATR=2.0 RR=3.0 BE=1.0  TotR=+6.4  N=149  PF=1.09
+  sweep_fade          market   ATR=2.0 RR=2.0 BE=None  TotR=+3.4  N=152  PF=1.04
+  sweep_fade          market   ATR=2.0 RR=1.5 BE=None  TotR=+1.2  N=162  PF=1.02
+  sweep_fade          market   ATR=1.5 RR=2.0 BE=None  TotR=+0.9  N=168  PF=1.01

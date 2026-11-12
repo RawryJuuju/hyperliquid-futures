@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>About — Systematic Futures Trader</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/static/hl-favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/static/hl-favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/static/hl-apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+ --bg:#08090b; --bg2:#0d0f12; --panel:#111418; --line:#1d2228;
+ --txt:#f2f4f7; --txt2:#8b939f; --txt3:#5a626d;
+ --acc:#5eead4; --acc2:#38bdf8; --gold:#e8b923;
+ --mono:'JetBrains Mono',monospace; --ui:'Inter',sans-serif; --serif:'Instrument Serif',serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:var(--ui);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+.glow{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0}
+.g1{width:520px;height:520px;background:rgba(94,234,212,.09);top:-180px;left:-120px}
+.g2{width:460px;height:460px;background:rgba(56,189,248,.07);bottom:-200px;right:-140px}
+
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 28px}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(20px);background:rgba(8,9,11,.72);border-bottom:1px solid var(--line)}
+.nav-in{max-width:1080px;margin:0 auto;padding:16px 28px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:-.2px}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--acc);box-shadow:0 0 10px var(--acc);animation:p 2s infinite}
+@keyframes p{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.85)}}
+.navlinks{display:flex;gap:26px;font-size:12.5px;color:var(--txt2);align-items:center}
+.navlinks a{color:inherit;text-decoration:none;transition:.2s}
+.navlinks a:hover{color:var(--acc)}
+.nav-cta{border:1px solid rgba(94,234,212,.35);border-radius:6px;padding:6px 13px;color:var(--acc) !important;
+ font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.02em;transition:.18s}
+.nav-cta:hover{background:rgba(94,234,212,.1);border-color:var(--acc);transform:translateY(-1px)}
+
+.hero{padding:170px 0 100px;position:relative}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);margin-bottom:26px;display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:'';width:28px;height:1px;background:var(--acc)}
+h1{font-family:var(--serif);font-size:clamp(46px,7vw,82px);line-height:1.02;font-weight:400;letter-spacing:-.025em;margin-bottom:28px}
+h1 em{font-style:italic;color:var(--acc)}
+.lede{font-size:17px;line-height:1.78;color:var(--txt2);max-width:640px;font-weight:300}
+.lede strong{color:var(--txt);font-weight:500}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:64px}
+.stat{background:var(--bg2);padding:26px 22px;transition:.25s}
+.stat:hover{background:var(--panel)}
+.sv{font-family:var(--mono);font-size:26px;font-weight:600;letter-spacing:-.03em;color:var(--acc)}
+.sl{font-size:10.5px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;margin-top:7px}
+
+section{padding:96px 0;border-top:1px solid var(--line)}
+.sh{display:flex;align-items:baseline;gap:16px;margin-bottom:44px}
+.sn{font-family:var(--mono);font-size:11px;color:var(--txt3)}
+h2{font-family:var(--serif);font-size:clamp(30px,4vw,44px);font-weight:400;letter-spacing:-.02em}
+h2 em{font-style:italic;color:var(--acc2)}
+
+.prose{max-width:660px;font-size:15.5px;line-height:1.85;color:var(--txt2);font-weight:300}
+.prose p{margin-bottom:20px}
+.prose strong{color:var(--txt);font-weight:500}
+
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:26px 22px;transition:.25s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(94,234,212,.4),transparent);opacity:0;transition:.3s}
+.card:hover{border-color:#2a3238;transform:translateY(-2px)}
+.card:hover::before{opacity:1}
+.ci{width:34px;height:34px;border-radius:9px;background:rgba(94,234,212,.08);border:1px solid rgba(94,234,212,.18);display:flex;align-items:center;justify-content:center;margin-bottom:18px;font-family:var(--mono);font-size:13px;color:var(--acc)}
+.ct{font-size:15px;font-weight:600;margin-bottom:9px;letter-spacing:-.01em}
+.cd{font-size:13px;line-height:1.7;color:var(--txt2);font-weight:300}
+
+.tbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+.tbl th{text-align:left;padding:11px 14px;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--txt3);border-bottom:1px solid var(--line);font-weight:500}
+.tbl td{padding:13px 14px;border-bottom:1px solid rgba(29,34,40,.6);font-family:var(--mono);font-size:12.5px}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tbody tr:hover{background:rgba(255,255,255,.015)}
+.tbl .n{color:var(--txt);font-weight:500}
+.pos{color:var(--acc)}
+.mut{color:var(--txt3)}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-family:var(--mono);letter-spacing:.03em}
+.b1{background:rgba(94,234,212,.1);color:var(--acc);border:1px solid rgba(94,234,212,.2)}
+.b2{background:rgba(232,185,35,.1);color:var(--gold);border:1px solid rgba(232,185,35,.2)}
+
+.quote{border-left:2px solid var(--acc);padding:6px 0 6px 30px;margin:48px 0;font-family:var(--serif);font-size:clamp(22px,3vw,30px);line-height:1.45;font-style:italic;color:var(--txt);letter-spacing:-.01em;max-width:720px}
+.quote span{display:block;font-family:var(--ui);font-size:12px;font-style:normal;color:var(--txt3);margin-top:20px;letter-spacing:.06em;text-transform:uppercase}
+
+.stack{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px}
+.chip{font-family:var(--mono);font-size:11.5px;padding:7px 13px;border:1px solid var(--line);border-radius:6px;color:var(--txt2);background:var(--bg2);transition:.2s}
+.chip:hover{border-color:rgba(94,234,212,.3);color:var(--acc)}
+
+
+.btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{padding:13px 28px;border-radius:8px;font-size:13.5px;font-weight:500;text-decoration:none;transition:.22s;border:1px solid transparent;display:inline-flex;align-items:center;gap:9px}
+.btn1{background:var(--acc);color:#04211c}
+.btn1:hover{background:#7df0dc;transform:translateY(-1px)}
+.btn2{border-color:var(--line);color:var(--txt2)}
+.btn2:hover{border-color:var(--acc);color:var(--acc)}
+.btn svg{width:15px;height:15px;fill:currentColor}
+
+footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;font-size:11.5px;color:var(--txt3);font-family:var(--mono)}
+.disclaimer{max-width:640px;margin:22px auto 0;font-family:var(--ui);font-size:11px;line-height:1.7;color:var(--txt3);text-align:center}
+
+@media(max-width:860px){
+ .stats{grid-template-columns:repeat(2,1fr)}
+ .grid3{grid-template-columns:1fr}
+ .navlinks{display:none}
+ .hero{padding:130px 0 70px}
+}
+</style>
+</head>
+<body>
+<div class="glow g1"></div><div class="glow g2"></div>
+
+<nav><div class="nav-in">
+  <div class="logo"><div class="pulse"></div>QUANT FUTURES</div>
+  <div class="navlinks">
+    <a href="#system">System</a>
+    <a href="#method">Method</a>
+    <a href="#metrics">Metrics</a>
+    <a href="#stack">Stack</a>
+    <a href="/calendar">PnL Calendar</a>
+    <a href="/versions">Versions</a>
+    <a href="/terminal" class="nav-cta">Terminal →</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+
+<div class="hero">
+  <div class="eyebrow">Systematic Futures Trading · Hyperliquid L1</div>
+  <h1>I trade systems,<br>not <em>opinions.</em></h1>
+  <p class="lede">
+    Quantitative futures trader running a multi-timeframe breakout book on Hyperliquid
+    perpetuals. Seven liquid instruments, three horizons each, every position sized by
+    fixed-fractional risk and executed by code.
+    <strong>No discretion. No revenge trading. No guessing.</strong>
+  </p>
+
+  <div class="stats">
+    <div class="stat"><div class="sv">7</div><div class="sl">Instruments</div></div>
+    <div class="stat"><div class="sv">21</div><div class="sl">Strategy Slots</div></div>
+    <div class="stat"><div class="sv">3</div><div class="sl">Timeframes</div></div>
+    <div class="stat"><div class="sv">24/24</div><div class="sl">Sensitivity Pass</div></div>
+  </div>
+</div>
+
+<section id="system">
+  <div class="sh"><span class="sn">01</span><h2>The <em>system</em></h2></div>
+  <div class="prose">
+    <p>Built on Hyperliquid L1 perpetuals. Sub-second settlement, deep orderbooks, no custody risk.
+    The engine runs 24/7, scanning seven liquid instruments across three horizons simultaneously.</p>
+    <p>Each timeframe carries a different job. The <strong>5m</strong> layer catches fast expansion.
+    The <strong>15m</strong> layer is the workhorse, balancing signal frequency with signal quality.
+    The <strong>1h</strong> layer trades only high-conviction structure.
+    Position size scales with timeframe: smaller on noise, larger on conviction.</p>
+  </div>
+
+  <div class="grid3" style="margin-top:44px">
+    <div class="card">
+      <div class="ci">5m</div>
+      <div class="ct">Fast Expansion</div>
+      <div class="cd">Short horizon, small size. Catches the first push out of compression.
+      Highest signal count, highest noise. Capped at 20% of coin risk.</div>
+    </div>
+    <div class="card">
+      <div class="ci">15m</div>
+      <div class="ct">Core Workhorse</div>
+      <div class="cd">The backbone of the book. Best balance of frequency and quality
+      across the validation window. Carries 55% of coin risk.</div>
+    </div>
+    <div class="card">
+      <div class="ci">1h</div>
+      <div class="ct">High Conviction</div>
+      <div class="cd">Fewest signals, cleanest structure, smallest drawdown.
+      Only fires when higher-timeframe alignment is unambiguous. 25% of risk.</div>
+    </div>
+  </div>
+</section>
+
+<section id="method">
+  <div class="sh"><span class="sn">02</span><h2>How the edge is <em>built</em></h2></div>
+
+  <div class="quote">
+    Most traders lose because they size by conviction.
+    I size by mathematics.
+    <span>Trading principle</span>
+  </div>
+
+  <div class="prose">
+    <p><strong>Stops are volatility-adaptive.</strong> A fixed percentage stop treats a 0.3% move
+    the same on every asset, which is wrong. Every stop sits at <strong>ATR(14) multiplied</strong>
+    by a per-instrument factor, so risk stays constant across instruments with wildly different
+    volatility profiles.</p>
+    <p><strong>Targets are R-multiples, not price guesses.</strong> Each setup defines its own
+    reward ratio, validated against measured hit rate. A 1:4 target at 31% win rate beats
+    a 1:1 target at 60%. The math is not close.</p>
+    <p><strong>Exits stay untouched.</strong> I tested breakeven locks, partial take-profits,
+    and trailing stops across 618 trades. All three destroyed performance.
+    A trend-following book with 1:4 targets survives on a handful of large winners.
+    Cutting them short removes the entire edge.</p>
+    <p><strong>Correlation is treated as position sizing.</strong> Instruments that move together
+    are capped together. Five correlated positions is one position at five times the size.</p>
+  </div>
+
+  <div class="grid3" style="margin-top:44px">
+    <div class="card">
+      <div class="ci">R</div>
+      <div class="ct">Risk-First Sizing</div>
+      <div class="cd">Fixed-fractional risk per trade, weighted by measured edge and sample confidence.
+      Position size is an output, never an input.</div>
+    </div>
+    <div class="card">
+      <div class="ci">σ</div>
+      <div class="ct">Volatility-Normalized Stops</div>
+      <div class="cd">ATR-scaled stops keep risk constant across instruments.
+      Liquidation buffer verified at multiple times the widest stop.</div>
+    </div>
+    <div class="card">
+      <div class="ci">ρ</div>
+      <div class="ct">Correlation Clustering</div>
+      <div class="cd">Instruments grouped by measured PnL correlation.
+      Exposure capped per cluster, not per position.</div>
+    </div>
+  </div>
+</section>
+
+<section id="metrics">
+  <div class="sh"><span class="sn">03</span><h2>Validated <em>numbers</em></h2></div>
+  <div class="prose" style="margin-bottom:34px">
+    <p>Results below are <strong>90-day performance across three horizons</strong>,
+    measured on five-minute, fifteen-minute, and hourly execution.</p>
+  </div>
+
+  <table class="tbl">
+    <thead><tr>
+      <th>Timeframe</th><th>Trades</th><th>Win Rate</th><th>Profit Factor</th><th>Total R</th><th>Max DD</th>
+    </tr></thead>
+    <tbody>
+      <tr><td class="n">5m</td><td class="mut">604</td><td class="mut">23.2%</td><td class="pos">1.07</td><td class="pos">+38.2</td><td class="mut">-25.2</td></tr>
+      <tr><td class="n">15m</td><td class="mut">695</td><td class="mut">29.8%</td><td class="pos">1.34</td><td class="pos">+173.0</td><td class="mut">-21.5</td></tr>
+      <tr><td class="n">1h</td><td class="mut">208</td><td class="mut">34.1%</td><td class="pos">1.51</td><td class="pos">+70.0</td><td class="mut">-12.2</td></tr>
+    </tbody>
+  </table>
+
+  <div class="stats" style="margin-top:36px">
+    <div class="stat"><div class="sv">1.33</div><div class="sl">PF with Slippage</div></div>
+    <div class="stat"><div class="sv">+82R</div><div class="sl">Baseline 90d</div></div>
+    <div class="stat"><div class="sv">31%</div><div class="sl">Win Rate</div></div>
+    <div class="stat"><div class="sv">1:4</div><div class="sl">Risk Reward</div></div>
+  </div>
+
+  <div class="prose" style="margin-top:36px">
+    <p><strong>Robustness stack:</strong> split-sample validation, 24-configuration
+    parameter sensitivity (all passed), and an execution model that accounts for
+    next-bar entry plus realistic slippage. The edge survived all three.</p>
+  </div>
+</section>
+
+<section id="stack">
+  <div class="sh"><span class="sn">04</span><h2>Built with</h2></div>
+  <div class="prose">
+    <p>Everything runs on a private VPS. No third-party signal services, no black-box
+    subscriptions. Data straight from the exchange, execution via signed API calls,
+    monitoring on a custom terminal.</p>
+  </div>
+  <div class="stack">
+    <span class="chip">Hyperliquid L1</span>
+    <span class="chip">Python 3.12</span>
+    <span class="chip">hyperliquid-python-sdk</span>
+    <span class="chip">FastAPI</span>
+    <span class="chip">Lightweight Charts</span>
+    <span class="chip">systemd</span>
+    <span class="chip">Split-sample validation</span>
+    <span class="chip">Parameter sensitivity</span>
+    <span class="chip">Execution reality test</span>
+    <span class="chip">ATR normalization</span>
+    <span class="chip">Correlation clustering</span>
+    <span class="chip">Multi-timeframe</span>
+  </div>
+</section>
+
+<footer>
+  QUANT FUTURES — SYSTEMATIC TRADING
+  <div class="disclaimer">
+    Performance figures reflect system results over the stated period. Past performance is
+    not indicative of future results. Trading futures involves substantial risk of loss.
+  </div>
+</footer>
+
+</div>
+</body>
+</html>

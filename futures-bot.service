@@ -1,0 +1,19 @@
+[Unit]
+Description=Hyperliquid Futures Bot (multi-coin, validated strategy)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/papertrade_backtest
+Environment=FUT_MODE=shadow
+Environment=FUT_NETWORK=testnet
+ExecStart=/home/ubuntu/papertrade_backtest/.venv/bin/python /home/ubuntu/papertrade_backtest/futures_bot.py
+Restart=always
+RestartSec=30
+StandardOutput=append:/home/ubuntu/papertrade_backtest/futures_bot.log
+StandardError=append:/home/ubuntu/papertrade_backtest/futures_bot.log
+
+[Install]
+WantedBy=multi-user.target

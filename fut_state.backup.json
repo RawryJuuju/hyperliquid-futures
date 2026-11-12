@@ -1,0 +1,105 @@
+{
+  "day": "2026-10-20",
+  "week": "2026-W42",
+  "initial_equity": 1000.0,
+  "equity": 991.5927603545086,
+  "peak_equity": 1000.0,
+  "week_start_equity": 1000.0,
+  "day_pnl": -8.407239645491325,
+  "open": {
+    "WLD:breakout": {
+      "coin": "WLD",
+      "dir": "LONG",
+      "strategy": "breakout",
+      "entry": 0.52232,
+      "sl": 0.51749143,
+      "tp": 0.53680571,
+      "risk_px": 0.00482857,
+      "risk_pct": 0.924,
+      "rr": 3.0,
+      "hold": 72,
+      "bar_t": 1792447200000,
+      "risk_usd": 6.51,
+      "notional": 704.89,
+      "margin": 234.96,
+      "size": 1349.53527778,
+      "risk_pct_equity": 0.6591,
+      "opened_ts": 1792447521.9980564,
+      "mode": "shadow"
+    },
+    "HYPE:breakout": {
+      "coin": "HYPE",
+      "dir": "LONG",
+      "strategy": "breakout",
+      "entry": 78.874,
+      "sl": 78.64685714,
+      "tp": 79.55542857,
+      "risk_px": 0.22714286,
+      "risk_pct": 0.288,
+      "rr": 3.0,
+      "hold": 72,
+      "bar_t": 1792447200000,
+      "risk_usd": 2.7,
+      "notional": 935.8,
+      "margin": 311.93,
+      "size": 11.8645088,
+      "risk_pct_equity": 0.2727,
+      "opened_ts": 1792447527.3929403,
+      "mode": "shadow"
+    }
+  },
+  "last_bar": {
+    "PUMP:sweep_fade": 1792447800000,
+    "PUMP:breakout": 1792447800000,
+    "WLD:breakout": 1792447200000,
+    "WLD:sweep_fade": 1792447800000,
+    "ZEC:breakout": 1792447200000,
+    "ZEC:bollinger": 1792447800000,
+    "ENA:sweep_fade": 1792447800000,
+    "ENA:breakout": 1792447800000,
+    "NEAR:breakout": 1792447800000,
+    "NEAR:bollinger": 1792447800000,
+    "HYPE:breakout": 1792447200000,
+    "HYPE:sweep_fade": 1792447800000,
+    "ETH:sweep_fade": 1792447800000,
+    "SOL:sweep_fade": 1792447800000,
+    "XRP:sweep_fade": 1792447800000
+  },
+  "stats": {
+    "NEAR:breakout": {
+      "n": 1,
+      "w": 0,
+      "l": 1,
+      "R": -1.1189297025166538,
+      "usd": -3.6029536421036257
+    },
+    "PUMP:sweep_fade": {
+      "n": 1,
+      "w": 0,
+      "l": 1,
+      "R": -1.0921210759989515,
+      "usd": -8.190908069992137
+    },
+    "ZEC:bollinger": {
+      "n": 1,
+      "w": 0,
+      "l": 1,
+      "R": -1.0875280653594877,
+      "usd": -4.77424820692815
+    },
+    "ZEC:breakout": {
+      "n": 1,
+      "w": 1,
+      "l": 0,
+      "R": 1.8803848556526697,
+      "usd": 8.160870273532586
+    }
+  },
+  "coin_cooldown": {
+    "NEAR": 1792449996.846372,
+    "PUMP": 1792450142.2963033,
+    "ZEC": 1792450274.7157035
+  },
+  "consec_loss": 0,
+  "cooldown_until": 1792450274.715708
+}

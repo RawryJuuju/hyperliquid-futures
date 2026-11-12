@@ -1,0 +1,17 @@
+[Unit]
+Description=Hyperliquid Futures Dashboard (:8899)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/papertrade_backtest
+ExecStart=/home/ubuntu/papertrade_backtest/.venv/bin/python /home/ubuntu/papertrade_backtest/futures_dashboard.py
+Restart=always
+RestartSec=10
+StandardOutput=append:/home/ubuntu/papertrade_backtest/futures_dashboard.log
+StandardError=append:/home/ubuntu/papertrade_backtest/futures_dashboard.log
+
+[Install]
+WantedBy=multi-user.target

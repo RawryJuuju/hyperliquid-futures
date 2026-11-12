@@ -1,0 +1,4 @@
+{"t": "2026-10-20T05:01:45.076398+07:00", "coin": "NEAR", "dir": "SHORT", "strategy": "breakout", "kind": "SL", "entry": 4.883, "exit": 4.91595714, "R": -1.119, "usd": -3.6, "equity": 996.4}
+{"t": "2026-10-20T05:04:10.337918+07:00", "coin": "PUMP", "dir": "SHORT", "strategy": "sweep_fade", "kind": "SL", "entry": 0.00439, "exit": 0.00442829, "R": -1.092, "usd": -8.19, "equity": 988.21}
+{"t": "2026-10-20T05:06:15.167354+07:00", "coin": "ZEC", "dir": "SHORT", "strategy": "bollinger", "kind": "SL", "entry": 1142.0, "exit": 1152.48571429, "R": -1.088, "usd": -4.77, "equity": 983.43}
+{"t": "2026-10-20T05:15:45.034803+07:00", "coin": "ZEC", "dir": "LONG", "strategy": "breakout", "kind": "TP", "entry": 1148.9, "exit": 1164.37142857, "R": 1.88, "usd": 8.16, "equity": 991.59}

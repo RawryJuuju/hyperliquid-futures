@@ -19,6 +19,7 @@ import time
 import statistics
 import urllib.request
 from datetime import datetime, timezone, timedelta
+from smc_lib import evaluate_smc_scalp_signal, get_killzone_status
 
 WIB = timezone(timedelta(hours=7))
 BASE_DIR = "/home/ubuntu/papertrade_backtest"
@@ -45,7 +46,7 @@ LEVERAGE = 10  # default fallback
 
 MAX_RISK_PCT_PRICE = 0.035      # SL max 3.5% (ATR kegedean -> skip)
 MIN_RISK_PCT_PRICE = 0.0015     # SL min 0.15% (sanity only, bukan filter fee)
-MAX_TOTAL_MARGIN_PCT = 0.60     # total margin semua posisi max 60% equity
+MAX_TOTAL_MARGIN_PCT = 0.75     # total margin semua posisi max 75% equity (aggressive mode)
 
 _CACHE = {}
 
@@ -343,8 +344,33 @@ def sig_bollinger(coin, P):
             "rr": P["rr"], "hold": P["hold"], "bar_t": cur["t"]}, "ok"
 
 
-ENGINES = {"breakout": sig_breakout, "sweep_fade": sig_sweep,
-           "bollinger": sig_bollinger}
+def sig_smc(coin, P):
+    """
+    SMC Silver Bullet Scalp:
+    1. Liquidity Sweep (BSL / SSL)
+    2. Displacement Candle + Fair Value Gap (FVG)
+    3. Market Structure Shift (MSS)
+    4. Killzone gating (London/NY high-vol sessions)
+    """
+    tf = P.get("timeframe", "5m")
+    d = _common(coin, tf)
+    if not d:
+        return None, "data"
+    c5, c15, c1h = d
+    a = atr(c5[:-1], 14)
+    if a is None:
+        return None, "ind"
+    aggressive = P.get("aggressive", True)
+    sig, reason = evaluate_smc_scalp_signal(c5, c15, c1h, coin, a, aggressive=aggressive)
+    return sig, reason
+
+
+ENGINES = {
+    "breakout": sig_breakout,
+    "sweep_fade": sig_sweep,
+    "bollinger": sig_bollinger,
+    "smc_silver_bullet": sig_smc,
+}
 
 
 # ============================================================

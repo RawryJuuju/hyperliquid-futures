@@ -195,13 +195,95 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
   </p>
 
   <div class="stats">
-    <div class="stat"><div class="sv">1</div><div class="sl">Releases</div></div>
+    <div class="stat"><div class="sv">2</div><div class="sl">Releases</div></div>
     <div class="stat"><div class="sv">0</div><div class="sl">Live Now</div></div>
-    <div class="stat"><div class="sv">157</div><div class="sl">Trades Logged</div></div>
-    <div class="stat"><div class="sv neg">$-90.57</div><div class="sl">Net PnL</div></div>
+    <div class="stat"><div class="sv">158</div><div class="sl">Trades Logged</div></div>
+    <div class="stat"><div class="sv neg">$-94.18</div><div class="sl">Net PnL</div></div>
   </div>
 </div>
 
+
+<section id="v1-1">
+  <div class="sh"><span class="sn">1.1</span><h2>SMC Silver Bullet & Kinetic Trend</h2></div>
+  <div class="vmeta-row">
+    <span class="badge b3">ACTIVE</span>
+    <span class="vdate">Released 2026-11-13 · 13 Nov 01:04 → 13 Nov 01:04 WIB</span>
+  </div>
+  <div class="prose"><p>Major algorithmic upgrade integrating Smart Money Concepts (SMC) & ICT quantitative mechanisms alongside HTF breakout momentum across a 12-asset multi-asset universe (including Gold PAXG, AVAX, TAO, SUI). Implements algorithmic Fair Value Gaps (FVG), BSL/SSL Liquidity Sweeps, Market Structure Shifts (MSS), dynamic Trailing Breakeven at +1.5R, and session Killzone filters.</p></div>
+
+  <div class="quote">Active on live production book. 12 assets including Gold (PAXG), 38 strategy slots, aggressive 0.45% base risk model with 6.00% max open risk cap.<span>Post-mortem</span></div>
+  
+  <div class="metrics">
+    <div class="m"><div class="ml">Total Return</div><div class="mv neg">-0.40%</div></div>
+    <div class="m"><div class="ml">Net PnL</div><div class="mv neg">$-3.61</div></div>
+    <div class="m"><div class="ml">Win Rate</div><div class="mv">0.0%</div></div>
+    <div class="m"><div class="ml">Profit Factor</div><div class="mv neg">0.00</div></div>
+    <div class="m"><div class="ml">Total R</div><div class="mv neg">-1.68R</div></div>
+    <div class="m"><div class="ml">Max Drawdown</div><div class="mv neg">-0.40%</div></div>
+    <div class="m"><div class="ml">Closed Trades</div><div class="mv">1</div></div>
+    <div class="m"><div class="ml">Ending Equity</div><div class="mv">$905.82</div></div>
+  </div>
+  <div class="curvebox">
+    <div class="curvehead">Equity curve · 1 closed trades</div>
+    <svg class="spark" viewBox="0 0 900 120" preserveAspectRatio="none"><polygon points="0,120 0.0,6.0 900.0,114.0 900,120" fill="#f2707f" opacity="0.07"/><polyline points="0.0,6.0 900.0,114.0" fill="none" stroke="#f2707f" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>
+  </div>
+
+  
+  <div class="grid2">
+    <div class="card">
+      <div class="ct">By Strategy</div>
+      <table class="tbl">
+        <thead><tr><th>Strategy</th><th>Trades</th><th>Win Rate</th><th>R</th><th>PnL</th></tr></thead>
+        <tbody><tr><td class="n">smc_silver_bullet</td><td class="mut">1</td><td class="mut">0.0%</td><td class="neg">-1.68</td><td class="neg">$-3.61</td></tr></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="ct">By Instrument</div>
+      <table class="tbl">
+        <thead><tr><th>Coin</th><th>Trades</th><th>Win Rate</th><th>R</th><th>PnL</th></tr></thead>
+        <tbody><tr><td class="n">ENA</td><td class="mut">1</td><td class="mut">0.0%</td><td class="neg">-1.68</td><td class="neg">$-3.61</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  
+  <div class="factrow">
+    <span>Avg win <b class="pos">$+0.00</b></span>
+    <span>Avg loss <b class="neg">$-3.61</b></span>
+    <span>Best <b class="pos">ENA $-3.61</b></span>
+    <span>Worst <b class="neg">ENA $-3.61</b></span>
+    <span>Exits <b>SL 1 · TP 0 · TIME 0</b></span>
+    <span>Span <b>0.0h</b></span>
+  </div>
+  
+  <div class="cfgsnap">
+    <div class="ct">Configuration</div>
+    <div class="cfgrow">
+      <span>Coins <b>WLD, INJ, ZEC, NEAR, HYPE, ENA, PUMP, ARB, PAXG, AVAX, TAO, SUI</b></span>
+      <span>Timeframes <b>5m, 15m, 1h</b></span>
+      <span>Strategies <b>smc_silver_bullet, breakout</b></span>
+      <span>Risk / trade <b>0.45%</b></span>
+      <span>Max open risk <b>6.0%</b></span>
+      <span>Leverage <b>10x</b></span>
+      <span>Slots <b>38</b></span>
+      <span>Stop model <b>SMC Sweep Wick Low/High & ATR(14)</b></span>
+    </div>
+  </div>
+    <div class="changelog">
+    <div class="ct">Changes in this release</div>
+    <ul><li>smc_lib quantitative engine deployed: Swing pivot fractal detection, BSL/SSL liquidity sweep wick analysis, Displacement identification (>2.0x ATR)</li><li>Algorithmic Fair Value Gap (FVG) and Consequent Encroachment (50% midpoint) retest entries</li><li>Trailing Breakeven activated: dynamic stop loss shift to entry price once floating unrealized reaches +1.5R</li><li>ICT Killzone time integration: London session (14:00-17:00 WIB), NY AM (20:00-23:30 WIB), US Late (03:00-05:00 WIB)</li><li>Aggressive Risk Model: Base risk increased from 0.25% to 0.45%, max total open risk expanded to 4.50%</li><li>Max total margin ceiling increased to 75% equity</li><li>ARB re-added to active portfolio universe (tested PF 1.46 in backtest)</li><li>Correlation cluster concurrency expanded to 3 concurrent positions per cluster</li><li>Expanded universe to 12 assets: added Gold (PAXG), AVAX, TAO, SUI across 5 correlation clusters</li><li>Total strategy slots expanded to 38, max concurrent trades raised to 20</li><li>Max total open risk ceiling raised to 6.00% for aggressive sizing</li></ul>
+  </div>
+  
+  <details class="tradelog">
+    <summary>Full trade ledger — 1 closed positions</summary>
+    <div class="scroll">
+      <table class="tbl">
+        <thead><tr><th>Time (WIB)</th><th>Coin</th><th>Side</th><th>Strategy</th><th>Exit</th>
+        <th>Entry</th><th>Exit</th><th>R</th><th>PnL</th><th>Equity</th></tr></thead>
+        <tbody><tr><td class="mut">13 Nov 01:04</td><td class="n">ENA</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>0.13868</td><td>0.139252</td><td class="neg">-1.68</td><td class="neg">$-3.61</td><td class="mut">$905.82</td></tr></tbody>
+      </table>
+    </div>
+  </details>
+</section>
 
 <section id="v1-0">
   <div class="sh"><span class="sn">1.0</span><h2>Baseline Breakout</h2></div>

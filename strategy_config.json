@@ -6,10 +6,10 @@
   "_start_equity": 1000.0,
   "_risk_model": {
     "mode": "fixed_fractional",
-    "base_risk_pct": 0.25,
+    "base_risk_pct": 0.45,
     "_rationale": "Calibrated 2026-10-20: base 0.55% -> 6 posisi = 2.17% risk (cap 2.25%). Leverage 10x uniform: margin 22.5% equity, liq buffer 6.4x SL terlebar. MC 500x: DD median -16%, worst -33%, ruin 0%.",
     "_leverage_note": "Leverage TIDAK mempengaruhi fee drag (fee/risk = 0.08%/SL%). Leverage hanya mengubah margin terkunci & jarak likuidasi.",
-    "max_total_open_risk_pct": 2.25,
+    "max_total_open_risk_pct": 4.5,
     "daily_loss_cap_pct": 99.0,
     "weekly_loss_cap_pct": 99.0,
     "reduce_after_dd_pct": 10.0,
@@ -30,10 +30,11 @@
     ],
     "C": [
       "ZEC",
-      "INJ"
+      "INJ",
+      "ARB"
     ],
     "D": [],
-    "_max_per_cluster": 2,
+    "_max_per_cluster": 3,
     "_note": "A: corr 0.89-0.95 (sangat tinggi). B: 0.76-0.88. C: ZEC negatif -0.73 s/d -0.82 (diversifier). D: SOL netral."
   },
   "_exit_management": {
@@ -71,9 +72,9 @@
       }
     },
     "_why": "Strategi RR 1:2-1:4 butuh winner besar. BE mematikan winner yang mundur dulu sebelum TP. Win rate naik (40->55%) tapi R hancur.",
-    "enabled": false,
-    "be_at_R": 1.0,
-    "partial_at_R": 1.5,
+    "enabled": true,
+    "be_at_R": 1.5,
+    "partial_at_R": null,
     "partial_frac": 0.5,
     "_presets": {
       "safe_visual_only": {
@@ -97,6 +98,16 @@
       "cluster": "B",
       "strategies": [
         {
+          "name": "smc_silver_bullet",
+          "timeframe": "5m",
+          "params": {
+            "aggressive": true,
+            "rr": 3.5,
+            "hold": 48
+          },
+          "risk_weight": 0.35
+        },
+        {
           "name": "breakout",
           "timeframe": "5m",
           "params": {
@@ -151,12 +162,22 @@
           "avg_R": 0.336
         }
       ],
-      "weight": 0.1429
+      "weight": 0.125
     },
     "INJ": {
       "cluster": "C",
       "strategies": [
         {
+          "name": "smc_silver_bullet",
+          "timeframe": "5m",
+          "params": {
+            "aggressive": true,
+            "rr": 3.5,
+            "hold": 48
+          },
+          "risk_weight": 0.35
+        },
+        {
           "name": "breakout",
           "timeframe": "5m",
           "params": {
@@ -211,12 +232,22 @@
           "avg_R": 0.336
         }
       ],
-      "weight": 0.1429
+      "weight": 0.125
     },
     "ZEC": {
       "cluster": "C",
       "strategies": [
         {
+          "name": "smc_silver_bullet",
+          "timeframe": "5m",
+          "params": {
+            "aggressive": true,
+            "rr": 3.5,
+            "hold": 48
+          },
+          "risk_weight": 0.35
+        },
+        {
           "name": "breakout",
           "timeframe": "5m",
           "params": {
@@ -271,12 +302,22 @@
           "avg_R": 0.336
         }
       ],
-      "weight": 0.1429
+      "weight": 0.125
     },
     "NEAR": {
       "cluster": "B",
       "strategies": [
         {
+          "name": "smc_silver_bullet",
+          "timeframe": "5m",
+          "params": {
+            "aggressive": true,
+            "rr": 3.5,
+            "hold": 48
+          },
+          "risk_weight": 0.35
+        },
+        {
           "name": "breakout",
           "timeframe": "5m",
           "params": {
@@ -331,12 +372,22 @@
           "avg_R": 0.336
         }
       ],
-      "weight": 0.1429
+      "weight": 0.125
     },
     "HYPE": {
       "cluster": "A",
       "strategies": [
         {
+          "name": "smc_silver_bullet",
+          "timeframe": "5m",
+          "params": {
+            "aggressive": true,
+            "rr": 3.5,
+            "hold": 48
+          },
+          "risk_weight": 0.35
+        },
+        {
           "name": "breakout",
           "timeframe": "5m",
           "params": {
@@ -391,12 +442,22 @@
           "avg_R": 0.336
         }
       ],
-      "weight": 0.1429
+      "weight": 0.125
     },
     "ENA": {
       "cluster": "A",
       "strategies": [
         {
+          "name": "smc_silver_bullet",
+          "timeframe": "5m",
+          "params": {
+            "aggressive": true,
+            "rr": 3.5,
+            "hold": 48
+          },
+          "risk_weight": 0.35
+        },
+        {
           "name": "breakout",
           "timeframe": "5m",
           "params": {
@@ -451,12 +512,22 @@
           "avg_R": 0.336
         }
       ],
-      "weight": 0.1429
+      "weight": 0.125
     },
     "PUMP": {
       "cluster": "B",
       "strategies": [
         {
+          "name": "smc_silver_bullet",
+          "timeframe": "5m",
+          "params": {
+            "aggressive": true,
+            "rr": 3.5,
+            "hold": 48
+          },
+          "risk_weight": 0.35
+        },
+        {
           "name": "breakout",
           "timeframe": "5m",
           "params": {
@@ -511,7 +582,37 @@
           "avg_R": 0.336
         }
       ],
-      "weight": 0.1429
+      "weight": 0.125
+    },
+    "ARB": {
+      "cluster": "C",
+      "strategies": [
+        {
+          "name": "smc_silver_bullet",
+          "timeframe": "5m",
+          "params": {
+            "aggressive": true,
+            "rr": 3.5,
+            "hold": 48
+          },
+          "risk_weight": 0.35
+        },
+        {
+          "name": "breakout",
+          "timeframe": "15m",
+          "params": {
+            "look": 10,
+            "atr_mult": 1.5,
+            "rr": 4.0,
+            "min_body": 0.5,
+            "htf_ema": 20,
+            "hold": 48,
+            "slope_min": 1.5
+          },
+          "risk_weight": 0.55
+        }
+      ],
+      "weight": 0.125
     }
   },
   "_total_combined_R": 242.0,

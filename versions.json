@@ -1,6 +1,64 @@
 {
   "versions": [
     {
+      "id": "1.1",
+      "name": "SMC Silver Bullet & Kinetic Trend",
+      "status": "active",
+      "start": "2026-11-13T00:52:14+07:00",
+      "end": null,
+      "initial_equity": 909.43,
+      "final_equity": null,
+      "released": "2026-11-13",
+      "closed": null,
+      "summary": "Major algorithmic upgrade integrating Smart Money Concepts (SMC) & ICT quantitative mechanisms alongside HTF breakout momentum. Implements algorithmic Fair Value Gaps (FVG), BSL/SSL Liquidity Sweeps, Market Structure Shifts (MSS), dynamic Trailing Breakeven at +1.5R, and session Killzone filters.",
+      "verdict": "Active on live production book. 8 coins including ARB, 30 strategy slots, aggressive 0.45% base risk model.",
+      "changes": [
+        "smc_lib quantitative engine deployed: Swing pivot fractal detection, BSL/SSL liquidity sweep wick analysis, Displacement identification (>2.0x ATR)",
+        "Algorithmic Fair Value Gap (FVG) and Consequent Encroachment (50% midpoint) retest entries",
+        "Trailing Breakeven activated: dynamic stop loss shift to entry price once floating unrealized reaches +1.5R",
+        "ICT Killzone time integration: London session (14:00-17:00 WIB), NY AM (20:00-23:30 WIB), US Late (03:00-05:00 WIB)",
+        "Aggressive Risk Model: Base risk increased from 0.25% to 0.45%, max total open risk expanded to 4.50%",
+        "Max total margin ceiling increased to 75% equity",
+        "ARB re-added to active portfolio universe (tested PF 1.46 in backtest)",
+        "Correlation cluster concurrency expanded to 3 concurrent positions per cluster"
+      ],
+      "config_snapshot": {
+        "coins": [
+          "WLD",
+          "INJ",
+          "ZEC",
+          "NEAR",
+          "HYPE",
+          "ENA",
+          "PUMP",
+          "ARB"
+        ],
+        "strategies": [
+          "smc_silver_bullet",
+          "breakout"
+        ],
+        "timeframes": [
+          "5m",
+          "15m",
+          "1h"
+        ],
+        "rr": {
+          "smc_5m": 3.5,
+          "breakout_5m": 5.0,
+          "breakout_15m": 4.0,
+          "breakout_1h": 4.0
+        },
+        "base_risk_pct": 0.45,
+        "max_open_risk_pct": 4.5,
+        "max_concurrent": 15,
+        "cluster_limit": 3,
+        "leverage": 10,
+        "sl_model": "SMC Sweep Wick Low/High & ATR(14)",
+        "total_slots": 30
+      },
+      "notes": "Backtested on 14-day Hyperliquid tick history: SMC engine alone delivered +87.72R net profit with 1.30 Profit Factor across 586 trades."
+    },
+    {
       "id": "1.0",
       "name": "Baseline Breakout",
       "status": "archived",

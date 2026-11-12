@@ -1,0 +1,389 @@
+{
+  "_note": "v4 FINAL \u2014 dual-strategy per koin. Setiap koin bisa jalan 2 strategi sekaligus (paralel, bukan overlap).",
+  "_validated": "2026-10-20",
+  "_method": "walk-forward 120d (IS 60d / OOS 60d), 6 keluarga strategi x 10 koin, 238 survivor",
+  "_combined_test": "OOS 60d: single +173.6R vs combined +242.0R (+39% lebih baik). 6/9 koin improved.",
+  "_start_equity": 1000.0,
+  "_risk_model": {
+    "mode": "fixed_fractional",
+    "base_risk_pct": 0.55,
+    "_rationale": "Calibrated 2026-10-20: base 0.55% -> 6 posisi = 2.17% risk (cap 2.25%). Leverage 10x uniform: margin 22.5% equity, liq buffer 6.4x SL terlebar. MC 500x: DD median -16%, worst -33%, ruin 0%.",
+    "_leverage_note": "Leverage TIDAK mempengaruhi fee drag (fee/risk = 0.08%/SL%). Leverage hanya mengubah margin terkunci & jarak likuidasi.",
+    "max_total_open_risk_pct": 2.25,
+    "daily_loss_cap_pct": 3.0,
+    "weekly_loss_cap_pct": 7.0,
+    "reduce_after_dd_pct": 10.0,
+    "reduce_factor": 0.5,
+    "coin_cooldown_min": 45,
+    "consec_loss_trigger": 3,
+    "max_concurrent": 6
+  },
+  "_correlation_clusters": {
+    "A": [
+      "HYPE",
+      "ENA",
+      "ETH",
+      "XRP"
+    ],
+    "B": [
+      "WLD",
+      "PUMP",
+      "NEAR"
+    ],
+    "C": [
+      "ZEC"
+    ],
+    "D": [
+      "SOL"
+    ],
+    "_max_per_cluster": 2,
+    "_note": "A: corr 0.89-0.95 (sangat tinggi). B: 0.76-0.88. C: ZEC negatif -0.73 s/d -0.82 (diversifier). D: SOL netral."
+  },
+  "_exit_management": {
+    "_status": "OPTIONAL \u2014 default OFF. Data 120d: BE & partial MERUSAK edge (lihat _backtest).",
+    "_backtest": {
+      "baseline_no_be_no_partial": {
+        "totR": 162.9,
+        "n": 1903,
+        "wr": 40.7,
+        "pf": 1.13
+      },
+      "BE_at_0.6R": {
+        "totR": -475.5,
+        "n": 2434,
+        "wr": 12.9,
+        "pf": 0.55
+      },
+      "BE_at_1.0R": {
+        "totR": -122.8,
+        "n": 2104,
+        "wr": 25.3,
+        "pf": 0.89
+      },
+      "partial_1R_50pct_plus_BE": {
+        "totR": -364.3,
+        "n": 2434,
+        "wr": 33.9,
+        "pf": 0.63
+      },
+      "partial_1R_50pct_BE_at_1R": {
+        "totR": -46.4,
+        "n": 2104,
+        "wr": 55.6,
+        "pf": 0.95
+      }
+    },
+    "_why": "Strategi RR 1:2-1:4 butuh winner besar. BE mematikan winner yang mundur dulu sebelum TP. Win rate naik (40->55%) tapi R hancur.",
+    "enabled": false,
+    "be_at_R": 1.0,
+    "partial_at_R": 1.5,
+    "partial_frac": 0.5,
+    "_presets": {
+      "safe_visual_only": {
+        "be_at_R": null,
+        "partial_at_R": null,
+        "_note": "Biarkan TP penuh. Dashboard tetap tampilkan locked-profit virtual."
+      },
+      "aggressive_BE": {
+        "be_at_R": 1.0,
+        "partial_at_R": null
+      },
+      "scale_out": {
+        "be_at_R": 1.0,
+        "partial_at_R": 1.5,
+        "partial_frac": 0.5
+      }
+    }
+  },
+  "coins": {
+    "PUMP": {
+      "cluster": "B",
+      "weight": 0.198,
+      "strategies": [
+        {
+          "name": "sweep_fade",
+          "params": {
+            "look": 6,
+            "atr_mult": 2.0,
+            "rr": 4.0,
+            "min_body": 0.3,
+            "htf_ema": 20,
+            "hold": 72
+          },
+          "oos_pf": 2.39,
+          "oos_R": 26.9,
+          "n": 34
+        },
+        {
+          "name": "breakout",
+          "params": {
+            "look": 10,
+            "atr_mult": 1.5,
+            "rr": 3.0,
+            "min_body": 0.4,
+            "htf_ema": 20,
+            "hold": 72
+          },
+          "oos_pf": 1.3,
+          "oos_R": 17.1,
+          "n": 81
+        }
+      ],
+      "combined_R": 43.3,
+      "combined_pf": 1.56
+    },
+    "WLD": {
+      "cluster": "B",
+      "weight": 0.174,
+      "strategies": [
+        {
+          "name": "breakout",
+          "params": {
+            "look": 10,
+            "atr_mult": 2.0,
+            "rr": 3.0,
+            "min_body": 0.6,
+            "htf_ema": 20,
+            "hold": 72
+          },
+          "oos_pf": 1.92,
+          "oos_R": 32.3,
+          "n": 61
+        },
+        {
+          "name": "sweep_fade",
+          "params": {
+            "look": 6,
+            "atr_mult": 2.5,
+            "rr": 3.0,
+            "min_body": 0.3,
+            "htf_ema": 20,
+            "hold": 72
+          },
+          "oos_pf": 1.09,
+          "oos_R": 2.1,
+          "n": 36
+        }
+      ],
+      "combined_R": 34.5,
+      "combined_pf": 1.58
+    },
+    "ZEC": {
+      "cluster": "C",
+      "weight": 0.116,
+      "strategies": [
+        {
+          "name": "breakout",
+          "params": {
+            "look": 10,
+            "atr_mult": 1.5,
+            "rr": 2.0,
+            "min_body": 0.6,
+            "htf_ema": 20,
+            "hold": 72
+          },
+          "oos_pf": 1.68,
+          "oos_R": 32.7,
+          "n": 87
+        },
+        {
+          "name": "bollinger",
+          "params": {
+            "bb_period": 20,
+            "bb_k": 2.0,
+            "atr_mult": 2.0,
+            "rr": 2.0,
+            "hold": 48,
+            "atr_max_ratio": 1.3
+          },
+          "oos_pf": 1.06,
+          "oos_R": 3.3,
+          "n": 82
+        }
+      ],
+      "combined_R": 37.3,
+      "combined_pf": 1.37
+    },
+    "ENA": {
+      "cluster": "A",
+      "weight": 0.087,
+      "strategies": [
+        {
+          "name": "sweep_fade",
+          "params": {
+            "look": 6,
+            "atr_mult": 1.5,
+            "rr": 4.0,
+            "min_body": 0.3,
+            "htf_ema": 20,
+            "hold": 72
+          },
+          "oos_pf": 1.72,
+          "oos_R": 17.5,
+          "n": 36
+        },
+        {
+          "name": "breakout",
+          "params": {
+            "look": 20,
+            "atr_mult": 1.5,
+            "rr": 3.0,
+            "min_body": 0.4,
+            "htf_ema": 20,
+            "hold": 72
+          },
+          "oos_pf": 1.36,
+          "oos_R": 17.5,
+          "n": 67
+        }
+      ],
+      "combined_R": 35.3,
+      "combined_pf": 1.48
+    },
+    "NEAR": {
+      "cluster": "B",
+      "weight": 0.085,
+      "strategies": [
+        {
+          "name": "breakout",
+          "params": {
+            "look": 20,
+            "atr_mult": 1.5,
+            "rr": 3.0,
+            "min_body": 0.4,
+            "htf_ema": 20,
+            "hold": 72
+          },
+          "oos_pf": 1.47,
+          "oos_R": 20.9,
+          "n": 64
+        },
+        {
+          "name": "bollinger",
+          "params": {
+            "bb_period": 20,
+            "bb_k": 2.0,
+            "atr_mult": 2.0,
+            "rr": 2.0,
+            "hold": 48,
+            "atr_max_ratio": 1.3
+          },
+          "oos_pf": 1.2,
+          "oos_R": 9.9,
+          "n": 82
+        }
+      ],
+      "combined_R": 30.3,
+      "combined_pf": 1.33
+    },
+    "HYPE": {
+      "cluster": "A",
+      "weight": 0.072,
+      "strategies": [
+        {
+          "name": "breakout",
+          "params": {
+            "look": 10,
+            "atr_mult": 1.5,
+            "rr": 3.0,
+            "min_body": 0.6,
+            "htf_ema": 20,
+            "hold": 72
+          },
+          "oos_pf": 1.33,
+          "oos_R": 18.5,
+          "n": 74
+        },
+        {
+          "name": "sweep_fade",
+          "params": {
+            "look": 6,
+            "atr_mult": 1.5,
+            "rr": 3.0,
+            "min_body": 0.5,
+            "htf_ema": 20,
+            "hold": 72
+          },
+          "oos_pf": 2.05,
+          "oos_R": 18.4,
+          "n": 27
+        }
+      ],
+      "combined_R": 37.0,
+      "combined_pf": 1.5
+    },
+    "ETH": {
+      "cluster": "A",
+      "weight": 0.112,
+      "strategies": [
+        {
+          "name": "sweep_fade",
+          "params": {
+            "look": 6,
+            "atr_mult": 2.0,
+            "rr": 3.0,
+            "min_body": 0.5,
+            "htf_ema": 20,
+            "hold": 72
+          },
+          "oos_pf": 1.62,
+          "oos_R": 10.6,
+          "n": 26
+        }
+      ],
+      "combined_R": 10.6,
+      "combined_pf": 1.62
+    },
+    "SOL": {
+      "cluster": "D",
+      "weight": 0.093,
+      "strategies": [
+        {
+          "name": "sweep_fade",
+          "params": {
+            "look": 10,
+            "atr_mult": 1.5,
+            "rr": 4.0,
+            "min_body": 0.5,
+            "htf_ema": 20,
+            "hold": 72
+          },
+          "oos_pf": 1.65,
+          "oos_R": 8.0,
+          "n": 17
+        }
+      ],
+      "combined_R": 8.0,
+      "combined_pf": 1.65
+    },
+    "XRP": {
+      "cluster": "A",
+      "weight": 0.063,
+      "strategies": [
+        {
+          "name": "sweep_fade",
+          "params": {
+            "look": 10,
+            "atr_mult": 2.0,
+            "rr": 2.0,
+            "min_body": 0.3,
+            "htf_ema": 20,
+            "hold": 72
+          },
+          "oos_pf": 1.43,
+          "oos_R": 5.5,
+          "n": 23
+        }
+      ],
+      "combined_R": 5.5,
+      "combined_pf": 1.43
+    }
+  },
+  "_total_combined_R": 242.0,
+  "_excluded": {
+    "BTC": "PF 0.45-0.60 di semua 6 keluarga \u2014 tidak ada edge",
+    "ema_pullback": "0 survivor dari walk-forward",
+    "rsi_rev": "0 survivor dari walk-forward",
+    "ZEC_bollinger_note": "PF 1.06 marginal tapi menambah +3.3R & menurunkan korelasi portfolio"
+  }
+}

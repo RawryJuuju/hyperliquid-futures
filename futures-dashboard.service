@@ -1,0 +1,17 @@
+[Unit]
+Description=Hyperliquid Futures Dashboard (:8899)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/hl-futures-engine
+ExecStart=/home/ubuntu/hl-futures-engine/.venv/bin/python /home/ubuntu/hl-futures-engine/futures_dashboard.py
+Restart=always
+RestartSec=10
+StandardOutput=append:/home/ubuntu/hl-futures-engine/futures_dashboard.log
+StandardError=append:/home/ubuntu/hl-futures-engine/futures_dashboard.log
+
+[Install]
+WantedBy=multi-user.target

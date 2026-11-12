@@ -1,0 +1,25 @@
+{
+  "network": "testnet",
+  "coin": "ETH",
+  "side": "long",
+  "size": 0.0417,
+  "mid": 2395.45,
+  "notional": 99.89,
+  "leverage": 3,
+  "sl_px": 2381.08,
+  "tp_px": 2424.2,
+  "dry_run": false,
+  "ts": "20/10/2026 04:06:27 WIB",
+  "entry_result": {
+    "status": "err",
+    "response": "User or API Wallet 0xb110ddf58c8657e45d498d1b4a24b1be0ff0e73c does not exist."
+  },
+  "sl_result": {
+    "status": "err",
+    "response": "User or API Wallet 0xb110ddf58c8657e45d498d1b4a24b1be0ff0e73c does not exist."
+  },
+  "tp_result": {
+    "status": "err",
+    "response": "User or API Wallet 0xb110ddf58c8657e45d498d1b4a24b1be0ff0e73c does not exist."
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "versions": [
+    {
+      "id": "1.0",
+      "name": "Baseline Breakout",
+      "status": "archived",
+      "start": "2026-10-20T05:01:45+07:00",
+      "end": "2026-10-23T23:59:59+07:00",
+      "initial_equity": 1000.0,
+      "final_equity": 909.43,
+      "released": "2026-10-20",
+      "closed": "2026-10-23",
+      "summary": "First production release, closed 23 Oct 2026. Single strategy family (breakout) across three horizons on seven coins. Fixed-fractional risk at 0.25% per trade with a 2.25% aggregate open-risk ceiling. Closed out at -9.06% after 157 trades over 74.8 hours of continuous operation.",
+      "verdict": "Underperformed. Breakout edge did not hold on the live book despite passing validation. Win rate of 25.5% against a 1:4-1:5 reward structure produced a profit factor of 0.78, short of the 1.0 breakeven threshold. Retired rather than patched.",
+      "changes": [
+        "Breakout family only - sweep_fade and bollinger retired after negative out-of-sample performance",
+        "Seven coins: WLD, INJ, ZEC, NEAR, HYPE, ENA, PUMP",
+        "Three horizons per coin: 5m (RR 1:5), 15m (RR 1:4), 1h (RR 1:4)",
+        "Risk 0.25% per trade, 2.25% max aggregate open risk",
+        "Correlation clusters capped at 2 concurrent positions",
+        "Leverage 10x uniform across all instruments",
+        "Daily and weekly loss caps disabled; per-coin cooldown disabled",
+        "Closed 23 Oct 2026 with 3 open positions flattened at market"
+      ],
+      "config_snapshot": {
+        "coins": [
+          "WLD",
+          "INJ",
+          "ZEC",
+          "NEAR",
+          "HYPE",
+          "ENA",
+          "PUMP"
+        ],
+        "strategies": [
+          "breakout"
+        ],
+        "timeframes": [
+          "5m",
+          "15m",
+          "1h"
+        ],
+        "rr": {
+          "5m": 5.0,
+          "15m": 4.0,
+          "1h": 4.0
+        },
+        "base_risk_pct": 0.25,
+        "max_open_risk_pct": 2.25,
+        "max_concurrent": 15,
+        "cluster_limit": 2,
+        "leverage": 10,
+        "sl_model": "ATR(14) x atr_mult",
+        "total_slots": 21
+      },
+      "notes": "Baseline release. All subsequent versions are measured against this. Post-mortem: 114 stop-outs vs 29 take-profits, 11 time exits. HYPE and ENA accounted for -$47.92 of the -$90.57 net loss."
+    }
+  ]
+}

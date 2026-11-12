@@ -1,0 +1,19 @@
+[Unit]
+Description=Hyperliquid Futures Bot (multi-coin, validated strategy)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/hl-futures-engine
+Environment=FUT_MODE=active
+Environment=FUT_NETWORK=mainnet
+ExecStart=/home/ubuntu/hl-futures-engine/.venv/bin/python /home/ubuntu/hl-futures-engine/futures_bot.py
+Restart=always
+RestartSec=30
+StandardOutput=append:/home/ubuntu/hl-futures-engine/futures_bot.log
+StandardError=append:/home/ubuntu/hl-futures-engine/futures_bot.log
+
+[Install]
+WantedBy=multi-user.target

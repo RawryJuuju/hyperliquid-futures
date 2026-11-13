@@ -498,24 +498,28 @@ def check_exits(state, cfg):
                 pos["realized_usd"] = pos.get("realized_usd", 0) + gain
                 pos["risk_usd"] = pos["risk_usd"] * (1 - frac)
                 pos["size"] = pos["size"] * (1 - frac)
-                pos["sl"] = entry  # BE setelah partial
+                # BE setelah partial dengan buffer penutup fee
+                be_fee_offset = risk * 0.15
+                pos["sl"] = (entry + be_fee_offset) if d == "LONG" else (entry - be_fee_offset)
                 pos["be_done"] = True
                 save_state(state)
-                log(f"💰 PARTIAL {coin} {frac*100:.0f}% @ {part_at}R (+${gain:.2f}) — SL→BE")
+                log(f"💰 PARTIAL {coin} {frac*100:.0f}% @ {part_at}R (+${gain:.2f}) — SL→BE+buffer")
                 tg(f"💰 *PARTIAL TP* {coin} {d}\n"
                    f"• Tutup {frac*100:.0f}% di +{part_at}R\n"
                    f"• Locked: +${gain:.2f}\n"
-                   f"• Sisa posisi SL digeser ke entry (BE)")
+                   f"• Sisa posisi SL digeser ke BE (+fee buffer)")
 
             # BE lock
             elif be_at and not pos.get("be_done") and r_now >= be_at:
-                pos["sl"] = entry
+                # Add small buffer to cover round-trip taker fee (0.09%) + slippage
+                be_fee_offset = risk * 0.15
+                pos["sl"] = (entry + be_fee_offset) if d == "LONG" else (entry - be_fee_offset)
                 pos["be_done"] = True
                 save_state(state)
-                log(f"🛡️ BE {coin} @ {be_at}R — SL→entry")
+                log(f"🛡️ BE {coin} @ {be_at}R — SL→entry+buffer")
                 tg(f"🛡️ *BREAKEVEN LOCK* {coin} {d}\n"
                    f"• Posisi +{r_now:.2f}R\n"
-                   f"• SL digeser ke entry — bebas risiko")
+                   f"• SL digeser ke entry (+fee buffer) — bebas risiko")
 
         hit = None
         if d == "LONG":

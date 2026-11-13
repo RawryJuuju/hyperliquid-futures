@@ -195,37 +195,47 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
   </p>
 
   <div class="stats">
-    <div class="stat"><div class="sv">2</div><div class="sl">Releases</div></div>
+    <div class="stat"><div class="sv">3</div><div class="sl">Releases</div></div>
     <div class="stat"><div class="sv">0</div><div class="sl">Live Now</div></div>
-    <div class="stat"><div class="sv">158</div><div class="sl">Trades Logged</div></div>
-    <div class="stat"><div class="sv neg">$-94.18</div><div class="sl">Net PnL</div></div>
+    <div class="stat"><div class="sv">192</div><div class="sl">Trades Logged</div></div>
+    <div class="stat"><div class="sv neg">$-170.16</div><div class="sl">Net PnL</div></div>
   </div>
 </div>
 
 
+<section id="vv1-2">
+  <div class="sh"><span class="sn">v1.2</span><h2>Dynamic Scale-Out & Calibrated RR</h2></div>
+  <div class="vmeta-row">
+    <span class="badge b3">ACTIVE</span>
+    <span class="vdate">Released 2026-11-13T07:11:17.597974+07:00</span>
+  </div>
+  <div class="prose"><p>Major risk execution refinement introducing Dynamic Scale-Out (50% Partial Take Profit at +1.0R), calibrated RR target (1:2.0 from 1:3.5), positive fee-buffered Breakeven trailing (+0.15R), and strict 1h counter-trend Short filtering to lock profits before intraday mean-reversion pullbacks.</p></div>
+  <p class="empty">No trades recorded for this release yet.</p>
+</section>
+
 <section id="v1-1">
   <div class="sh"><span class="sn">1.1</span><h2>SMC Silver Bullet & Kinetic Trend</h2></div>
   <div class="vmeta-row">
-    <span class="badge b3">ACTIVE</span>
-    <span class="vdate">Released 2026-11-13 · 13 Nov 01:04 → 13 Nov 01:04 WIB</span>
+    <span class="badge b3">SUPERSEDED</span>
+    <span class="vdate">Released 2026-11-13 · 13 Nov 01:04 → 13 Nov 07:03 WIB</span>
   </div>
   <div class="prose"><p>Major algorithmic upgrade integrating Smart Money Concepts (SMC) & ICT quantitative mechanisms alongside HTF breakout momentum across a 12-asset multi-asset universe (including Gold PAXG, AVAX, TAO, SUI). Implements algorithmic Fair Value Gaps (FVG), BSL/SSL Liquidity Sweeps, Market Structure Shifts (MSS), dynamic Trailing Breakeven at +1.5R, and session Killzone filters.</p></div>
 
   <div class="quote">Active on live production book. 12 assets including Gold (PAXG), 38 strategy slots, aggressive 0.45% base risk model with 6.00% max open risk cap.<span>Post-mortem</span></div>
   
   <div class="metrics">
-    <div class="m"><div class="ml">Total Return</div><div class="mv neg">-0.40%</div></div>
-    <div class="m"><div class="ml">Net PnL</div><div class="mv neg">$-3.61</div></div>
-    <div class="m"><div class="ml">Win Rate</div><div class="mv">0.0%</div></div>
-    <div class="m"><div class="ml">Profit Factor</div><div class="mv neg">0.00</div></div>
-    <div class="m"><div class="ml">Total R</div><div class="mv neg">-1.68R</div></div>
-    <div class="m"><div class="ml">Max Drawdown</div><div class="mv neg">-0.40%</div></div>
-    <div class="m"><div class="ml">Closed Trades</div><div class="mv">1</div></div>
-    <div class="m"><div class="ml">Ending Equity</div><div class="mv">$905.82</div></div>
+    <div class="m"><div class="ml">Total Return</div><div class="mv neg">-8.75%</div></div>
+    <div class="m"><div class="ml">Net PnL</div><div class="mv neg">$-79.59</div></div>
+    <div class="m"><div class="ml">Win Rate</div><div class="mv">14.3%</div></div>
+    <div class="m"><div class="ml">Profit Factor</div><div class="mv neg">0.16</div></div>
+    <div class="m"><div class="ml">Total R</div><div class="mv neg">-33.70R</div></div>
+    <div class="m"><div class="ml">Max Drawdown</div><div class="mv neg">-8.75%</div></div>
+    <div class="m"><div class="ml">Closed Trades</div><div class="mv">35</div></div>
+    <div class="m"><div class="ml">Ending Equity</div><div class="mv">$829.84</div></div>
   </div>
   <div class="curvebox">
-    <div class="curvehead">Equity curve · 1 closed trades</div>
-    <svg class="spark" viewBox="0 0 900 120" preserveAspectRatio="none"><polygon points="0,120 0.0,6.0 900.0,114.0 900,120" fill="#f2707f" opacity="0.07"/><polyline points="0.0,6.0 900.0,114.0" fill="none" stroke="#f2707f" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>
+    <div class="curvehead">Equity curve · 35 closed trades</div>
+    <svg class="spark" viewBox="0 0 900 120" preserveAspectRatio="none"><polygon points="0,120 0.0,6.0 25.7,10.9 51.4,14.4 77.1,21.8 102.9,24.4 128.6,28.7 154.3,30.8 180.0,32.6 205.7,35.6 231.4,37.4 257.1,41.4 282.9,46.2 308.6,49.8 334.3,53.8 360.0,60.3 385.7,64.1 411.4,66.1 437.1,70.0 462.9,62.1 488.6,66.3 514.3,70.1 540.0,76.1 565.7,81.4 591.4,75.6 617.1,77.7 642.9,84.7 668.6,91.9 694.3,86.0 720.0,85.9 745.7,90.4 771.4,93.3 797.1,101.1 822.9,99.4 848.6,103.5 874.3,109.9 900.0,114.0 900,120" fill="#f2707f" opacity="0.07"/><polyline points="0.0,6.0 25.7,10.9 51.4,14.4 77.1,21.8 102.9,24.4 128.6,28.7 154.3,30.8 180.0,32.6 205.7,35.6 231.4,37.4 257.1,41.4 282.9,46.2 308.6,49.8 334.3,53.8 360.0,60.3 385.7,64.1 411.4,66.1 437.1,70.0 462.9,62.1 488.6,66.3 514.3,70.1 540.0,76.1 565.7,81.4 591.4,75.6 617.1,77.7 642.9,84.7 668.6,91.9 694.3,86.0 720.0,85.9 745.7,90.4 771.4,93.3 797.1,101.1 822.9,99.4 848.6,103.5 874.3,109.9 900.0,114.0" fill="none" stroke="#f2707f" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>
   </div>
 
   
@@ -234,25 +244,25 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
       <div class="ct">By Strategy</div>
       <table class="tbl">
         <thead><tr><th>Strategy</th><th>Trades</th><th>Win Rate</th><th>R</th><th>PnL</th></tr></thead>
-        <tbody><tr><td class="n">smc_silver_bullet</td><td class="mut">1</td><td class="mut">0.0%</td><td class="neg">-1.68</td><td class="neg">$-3.61</td></tr></tbody>
+        <tbody><tr><td class="n">breakout</td><td class="mut">7</td><td class="mut">0.0%</td><td class="neg">-11.35</td><td class="neg">$-26.42</td></tr><tr><td class="n">smc_silver_bullet</td><td class="mut">28</td><td class="mut">17.9%</td><td class="neg">-22.35</td><td class="neg">$-53.17</td></tr></tbody>
       </table>
     </div>
     <div class="card">
       <div class="ct">By Instrument</div>
       <table class="tbl">
         <thead><tr><th>Coin</th><th>Trades</th><th>Win Rate</th><th>R</th><th>PnL</th></tr></thead>
-        <tbody><tr><td class="n">ENA</td><td class="mut">1</td><td class="mut">0.0%</td><td class="neg">-1.68</td><td class="neg">$-3.61</td></tr></tbody>
+        <tbody><tr><td class="n">PUMP</td><td class="mut">3</td><td class="mut">33.3%</td><td class="neg">-0.19</td><td class="neg">$-0.27</td></tr><tr><td class="n">TAO</td><td class="mut">1</td><td class="mut">0.0%</td><td class="neg">-0.50</td><td class="neg">$-1.51</td></tr><tr><td class="n">ENA</td><td class="mut">2</td><td class="mut">50.0%</td><td class="neg">-1.10</td><td class="neg">$-2.41</td></tr><tr><td class="n">ARB</td><td class="mut">4</td><td class="mut">25.0%</td><td class="neg">-1.90</td><td class="neg">$-5.44</td></tr><tr><td class="n">WLD</td><td class="mut">2</td><td class="mut">0.0%</td><td class="neg">-2.91</td><td class="neg">$-6.09</td></tr><tr><td class="n">HYPE</td><td class="mut">5</td><td class="mut">20.0%</td><td class="neg">-3.02</td><td class="neg">$-6.39</td></tr><tr><td class="n">ZEC</td><td class="mut">4</td><td class="mut">25.0%</td><td class="neg">-3.70</td><td class="neg">$-6.72</td></tr><tr><td class="n">INJ</td><td class="mut">4</td><td class="mut">0.0%</td><td class="neg">-5.67</td><td class="neg">$-10.49</td></tr><tr><td class="n">AVAX</td><td class="mut">3</td><td class="mut">0.0%</td><td class="neg">-3.86</td><td class="neg">$-11.44</td></tr><tr><td class="n">NEAR</td><td class="mut">4</td><td class="mut">0.0%</td><td class="neg">-5.97</td><td class="neg">$-14.19</td></tr><tr><td class="n">SUI</td><td class="mut">3</td><td class="mut">0.0%</td><td class="neg">-4.88</td><td class="neg">$-14.64</td></tr></tbody>
       </table>
     </div>
   </div>
   
   <div class="factrow">
-    <span>Avg win <b class="pos">$+0.00</b></span>
-    <span>Avg loss <b class="neg">$-3.61</b></span>
-    <span>Best <b class="pos">ENA $-3.61</b></span>
-    <span>Worst <b class="neg">ENA $-3.61</b></span>
-    <span>Exits <b>SL 1 · TP 0 · TIME 0</b></span>
-    <span>Span <b>0.0h</b></span>
+    <span>Avg win <b class="pos">$+3.13</b></span>
+    <span>Avg loss <b class="neg">$-3.17</b></span>
+    <span>Best <b class="pos">HYPE $+5.83</b></span>
+    <span>Worst <b class="neg">HYPE $-5.76</b></span>
+    <span>Exits <b>SL 30 · TP 1 · TIME 4</b></span>
+    <span>Span <b>6.0h</b></span>
   </div>
   
   <div class="cfgsnap">
@@ -274,12 +284,12 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
   </div>
   
   <details class="tradelog">
-    <summary>Full trade ledger — 1 closed positions</summary>
+    <summary>Full trade ledger — 35 closed positions</summary>
     <div class="scroll">
       <table class="tbl">
         <thead><tr><th>Time (WIB)</th><th>Coin</th><th>Side</th><th>Strategy</th><th>Exit</th>
         <th>Entry</th><th>Exit</th><th>R</th><th>PnL</th><th>Equity</th></tr></thead>
-        <tbody><tr><td class="mut">13 Nov 01:04</td><td class="n">ENA</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>0.13868</td><td>0.139252</td><td class="neg">-1.68</td><td class="neg">$-3.61</td><td class="mut">$905.82</td></tr></tbody>
+        <tbody><tr><td class="mut">13 Nov 07:03</td><td class="n">ARB</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>0.15029</td><td>0.151118</td><td class="neg">-1.51</td><td class="neg">$-3.02</td><td class="mut">$829.84</td></tr><tr><td class="mut">13 Nov 06:58</td><td class="n">NEAR</td><td class="neg">SHORT</td><td class="mut">breakout</td><td class="mut">SL</td><td>3.4015</td><td>3.4218</td><td class="neg">-1.47</td><td class="neg">$-4.69</td><td class="mut">$832.86</td></tr><tr><td class="mut">13 Nov 06:53</td><td class="n">HYPE</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>72.115</td><td>72.4988</td><td class="neg">-1.53</td><td class="neg">$-3.02</td><td class="mut">$837.55</td></tr><tr><td class="mut">13 Nov 06:45</td><td class="n">ENA</td><td class="pos">LONG</td><td class="mut">smc_silver_bullet</td><td class="mut">TIME</td><td>0.1391</td><td>0.139975</td><td class="pos">+0.58</td><td class="pos">$+1.20</td><td class="mut">$840.58</td></tr><tr><td class="mut">13 Nov 06:36</td><td class="n">HYPE</td><td class="pos">LONG</td><td class="mut">breakout</td><td class="mut">SL</td><td>72.367</td><td>72.1211</td><td class="neg">-1.82</td><td class="neg">$-5.76</td><td class="mut">$839.37</td></tr><tr><td class="mut">13 Nov 06:36</td><td class="n">HYPE</td><td class="pos">LONG</td><td class="mut">breakout</td><td class="mut">SL</td><td>72.367</td><td>72.1211</td><td class="neg">-1.82</td><td class="neg">$-2.10</td><td class="mut">$845.13</td></tr><tr><td class="mut">13 Nov 06:35</td><td class="n">PUMP</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>0.003449</td><td>0.00346406</td><td class="neg">-1.64</td><td class="neg">$-3.30</td><td class="mut">$847.23</td></tr><tr><td class="mut">13 Nov 06:17</td><td class="n">ZEC</td><td class="pos">LONG</td><td class="mut">smc_silver_bullet</td><td class="mut">TIME</td><td>945.57</td><td>948.575</td><td class="pos">+0.03</td><td class="pos">$+0.06</td><td class="mut">$850.53</td></tr><tr><td class="mut">13 Nov 06:10</td><td class="n">PUMP</td><td class="pos">LONG</td><td class="mut">smc_silver_bullet</td><td class="mut">TIME</td><td>0.003388</td><td>0.003454</td><td class="pos">+2.07</td><td class="pos">$+4.32</td><td class="mut">$850.47</td></tr><tr><td class="mut">13 Nov 06:02</td><td class="n">AVAX</td><td class="neg">SHORT</td><td class="mut">breakout</td><td class="mut">SL</td><td>8.3154</td><td>8.34343</td><td class="neg">-1.83</td><td class="neg">$-5.31</td><td class="mut">$846.15</td></tr><tr><td class="mut">13 Nov 06:00</td><td class="n">ARB</td><td class="pos">LONG</td><td class="mut">breakout</td><td class="mut">SL</td><td>0.15098</td><td>0.150301</td><td class="neg">-1.62</td><td class="neg">$-5.15</td><td class="mut">$851.46</td></tr><tr><td class="mut">13 Nov 05:32</td><td class="n">ARB</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>0.15055</td><td>0.15055</td><td class="neg">-0.75</td><td class="neg">$-1.52</td><td class="mut">$856.62</td></tr><tr><td class="mut">13 Nov 04:56</td><td class="n">ARB</td><td class="pos">LONG</td><td class="mut">smc_silver_bullet</td><td class="mut">TIME</td><td>0.146265</td><td>0.15064</td><td class="pos">+1.98</td><td class="pos">$+4.25</td><td class="mut">$858.14</td></tr><tr><td class="mut">13 Nov 04:35</td><td class="n">AVAX</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>8.2976</td><td>8.37617</td><td class="neg">-1.30</td><td class="neg">$-3.89</td><td class="mut">$853.89</td></tr><tr><td class="mut">13 Nov 04:30</td><td class="n">SUI</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>0.80207</td><td>0.806412</td><td class="neg">-1.52</td><td class="neg">$-4.43</td><td class="mut">$857.78</td></tr><tr><td class="mut">13 Nov 04:27</td><td class="n">INJ</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>7.4212</td><td>7.47826</td><td class="neg">-1.37</td><td class="neg">$-2.80</td><td class="mut">$862.21</td></tr><tr><td class="mut">13 Nov 04:27</td><td class="n">WLD</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>0.30128</td><td>0.302988</td><td class="neg">-1.50</td><td class="neg">$-3.10</td><td class="mut">$865.01</td></tr><tr><td class="mut">13 Nov 04:26</td><td class="n">HYPE</td><td class="pos">LONG</td><td class="mut">smc_silver_bullet</td><td class="mut">TP</td><td>70.974</td><td>71.9426</td><td class="pos">+2.78</td><td class="pos">$+5.83</td><td class="mut">$868.11</td></tr><tr><td class="mut">13 Nov 03:44</td><td class="n">NEAR</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>3.4142</td><td>3.43933</td><td class="neg">-1.38</td><td class="neg">$-2.86</td><td class="mut">$862.27</td></tr><tr><td class="mut">13 Nov 03:37</td><td class="n">TAO</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>210.19</td><td>210.19</td><td class="neg">-0.50</td><td class="neg">$-1.51</td><td class="mut">$865.13</td></tr><tr><td class="mut">13 Nov 03:00</td><td class="n">INJ</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>7.3782</td><td>7.43702</td><td class="neg">-1.35</td><td class="neg">$-2.80</td><td class="mut">$866.64</td></tr><tr><td class="mut">13 Nov 02:51</td><td class="n">SUI</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>0.79969</td><td>0.803609</td><td class="neg">-1.57</td><td class="neg">$-4.73</td><td class="mut">$869.44</td></tr><tr><td class="mut">13 Nov 02:17</td><td class="n">WLD</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>0.30043</td><td>0.302461</td><td class="neg">-1.42</td><td class="neg">$-2.99</td><td class="mut">$874.17</td></tr><tr><td class="mut">13 Nov 02:16</td><td class="n">ZEC</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>937.74</td><td>947.544</td><td class="neg">-1.27</td><td class="neg">$-2.67</td><td class="mut">$877.16</td></tr><tr><td class="mut">13 Nov 02:16</td><td class="n">NEAR</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>3.4159</td><td>3.43056</td><td class="neg">-1.65</td><td class="neg">$-3.49</td><td class="mut">$879.83</td></tr><tr><td class="mut">13 Nov 02:15</td><td class="n">INJ</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>7.3615</td><td>7.41069</td><td class="neg">-1.42</td><td class="neg">$-3.00</td><td class="mut">$883.32</td></tr><tr><td class="mut">13 Nov 02:10</td><td class="n">PUMP</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>0.003391</td><td>0.003391</td><td class="neg">-0.61</td><td class="neg">$-1.29</td><td class="mut">$886.31</td></tr><tr><td class="mut">13 Nov 02:04</td><td class="n">AVAX</td><td class="pos">LONG</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>8.3055</td><td>8.3055</td><td class="neg">-0.73</td><td class="neg">$-2.24</td><td class="mut">$887.60</td></tr><tr><td class="mut">13 Nov 01:45</td><td class="n">HYPE</td><td class="pos">LONG</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>70.906</td><td>70.906</td><td class="neg">-0.62</td><td class="neg">$-1.34</td><td class="mut">$889.84</td></tr><tr><td class="mut">13 Nov 01:34</td><td class="n">ZEC</td><td class="neg">SHORT</td><td class="mut">breakout</td><td class="mut">SL</td><td>932.99</td><td>943.653</td><td class="neg">-1.25</td><td class="neg">$-1.52</td><td class="mut">$891.19</td></tr><tr><td class="mut">13 Nov 01:32</td><td class="n">NEAR</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>3.3987</td><td>3.41927</td><td class="neg">-1.46</td><td class="neg">$-3.15</td><td class="mut">$892.71</td></tr><tr><td class="mut">13 Nov 01:29</td><td class="n">INJ</td><td class="neg">SHORT</td><td class="mut">breakout</td><td class="mut">SL</td><td>7.328</td><td>7.36657</td><td class="neg">-1.53</td><td class="neg">$-1.89</td><td class="mut">$895.85</td></tr><tr><td class="mut">13 Nov 01:28</td><td class="n">SUI</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>0.79767</td><td>0.800495</td><td class="neg">-1.79</td><td class="neg">$-5.48</td><td class="mut">$897.74</td></tr><tr><td class="mut">13 Nov 01:20</td><td class="n">ZEC</td><td class="pos">LONG</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>948.69</td><td>935.934</td><td class="neg">-1.21</td><td class="neg">$-2.59</td><td class="mut">$903.22</td></tr><tr><td class="mut">13 Nov 01:04</td><td class="n">ENA</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>0.13868</td><td>0.139252</td><td class="neg">-1.68</td><td class="neg">$-3.61</td><td class="mut">$905.82</td></tr></tbody>
       </table>
     </div>
   </details>

@@ -1,15 +1,49 @@
 {
   "versions": [
     {
+      "id": "v1.2",
+      "name": "Dynamic Scale-Out & Calibrated RR",
+      "status": "active",
+      "start": "2026-11-13T07:11:17.597974+07:00",
+      "end": null,
+      "initial_equity": 832.86,
+      "final_equity": null,
+      "released": "2026-11-13T07:11:17.597974+07:00",
+      "closed": null,
+      "summary": "Major risk execution refinement introducing Dynamic Scale-Out (50% Partial Take Profit at +1.0R), calibrated RR target (1:2.0 from 1:3.5), positive fee-buffered Breakeven trailing (+0.15R), and strict 1h counter-trend Short filtering to lock profits before intraday mean-reversion pullbacks.",
+      "verdict": "Active on live production book. Calibrated 1:2.0 RR target, 50% partial profit lock at 1.0R, fee-buffered Breakeven trailing, and strict 1h multi-timeframe short trend gating.",
+      "changes": [
+        "Calibrated Risk-to-Reward: SMC Silver Bullet scalp target recalibrated from 1:3.5 to 1:2.0 RR (+230% backtested expectancy boost by capturing profits before retrace)",
+        "Dynamic Scale-Out Engine: Automated 50% Partial Take Profit at +1.0R (locks realized gains into balance immediately upon momentum expansion)",
+        "Fee-Buffered Breakeven Trailing: Breakeven shift now includes a +0.15R positive buffer to eliminate round-trip taker fee (0.09%) and slippage erosion",
+        "Strict Multi-Timeframe Short Gating: Short trades strictly forbidden unless 1h higher timeframe confirmed in structural downtrend (closes below EMA 20 and EMA 20 <= EMA 50)",
+        "Eliminated False Retracement Drawdown: Stops winning trades (+1R to +1.8R) from round-tripping into full stop-outs during Asian session chop"
+      ],
+      "config_snapshot": {
+        "coins": "WLD, INJ, ZEC, NEAR, HYPE, ENA, PUMP, ARB, PAXG, AVAX, TAO, SUI",
+        "timeframes": "5m, 15m, 1h",
+        "strategies": "smc_silver_bullet, breakout",
+        "base_risk": "0.45%",
+        "max_open_risk": "6.0%",
+        "leverage": "10x",
+        "slots": 38,
+        "stop_model": "SMC Sweep Wick Low/High & ATR(14)"
+      },
+      "notes": [
+        "Eliminates the Asian session shorting trap where counter-trend bounces wiped floating gains.",
+        "50% partial at 1.0R guarantees positive cash flow even if the remainder returns to entry."
+      ]
+    },
+    {
       "id": "1.1",
       "name": "SMC Silver Bullet & Kinetic Trend",
-      "status": "active",
+      "status": "superseded",
       "start": "2026-11-13T00:52:14+07:00",
-      "end": null,
+      "end": "2026-11-13T07:11:17.597974+07:00",
       "initial_equity": 909.43,
       "final_equity": null,
       "released": "2026-11-13",
-      "closed": null,
+      "closed": "2026-11-13T07:11:17.597974+07:00",
       "summary": "Major algorithmic upgrade integrating Smart Money Concepts (SMC) & ICT quantitative mechanisms alongside HTF breakout momentum across a 12-asset multi-asset universe (including Gold PAXG, AVAX, TAO, SUI). Implements algorithmic Fair Value Gaps (FVG), BSL/SSL Liquidity Sweeps, Market Structure Shifts (MSS), dynamic Trailing Breakeven at +1.5R, and session Killzone filters.",
       "verdict": "Active on live production book. 12 assets including Gold (PAXG), 38 strategy slots, aggressive 0.45% base risk model with 6.00% max open risk cap.",
       "changes": [

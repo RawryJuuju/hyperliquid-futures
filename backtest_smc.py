@@ -50,10 +50,10 @@ def run_backtest(days=30):
                 tp = in_pos["tp"]
                 risk = in_pos["risk_px"]
                 
-                # Check Breakeven trailing: if price hits +1.5R, move SL to entry (0 risk)
+                # Check Breakeven trailing: if price hits +1.2R, move SL to entry + fee buffer
                 r_max = (h - entry) / risk if direction == "LONG" else (entry - l) / risk
-                if r_max >= 1.5:
-                    in_pos["sl"] = entry # Breakeven lock!
+                if r_max >= 1.2:
+                    in_pos["sl"] = entry + (risk * 0.15) if direction == "LONG" else entry - (risk * 0.15)
                 
                 exit_r = None
                 kind = None

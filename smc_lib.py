@@ -262,7 +262,7 @@ def evaluate_smc_scalp_signal(
             risk_px = entry_px - sl_px
             
             if risk_px > 0 and (risk_px / entry_px) <= 0.035 and (risk_px / entry_px) >= 0.003:
-                rr = 3.5 if aggressive else 3.0
+                rr = 2.0 if aggressive else 2.0
                 tp_px = entry_px + (risk_px * rr)
                 return {
                     "coin": coin,
@@ -283,16 +283,16 @@ def evaluate_smc_scalp_signal(
                 }, "ok_bullish_smc"
 
     # Trade Setup 2: Bearish SMC Scalp (BSL Sweep + Displacement Bearish FVG)
-    # STRICT GUARD: Only short if HTF is NOT bullish! (Direct fix for our v1.0 -$104 short losses!)
+    # STRICT GUARD: Only short if HTF is CONFIRMED BEARISH (strict trend alignment)
     if (sweep and sweep["bias"] == "BEARISH") or (fvg and fvg["type"] == "bearish" and disp):
-        if not htf_bullish:
+        if htf_bearish and not htf_bullish:
             entry_px = fvg["mid"] if fvg and fvg["type"] == "bearish" else cur["c"]
             recent_highs = [x["h"] for x in candles_5m[-6:-1]]
             sl_px = max(recent_highs) + (atr_val * 0.3)
             risk_px = sl_px - entry_px
 
             if risk_px > 0 and (risk_px / entry_px) <= 0.035 and (risk_px / entry_px) >= 0.003:
-                rr = 3.5 if aggressive else 3.0
+                rr = 2.0 if aggressive else 2.0
                 tp_px = entry_px - (risk_px * rr)
                 return {
                     "coin": coin,

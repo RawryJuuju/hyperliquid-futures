@@ -80,8 +80,8 @@
     },
     "_why": "Strategi RR 1:2-1:4 butuh winner besar. BE mematikan winner yang mundur dulu sebelum TP. Win rate naik (40->55%) tapi R hancur.",
     "enabled": true,
-    "be_at_R": 1.5,
-    "partial_at_R": null,
+    "be_at_R": 1.2,
+    "partial_at_R": 1.0,
     "partial_frac": 0.5,
     "_presets": {
       "safe_visual_only": {

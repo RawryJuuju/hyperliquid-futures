@@ -55,32 +55,33 @@ This repository hosts an autonomous, quantitative trading system operating 24/7 
 
 ## 🪙 Asset Universe & Correlation Clusters
 
-The book currently trades **10 high-conviction alpha assets** across **30 active strategy slots**, partitioned into 5 independent correlation clusters to eliminate portfolio contagion:
+The book currently trades **10 high-conviction alpha assets** across **30 active strategy slots**, partitioned into 5 independent correlation clusters. Each asset operates **3 synchronized time horizons simultaneously**:
 
-| Cluster | Category | Assets | Active Strategies |
+| Cluster | Category | Assets | Active Multi-Horizon Strategy Stacks |
 |---|---|---|---|
-| **Cluster A** | Ecosystem Hyperliquid | `ENA` | SMC Silver Bullet 5m + Breakout 5m/15m/1h |
-| **Cluster B** | Alt Momentum | `WLD`, `NEAR` | SMC Silver Bullet 5m + Breakout 5m/15m/1h |
-| **Cluster C** | Layer 2 & High-Beta DeFi | `INJ`, `ZEC`, `ARB` | SMC Silver Bullet 5m + Breakout 5m/15m/1h |
-| **Cluster D** | Alternate L1 / AI Narrative | `AVAX`, `TAO`, `SUI` | SMC Silver Bullet 5m + Breakout 15m |
-| **Cluster E** | Macro Commodities & Metals | `PAXG` (Paxos Gold) | SMC Silver Bullet 5m + Breakout 15m |
+| **Cluster A** | Ecosystem Hyperliquid | `ENA` | 5m SMC Scalp + 15m Intraday Breakout + 1h Swing Breakout |
+| **Cluster B** | Alt Momentum | `WLD`, `NEAR` | 5m SMC Scalp + 15m Intraday Breakout + 1h Swing Breakout |
+| **Cluster C** | Layer 2 & High-Beta DeFi | `INJ`, `ZEC`, `ARB` | 5m SMC Scalp + 15m Intraday Breakout + 1h Swing Breakout |
+| **Cluster D** | Alternate L1 / AI Narrative | `AVAX`, `TAO`, `SUI` | 5m SMC Scalp + 15m Intraday Breakout + 1h Swing Breakout |
+| **Cluster E** | Macro Commodities & Metals | `PAXG` (Paxos Gold) | 5m SMC Scalp + 15m Intraday Breakout + 1h Swing Breakout |
 
 ---
 
-## 🛡️ Risk Management Parameters (v1.3 Release)
+## 🛡️ Risk Management Parameters (v1.4 Release)
 
 ```yaml
-Base Risk per Trade: 0.45% of total equity
+Base Risk per Trade: 0.45% of total equity (Strictly Normalized Dollar Risk)
 Aggregate Open Risk Ceiling: 6.00%
 Maximum Concurrent Positions: 20
 Maximum Margin Utilization: 75% of equity
 Correlation Cluster Max: 3 concurrent positions per cluster
-Risk-to-Reward Model: Calibrated 1:2.0 target (SMC Scalp)
+Risk-to-Reward Model: Calibrated 1:2.0 target (SMC Scalp) / 1:2.5 target (Breakout)
+Multi-Horizon Stacking: Scalp (5m), Intraday (15m), Swing (1h) concurrent entries enabled
+Anti-Hedging Guard: Prohibits opposite-direction positions on the same asset
 Dynamic Partial Take Profit: 33% closed at +1.0R (Realized Cashflow Lock)
-Runner Position: 67% retained to run for full +2.0R expansion
+Runner Position: 67% retained to run for full +2.0R / +2.5R expansion
 Breakeven Trailing: Shift SL to Entry + 0.15R positive fee buffer at +1.2R MFE
 Autonomous Loss Cooldown: 45 minutes timeout per coin following a stopout
-Multi-Timeframe Trend Gating: Strictly no short positions against 1h bullish EMA drift
 ```
 
 ---
@@ -162,7 +163,8 @@ Access the local monitoring dashboard at `http://localhost:8899`.
 
 ## 📜 Release Cadence
 
-- **`v1.3` (Current Active)**: Delisted toxic chop assets (`HYPE`, `PUMP`), upgraded scale-out ratio to 33% @ 1.0R (67% runner), deployed 45m loss cooldown, and normalized 10-asset universe.
+- **`v1.4` (Current Active)**: Symmetric Multi-Horizon Stacking (Scalp 5m, Intraday 15m, Swing 1h) across all 10 assets, strict dollar risk normalization (0.45% flat), anti-hedging directional guard, and calibrated 1:2.5R breakout targets.
+- **`v1.3` (Superseded)**: Delisted toxic chop assets (`HYPE`, `PUMP`), upgraded scale-out ratio to 33% @ 1.0R (67% runner), deployed 45m loss cooldown, and normalized 10-asset universe.
 - **`v1.2` (Superseded)**: Dynamic Scale-Out (50% partial at 1.0R), calibrated RR 1:2.0, positive fee-buffered Breakeven trailing, and strict 1h short filtering.
 - **`v1.1` (Superseded)**: SMC/ICT Silver Bullet integration, Killzone time filtering, and universe expansion to 12 assets (including Gold PAXG).
 - **`v1.0` (Archived)**: Multi-timeframe breakout baseline (157 closed trades, documented in `/versions`).

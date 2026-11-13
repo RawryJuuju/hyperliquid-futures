@@ -1,15 +1,52 @@
 {
   "versions": [
     {
+      "id": "v1.4",
+      "name": "Symmetric Multi-Horizon Stacking & Risk Normalization",
+      "status": "active",
+      "start": "2026-11-13T19:58:29.308244+07:00",
+      "end": null,
+      "initial_equity": 812.5,
+      "final_equity": null,
+      "released": "2026-11-13T19:58:29.308244+07:00",
+      "closed": null,
+      "summary": "Core structural architectural upgrade unlocking Multi-Horizon Strategy Stacking across 3 distinct time horizons (Scalp 5m, Intraday 15m, and Swing 1h) simultaneously on each asset without internal hedging conflict. Eliminates risk asymmetry by strictly normalizing risk dollar allocations to an exact 0.45% base risk per trade across all timeframes, fixes timeframe parameter propagation bug in breakout engines, and calibrates breakout take-profit targets from unrealistic 4.0-5.0R down to high-expectancy 1:2.5R.",
+      "verdict": "Active on live production book. 10 assets x 3 horizons = 30 standardized strategy slots, symmetric dollar risk allocations, anti-conflict directional gating, and calibrated RR 1:2.0 / 1:2.5 targets.",
+      "changes": [
+        "Multi-Horizon Strategy Stacking: Every asset simultaneously operates 3 independent horizons: 5m SMC Scalp (quick liquidity sweep), 15m Intraday Breakout (session momentum), and 1h Swing Breakout (macro trend ride)",
+        "Risk Normalization (Symmetric Dollar Risk): Position sizing strictly allocates 0.45% base risk per trade across all strategies and timeframes, eliminating the flaw where small 5m wins ($0.80) were wiped out by oversized 15m/1h SL hits ($6.00+)",
+        "Anti-Conflict Directional Guard: Built-in safety check preventing concurrent opposite-direction positions on the same coin (e.g. prohibits 5m Short if 1h Swing is Long), saving taker fees and eliminating self-hedging drag",
+        "Timeframe Parameter Propagation Fix: Resolved bug in sig_breakout where execution engine defaulted to 5m candle evaluation regardless of configured timeframe",
+        "Calibrated Breakout RR Targets: Adjusted breakout targets to high-expectancy 1:2.5R (down from 4.0-5.0R), enabling positions to lock profits reliably before mid-session retracements"
+      ],
+      "config_snapshot": {
+        "coins": "WLD, INJ, ZEC, NEAR, ENA, ARB, PAXG, AVAX, TAO, SUI",
+        "timeframes": "5m (Scalp), 15m (Intraday), 1h (Swing)",
+        "strategies": "smc_silver_bullet (5m), breakout (15m), breakout (1h)",
+        "base_risk": "0.45% flat per trade",
+        "max_open_risk": "6.0%",
+        "leverage": "10x",
+        "slots": 30,
+        "partial_take_profit": "33% @ 1.0R",
+        "breakeven_trigger": "1.2R (+0.15R fee buffer)",
+        "coin_cooldown": "45 minutes post-SL",
+        "anti_hedging_guard": "Strict directional synchronization"
+      },
+      "notes": [
+        "Allows single coins to compound gains across multiple horizons simultaneously during strong trend expansions.",
+        "Restores mathematical symmetry to the PnL curve: average win will now equal or exceed average loss."
+      ]
+    },
+    {
       "id": "v1.3",
       "name": "Asymmetric Scale-Out & Toxic Asset Purge",
-      "status": "active",
+      "status": "superseded",
       "start": "2026-11-13T17:41:24.535410+07:00",
-      "end": null,
+      "end": "2026-11-13T19:58:29.308244+07:00",
       "initial_equity": 805.74,
-      "final_equity": null,
+      "final_equity": 812.5,
       "released": "2026-11-13T17:41:24.535410+07:00",
-      "closed": null,
+      "closed": "2026-11-13T19:58:29.308244+07:00",
       "summary": "Core execution perfection addressing post-v1.2 empirical findings: delisted high-volatility chop assets (HYPE and PUMP, which drove -$39.28 USD in drag), upgraded Dynamic Scale-Out ratio to 33% Partial Take Profit at +1.0R (leaving 67% runner volume to capture full +2.0R expansions), and deployed an autonomous 45-minute per-coin loss cooldown to prevent revenge-trading during chop cycles.",
       "verdict": "Active on live production book. 10 curated alpha assets (30 strategy slots), 33/67 asymmetric scale-out profit locking, 45-minute coin loss cooldown, and fee-buffered Breakeven trailing.",
       "changes": [

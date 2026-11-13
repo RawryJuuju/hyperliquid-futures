@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Papertrade Quantitative TradingView Slate/Grey Dashboard
+Hyperliquid Quantitative TradingView Slate/Grey Dashboard
 Palette: Muted Slate-Grey with Luminous Shiny Light-Blue (Ice Cyan) Accents
 Engine: FastAPI + Hyperliquid L1 Oracle Cache Shield
 Frontend: TradingView Lightweight Charts v4.1 (Pure Light Mode, No Volume, Refined Lines)
@@ -16,12 +16,12 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 WIB = timezone(timedelta(hours=7))
-BASE_DIR = "/home/ubuntu/papertrade_backtest"
-STATE_FILE = os.path.join(BASE_DIR, "papertrade_state.json")
-LOG_FILE = os.path.join(BASE_DIR, "papertrade_watcher.log")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATE_FILE = os.path.join(BASE_DIR, "hl_state.json")
+LOG_FILE = os.path.join(BASE_DIR, "hl_watcher.log")
 STATIC_DIR = os.path.join(BASE_DIR, "static")
 
-app = FastAPI(title="Papertrade Quant Desk")
+app = FastAPI(title="Hyperliquid Quant Desk")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 _DASH_CACHE = {}
@@ -203,7 +203,7 @@ def index():
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Papertrade // Quant Titanium Desk</title>
+  <title>Hyperliquid // Quant Titanium Desk</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -544,7 +544,7 @@ def index():
     <div class="brand-group">
       <div class="logo-badge">
         <div class="shiny-dot"></div>
-        <span>PAPERTRADE // DESK</span>
+        <span>HYPERLIQUID // DESK</span>
       </div>
 
       <!-- COIN TABS -->

@@ -14,18 +14,16 @@
     "weekly_loss_cap_pct": 99.0,
     "reduce_after_dd_pct": 10.0,
     "reduce_factor": 0.5,
-    "coin_cooldown_min": 0,
+    "coin_cooldown_min": 45,
     "consec_loss_trigger": 999,
     "max_concurrent": 20
   },
   "_correlation_clusters": {
     "A": [
-      "HYPE",
       "ENA"
     ],
     "B": [
       "WLD",
-      "PUMP",
       "NEAR"
     ],
     "C": [
@@ -82,7 +80,7 @@
     "enabled": true,
     "be_at_R": 1.2,
     "partial_at_R": 1.0,
-    "partial_frac": 0.5,
+    "partial_frac": 0.33,
     "_presets": {
       "safe_visual_only": {
         "be_at_R": null,
@@ -169,7 +167,7 @@
           "avg_R": 0.336
         }
       ],
-      "weight": 0.0833
+      "weight": 0.1
     },
     "INJ": {
       "cluster": "C",
@@ -239,7 +237,7 @@
           "avg_R": 0.336
         }
       ],
-      "weight": 0.0833
+      "weight": 0.1
     },
     "ZEC": {
       "cluster": "C",
@@ -309,7 +307,7 @@
           "avg_R": 0.336
         }
       ],
-      "weight": 0.0833
+      "weight": 0.1
     },
     "NEAR": {
       "cluster": "B",
@@ -379,77 +377,7 @@
           "avg_R": 0.336
         }
       ],
-      "weight": 0.0833
-    },
-    "HYPE": {
-      "cluster": "A",
-      "strategies": [
-        {
-          "name": "smc_silver_bullet",
-          "timeframe": "5m",
-          "params": {
-            "aggressive": true,
-            "rr": 3.5,
-            "hold": 48
-          },
-          "risk_weight": 0.35
-        },
-        {
-          "name": "breakout",
-          "timeframe": "5m",
-          "params": {
-            "look": 10,
-            "atr_mult": 1.5,
-            "rr": 5.0,
-            "min_body": 0.6,
-            "htf_ema": 20,
-            "hold": 72,
-            "slope_min": 1.5
-          },
-          "oos_pf": 1.07,
-          "oos_R": 0.64,
-          "n": 604,
-          "risk_weight": 0.2,
-          "avg_R": 0.063
-        },
-        {
-          "name": "breakout",
-          "timeframe": "15m",
-          "params": {
-            "look": 10,
-            "atr_mult": 1.5,
-            "rr": 4.0,
-            "min_body": 0.5,
-            "htf_ema": 20,
-            "hold": 48,
-            "slope_min": 1.5
-          },
-          "oos_pf": 1.34,
-          "oos_R": 1.92,
-          "n": 695,
-          "risk_weight": 0.55,
-          "avg_R": 0.249
-        },
-        {
-          "name": "breakout",
-          "timeframe": "1h",
-          "params": {
-            "look": 12,
-            "atr_mult": 2.0,
-            "rr": 4.0,
-            "min_body": 0.5,
-            "htf_ema": 20,
-            "hold": 48,
-            "slope_min": 1.5
-          },
-          "oos_pf": 1.51,
-          "oos_R": 0.39,
-          "n": 208,
-          "risk_weight": 0.25,
-          "avg_R": 0.336
-        }
-      ],
-      "weight": 0.0833
+      "weight": 0.1
     },
     "ENA": {
       "cluster": "A",
@@ -519,77 +447,7 @@
           "avg_R": 0.336
         }
       ],
-      "weight": 0.0833
-    },
-    "PUMP": {
-      "cluster": "B",
-      "strategies": [
-        {
-          "name": "smc_silver_bullet",
-          "timeframe": "5m",
-          "params": {
-            "aggressive": true,
-            "rr": 3.5,
-            "hold": 48
-          },
-          "risk_weight": 0.35
-        },
-        {
-          "name": "breakout",
-          "timeframe": "5m",
-          "params": {
-            "look": 10,
-            "atr_mult": 1.5,
-            "rr": 5.0,
-            "min_body": 0.6,
-            "htf_ema": 20,
-            "hold": 72,
-            "slope_min": 1.5
-          },
-          "oos_pf": 1.07,
-          "oos_R": 0.64,
-          "n": 604,
-          "risk_weight": 0.2,
-          "avg_R": 0.063
-        },
-        {
-          "name": "breakout",
-          "timeframe": "15m",
-          "params": {
-            "look": 10,
-            "atr_mult": 1.5,
-            "rr": 4.0,
-            "min_body": 0.5,
-            "htf_ema": 20,
-            "hold": 48,
-            "slope_min": 1.5
-          },
-          "oos_pf": 1.34,
-          "oos_R": 1.92,
-          "n": 695,
-          "risk_weight": 0.55,
-          "avg_R": 0.249
-        },
-        {
-          "name": "breakout",
-          "timeframe": "1h",
-          "params": {
-            "look": 12,
-            "atr_mult": 2.0,
-            "rr": 4.0,
-            "min_body": 0.5,
-            "htf_ema": 20,
-            "hold": 48,
-            "slope_min": 1.5
-          },
-          "oos_pf": 1.51,
-          "oos_R": 0.39,
-          "n": 208,
-          "risk_weight": 0.25,
-          "avg_R": 0.336
-        }
-      ],
-      "weight": 0.0833
+      "weight": 0.1
     },
     "ARB": {
       "cluster": "C",
@@ -619,7 +477,7 @@
           "risk_weight": 0.55
         }
       ],
-      "weight": 0.0833
+      "weight": 0.1
     },
     "PAXG": {
       "cluster": "E",
@@ -649,7 +507,7 @@
           "risk_weight": 0.5
         }
       ],
-      "weight": 0.0833
+      "weight": 0.1
     },
     "AVAX": {
       "cluster": "D",
@@ -679,7 +537,7 @@
           "risk_weight": 0.5
         }
       ],
-      "weight": 0.0833
+      "weight": 0.1
     },
     "TAO": {
       "cluster": "D",
@@ -709,7 +567,7 @@
           "risk_weight": 0.5
         }
       ],
-      "weight": 0.0833
+      "weight": 0.1
     },
     "SUI": {
       "cluster": "D",
@@ -739,7 +597,7 @@
           "risk_weight": 0.5
         }
       ],
-      "weight": 0.0833
+      "weight": 0.1
     }
   },
   "_total_combined_R": 242.0,

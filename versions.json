@@ -1,15 +1,52 @@
 {
   "versions": [
     {
+      "id": "v1.3",
+      "name": "Asymmetric Scale-Out & Toxic Asset Purge",
+      "status": "active",
+      "start": "2026-11-13T17:41:24.535410+07:00",
+      "end": null,
+      "initial_equity": 805.74,
+      "final_equity": null,
+      "released": "2026-11-13T17:41:24.535410+07:00",
+      "closed": null,
+      "summary": "Core execution perfection addressing post-v1.2 empirical findings: delisted high-volatility chop assets (HYPE and PUMP, which drove -$39.28 USD in drag), upgraded Dynamic Scale-Out ratio to 33% Partial Take Profit at +1.0R (leaving 67% runner volume to capture full +2.0R expansions), and deployed an autonomous 45-minute per-coin loss cooldown to prevent revenge-trading during chop cycles.",
+      "verdict": "Active on live production book. 10 curated alpha assets (30 strategy slots), 33/67 asymmetric scale-out profit locking, 45-minute coin loss cooldown, and fee-buffered Breakeven trailing.",
+      "changes": [
+        "Delisted High-Chop Assets: Permanently purged HYPE and PUMP from active universe (isolated -$39.28 USD drag in v1.2 due to 5m wick traps)",
+        "Curated 10-Asset Alpha Universe: Book re-balanced across high-conviction performers (WLD, INJ, ZEC, NEAR, ENA, ARB, PAXG, AVAX, TAO, SUI) across 5 clusters",
+        "Asymmetric Scale-Out Model (33% @ 1.0R): Recalibrated partial profit ratio from 50% to 33.3%, securing fees and risk-free status while allowing a heavy 66.7% runner to capture full +2.0R expansions",
+        "Autonomous Loss Cooldown (45m): Implemented strict per-coin post-stopout timeout (45 minutes) to eliminate rapid consecutive stopouts in erratic consolidation",
+        "Refined Correlation Cluster Weights: Normalized capital allocation across 10 assets (w=0.1000 per asset) with max 3 concurrent positions per cluster"
+      ],
+      "config_snapshot": {
+        "coins": "WLD, INJ, ZEC, NEAR, ENA, ARB, PAXG, AVAX, TAO, SUI",
+        "timeframes": "5m, 15m, 1h",
+        "strategies": "smc_silver_bullet, breakout",
+        "base_risk": "0.45%",
+        "max_open_risk": "6.0%",
+        "leverage": "10x",
+        "slots": 30,
+        "partial_take_profit": "33% @ 1.0R",
+        "breakeven_trigger": "1.2R (+0.15R buffer)",
+        "coin_cooldown": "45 minutes post-SL",
+        "stop_model": "SMC Sweep Wick Low/High & ATR(14)"
+      },
+      "notes": [
+        "Eliminated the two primary profit drains that caused -48% of total v1.2 drawdown.",
+        "Asymmetric 33/67 scale-out restores positive profit asymmetry: full TP gains now outweigh partial-only saves by 3.5:1."
+      ]
+    },
+    {
       "id": "v1.2",
       "name": "Dynamic Scale-Out & Calibrated RR",
-      "status": "active",
+      "status": "superseded",
       "start": "2026-11-13T07:11:17.597974+07:00",
-      "end": null,
+      "end": "2026-11-13T17:41:24.535410+07:00",
       "initial_equity": 832.86,
-      "final_equity": null,
+      "final_equity": 805.74,
       "released": "2026-11-13T07:11:17.597974+07:00",
-      "closed": null,
+      "closed": "2026-11-13T17:41:24.535410+07:00",
       "summary": "Major risk execution refinement introducing Dynamic Scale-Out (50% Partial Take Profit at +1.0R), calibrated RR target (1:2.0 from 1:3.5), positive fee-buffered Breakeven trailing (+0.15R), and strict 1h counter-trend Short filtering to lock profits before intraday mean-reversion pullbacks.",
       "verdict": "Active on live production book. Calibrated 1:2.0 RR target, 50% partial profit lock at 1.0R, fee-buffered Breakeven trailing, and strict 1h multi-timeframe short trend gating.",
       "changes": [

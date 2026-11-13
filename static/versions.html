@@ -195,22 +195,104 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
   </p>
 
   <div class="stats">
-    <div class="stat"><div class="sv">4</div><div class="sl">Releases</div></div>
+    <div class="stat"><div class="sv">5</div><div class="sl">Releases</div></div>
     <div class="stat"><div class="sv">0</div><div class="sl">Live Now</div></div>
-    <div class="stat"><div class="sv">291</div><div class="sl">Trades Logged</div></div>
-    <div class="stat"><div class="sv neg">$-241.21</div><div class="sl">Net PnL</div></div>
+    <div class="stat"><div class="sv">302</div><div class="sl">Trades Logged</div></div>
+    <div class="stat"><div class="sv neg">$-231.57</div><div class="sl">Net PnL</div></div>
   </div>
 </div>
 
 
+<section id="vv1-4">
+  <div class="sh"><span class="sn">v1.4</span><h2>Symmetric Multi-Horizon Stacking & Risk Normalization</h2></div>
+  <div class="vmeta-row">
+    <span class="badge b3">ACTIVE</span>
+    <span class="vdate">Released 2026-11-13T19:58:29.308244+07:00</span>
+  </div>
+  <div class="prose"><p>Core structural architectural upgrade unlocking Multi-Horizon Strategy Stacking across 3 distinct time horizons (Scalp 5m, Intraday 15m, and Swing 1h) simultaneously on each asset without internal hedging conflict. Eliminates risk asymmetry by strictly normalizing risk dollar allocations to an exact 0.45% base risk per trade across all timeframes, fixes timeframe parameter propagation bug in breakout engines, and calibrates breakout take-profit targets from unrealistic 4.0-5.0R down to high-expectancy 1:2.5R.</p></div>
+  <p class="empty">No trades recorded for this release yet.</p>
+</section>
+
 <section id="vv1-3">
   <div class="sh"><span class="sn">v1.3</span><h2>Asymmetric Scale-Out & Toxic Asset Purge</h2></div>
   <div class="vmeta-row">
-    <span class="badge b3">ACTIVE</span>
-    <span class="vdate">Released 2026-11-13T17:41:24.535410+07:00</span>
+    <span class="badge b3">SUPERSEDED</span>
+    <span class="vdate">Released 2026-11-13T17:41:24.535410+07:00 · 13 Nov 18:02 → 13 Nov 19:30 WIB</span>
   </div>
   <div class="prose"><p>Core execution perfection addressing post-v1.2 empirical findings: delisted high-volatility chop assets (HYPE and PUMP, which drove -$39.28 USD in drag), upgraded Dynamic Scale-Out ratio to 33% Partial Take Profit at +1.0R (leaving 67% runner volume to capture full +2.0R expansions), and deployed an autonomous 45-minute per-coin loss cooldown to prevent revenge-trading during chop cycles.</p></div>
-  <p class="empty">No trades recorded for this release yet.</p>
+
+  <div class="quote">Active on live production book. 10 curated alpha assets (30 strategy slots), 33/67 asymmetric scale-out profit locking, 45-minute coin loss cooldown, and fee-buffered Breakeven trailing.<span>Post-mortem</span></div>
+  
+  <div class="metrics">
+    <div class="m"><div class="ml">Total Return</div><div class="mv pos">+1.20%</div></div>
+    <div class="m"><div class="ml">Net PnL</div><div class="mv pos">$+9.64</div></div>
+    <div class="m"><div class="ml">Win Rate</div><div class="mv">63.6%</div></div>
+    <div class="m"><div class="ml">Profit Factor</div><div class="mv pos">1.85</div></div>
+    <div class="m"><div class="ml">Total R</div><div class="mv pos">+9.93R</div></div>
+    <div class="m"><div class="ml">Max Drawdown</div><div class="mv neg">-0.66%</div></div>
+    <div class="m"><div class="ml">Closed Trades</div><div class="mv">11</div></div>
+    <div class="m"><div class="ml">Ending Equity</div><div class="mv">$815.38</div></div>
+  </div>
+  <div class="curvebox">
+    <div class="curvehead">Equity curve · 11 closed trades</div>
+    <svg class="spark" viewBox="0 0 900 120" preserveAspectRatio="none"><polygon points="0,120 0.0,75.5 81.8,94.2 163.6,114.0 245.5,95.9 327.3,48.8 409.1,62.2 490.9,37.1 572.7,17.0 654.5,15.8 736.4,45.7 818.2,19.0 900.0,6.0 900,120" fill="#5eead4" opacity="0.07"/><polyline points="0.0,75.5 81.8,94.2 163.6,114.0 245.5,95.9 327.3,48.8 409.1,62.2 490.9,37.1 572.7,17.0 654.5,15.8 736.4,45.7 818.2,19.0 900.0,6.0" fill="none" stroke="#5eead4" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>
+  </div>
+
+  
+  <div class="grid2">
+    <div class="card">
+      <div class="ct">By Strategy</div>
+      <table class="tbl">
+        <thead><tr><th>Strategy</th><th>Trades</th><th>Win Rate</th><th>R</th><th>PnL</th></tr></thead>
+        <tbody><tr><td class="n">breakout</td><td class="mut">5</td><td class="mut">80.0%</td><td class="pos">+10.18</td><td class="pos">$+12.03</td></tr><tr><td class="n">smc_silver_bullet</td><td class="mut">6</td><td class="mut">50.0%</td><td class="neg">-0.26</td><td class="neg">$-2.39</td></tr></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="ct">By Instrument</div>
+      <table class="tbl">
+        <thead><tr><th>Coin</th><th>Trades</th><th>Win Rate</th><th>R</th><th>PnL</th></tr></thead>
+        <tbody><tr><td class="n">HYPE</td><td class="mut">2</td><td class="mut">100.0%</td><td class="pos">+7.61</td><td class="pos">$+10.02</td></tr><tr><td class="n">INJ</td><td class="mut">1</td><td class="mut">100.0%</td><td class="pos">+4.53</td><td class="pos">$+3.70</td></tr><tr><td class="n">ARB</td><td class="mut">1</td><td class="mut">100.0%</td><td class="pos">+1.68</td><td class="pos">$+2.78</td></tr><tr><td class="n">NEAR</td><td class="mut">2</td><td class="mut">100.0%</td><td class="pos">+1.19</td><td class="pos">$+2.68</td></tr><tr><td class="n">ZEC</td><td class="mut">1</td><td class="mut">100.0%</td><td class="pos">+0.90</td><td class="pos">$+1.81</td></tr><tr><td class="n">WLD</td><td class="mut">1</td><td class="mut">0.0%</td><td class="neg">-1.69</td><td class="neg">$-1.86</td></tr><tr><td class="n">PUMP</td><td class="mut">1</td><td class="mut">0.0%</td><td class="neg">-1.36</td><td class="neg">$-2.60</td></tr><tr><td class="n">ENA</td><td class="mut">1</td><td class="mut">0.0%</td><td class="neg">-1.43</td><td class="neg">$-2.74</td></tr><tr><td class="n">TAO</td><td class="mut">1</td><td class="mut">0.0%</td><td class="neg">-1.49</td><td class="neg">$-4.15</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  
+  <div class="factrow">
+    <span>Avg win <b class="pos">$+3.00</b></span>
+    <span>Avg loss <b class="neg">$-2.84</b></span>
+    <span>Best <b class="pos">HYPE $+6.54</b></span>
+    <span>Worst <b class="neg">TAO $-4.15</b></span>
+    <span>Exits <b>SL 5 · TP 5 · TIME 1</b></span>
+    <span>Span <b>1.5h</b></span>
+  </div>
+  
+  <div class="cfgsnap">
+    <div class="ct">Configuration</div>
+    <div class="cfgrow">
+      <span>Coins <b>W, L, D, ,,  , I, N, J, ,,  , Z, E, C, ,,  , N, E, A, R, ,,  , E, N, A, ,,  , A, R, B, ,,  , P, A, X, G, ,,  , A, V, A, X, ,,  , T, A, O, ,,  , S, U, I</b></span>
+      <span>Timeframes <b>5, m, ,,  , 1, 5, m, ,,  , 1, h</b></span>
+      <span>Strategies <b>s, m, c, _, s, i, l, v, e, r, _, b, u, l, l, e, t, ,,  , b, r, e, a, k, o, u, t</b></span>
+      <span>Risk / trade <b>None%</b></span>
+      <span>Max open risk <b>None%</b></span>
+      <span>Leverage <b>10xx</b></span>
+      <span>Slots <b>None</b></span>
+      <span>Stop model <b>None</b></span>
+    </div>
+  </div>
+    <div class="changelog">
+    <div class="ct">Changes in this release</div>
+    <ul><li>Delisted High-Chop Assets: Permanently purged HYPE and PUMP from active universe (isolated -$39.28 USD drag in v1.2 due to 5m wick traps)</li><li>Curated 10-Asset Alpha Universe: Book re-balanced across high-conviction performers (WLD, INJ, ZEC, NEAR, ENA, ARB, PAXG, AVAX, TAO, SUI) across 5 clusters</li><li>Asymmetric Scale-Out Model (33% @ 1.0R): Recalibrated partial profit ratio from 50% to 33.3%, securing fees and risk-free status while allowing a heavy 66.7% runner to capture full +2.0R expansions</li><li>Autonomous Loss Cooldown (45m): Implemented strict per-coin post-stopout timeout (45 minutes) to eliminate rapid consecutive stopouts in erratic consolidation</li><li>Refined Correlation Cluster Weights: Normalized capital allocation across 10 assets (w=0.1000 per asset) with max 3 concurrent positions per cluster</li></ul>
+  </div>
+  
+  <details class="tradelog">
+    <summary>Full trade ledger — 11 closed positions</summary>
+    <div class="scroll">
+      <table class="tbl">
+        <thead><tr><th>Time (WIB)</th><th>Coin</th><th>Side</th><th>Strategy</th><th>Exit</th>
+        <th>Entry</th><th>Exit</th><th>R</th><th>PnL</th><th>Equity</th></tr></thead>
+        <tbody><tr><td class="mut">13 Nov 19:30</td><td class="n">ZEC</td><td class="pos">LONG</td><td class="mut">smc_silver_bullet</td><td class="mut">TIME</td><td>947.49</td><td>963.575</td><td class="pos">+0.90</td><td class="pos">$+1.81</td><td class="mut">$824.22</td></tr><tr><td class="mut">13 Nov 19:26</td><td class="n">INJ</td><td class="pos">LONG</td><td class="mut">breakout</td><td class="mut">TP</td><td>7.6272</td><td>7.85541</td><td class="pos">+4.53</td><td class="pos">$+3.70</td><td class="mut">$822.42</td></tr><tr><td class="mut">13 Nov 19:24</td><td class="n">TAO</td><td class="pos">LONG</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>212.955</td><td>211.751</td><td class="neg">-1.49</td><td class="neg">$-4.15</td><td class="mut">$818.72</td></tr><tr><td class="mut">13 Nov 19:12</td><td class="n">NEAR</td><td class="pos">LONG</td><td class="mut">breakout</td><td class="mut">SL</td><td>3.533</td><td>3.53657</td><td class="neg">-0.27</td><td class="pos">$+0.17</td><td class="mut">$822.87</td></tr><tr><td class="mut">13 Nov 19:05</td><td class="n">ARB</td><td class="pos">LONG</td><td class="mut">smc_silver_bullet</td><td class="mut">TP</td><td>0.14513</td><td>0.147685</td><td class="pos">+1.68</td><td class="pos">$+2.78</td><td class="mut">$822.71</td></tr><tr><td class="mut">13 Nov 19:03</td><td class="n">HYPE</td><td class="pos">LONG</td><td class="mut">breakout</td><td class="mut">TP</td><td>72.631</td><td>74.0549</td><td class="pos">+4.28</td><td class="pos">$+3.48</td><td class="mut">$819.93</td></tr><tr><td class="mut">13 Nov 18:27</td><td class="n">WLD</td><td class="pos">LONG</td><td class="mut">breakout</td><td class="mut">SL</td><td>0.30046</td><td>0.299239</td><td class="neg">-1.69</td><td class="neg">$-1.86</td><td class="mut">$816.08</td></tr><tr><td class="mut">13 Nov 18:21</td><td class="n">HYPE</td><td class="pos">LONG</td><td class="mut">breakout</td><td class="mut">TP</td><td>72.38</td><td>73.6036</td><td class="pos">+3.33</td><td class="pos">$+6.54</td><td class="mut">$817.94</td></tr><tr><td class="mut">13 Nov 18:03</td><td class="n">NEAR</td><td class="pos">LONG</td><td class="mut">smc_silver_bullet</td><td class="mut">TP</td><td>3.4844</td><td>3.52055</td><td class="pos">+1.46</td><td class="pos">$+2.51</td><td class="mut">$810.76</td></tr><tr><td class="mut">13 Nov 18:03</td><td class="n">ENA</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>0.1375</td><td>0.138392</td><td class="neg">-1.43</td><td class="neg">$-2.74</td><td class="mut">$808.25</td></tr><tr><td class="mut">13 Nov 18:02</td><td class="n">PUMP</td><td class="neg">SHORT</td><td class="mut">smc_silver_bullet</td><td class="mut">SL</td><td>0.00341</td><td>0.0034366</td><td class="neg">-1.36</td><td class="neg">$-2.60</td><td class="mut">$810.98</td></tr></tbody>
+      </table>
+    </div>
+  </details>
 </section>
 
 <section id="vv1-2">

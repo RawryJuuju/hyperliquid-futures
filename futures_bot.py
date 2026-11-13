@@ -362,6 +362,8 @@ def sig_smc(coin, P):
         return None, "ind"
     aggressive = P.get("aggressive", True)
     sig, reason = evaluate_smc_scalp_signal(c5, c15, c1h, coin, a, aggressive=aggressive)
+    if sig:
+        sig["timeframe"] = tf
     return sig, reason
 
 
@@ -386,7 +388,7 @@ def current_risk_pct(state, cfg):
     return base
 
 
-def can_open(state, coin, cfg, new_risk_pct):
+def can_open(state, coin, cfg, new_risk_pct, sig_dir=None):
     rm = cfg["_risk_model"]
     open_pos = state["open"]
 
@@ -413,14 +415,22 @@ def can_open(state, coin, cfg, new_risk_pct):
     if len(same) >= cfg["_correlation_clusters"]["_max_per_cluster"]:
         return False, f"cluster {cluster} full ({len(same)}: {','.join(same)})"
 
-    # BLOCK: koin sama + timeframe sama sudah ada posisi (cegah hedge sendiri)
-    # Multi-TF: 5m dan 1h di coin sama BOLEH jalan bersamaan (beda horizon)
+    # BLOCK 1: koin sama + timeframe sama sudah ada posisi (cegah hedge sendiri di TF sama)
+    # Multi-TF: 5m, 15m, dan 1h di coin sama BOLEH jalan bersamaan (beda horizon)
     new_tf = (state.get("_pending_tf") or "5m")
     for slot in open_pos:
         oc = open_pos[slot].get("coin") or slot.split(":")[0]
         otf = open_pos[slot].get("timeframe", "5m")
         if oc == coin and otf == new_tf:
             return False, f"{coin} {new_tf} sudah ada posisi ({open_pos[slot]['dir']} @ {slot})"
+
+    # BLOCK 2: Anti-Conflict Directional Guard
+    # Mencegah posisi berlawanan di koin yang sama (misal 1h Swing LONG tapi 5m Scalp SHORT)
+    if sig_dir:
+        for slot in open_pos:
+            oc = open_pos[slot].get("coin") or slot.split(":")[0]
+            if oc == coin and open_pos[slot].get("dir") != sig_dir:
+                return False, f"{coin} directional conflict ({open_pos[slot]['dir']} @ {slot} vs new {sig_dir})"
 
     # per-coin cooldown (setelah loss) — skip kalau dinonaktifkan
     cd_min = rm.get("coin_cooldown_min", 0)
@@ -672,15 +682,18 @@ def main():
                     fn = ENGINES.get(strat["name"])
                     if not fn:
                         continue
-                    sig, reason = fn(coin, strat["params"])
+                    # Pass params with explicit timeframe injected
+                    engine_params = {**strat["params"], "timeframe": tf}
+                    sig, reason = fn(coin, engine_params)
                     if not sig:
                         continue
 
-                    # risk = base * coin weight * TF risk weight
-                    tf_w = strat.get("risk_weight", 1.0)
-                    weighted = base_risk * cc["weight"] / max_w * tf_w * 3.0
+                    # RISK NORMALIZATION (v1.4):
+                    # Each position risks exactly base_risk (0.45% of equity)
+                    # Eliminates risk disparity where a single loss wiped out 5 wins.
+                    weighted = base_risk
                     state["_pending_tf"] = tf
-                    ok, why = can_open(state, coin, cfg, weighted)
+                    ok, why = can_open(state, coin, cfg, weighted, sig_dir=sig["dir"])
                     state.pop("_pending_tf", None)
                     if not ok:
                         log(f"  skip {slot}: {why}")

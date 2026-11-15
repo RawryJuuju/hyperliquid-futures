@@ -21,8 +21,10 @@
 This repository hosts an autonomous, quantitative trading system operating 24/7 on Hyperliquid Layer-1 perpetual contracts. Built with institutional risk boundaries, it pairs systematic trend expansion with intraday Smart Money Concepts (SMC/ICT), executing bracket orders directly against on-chain liquidity.
 
 ### Core Capabilities
-- **Dual-Engine Execution**: Multi-timeframe Breakout (5m / 15m / 1h) combined with SMC Silver Bullet (Fair Value Gaps, Liquidity Sweeps, and Displacement filters).
-- **Dynamic Scale-Out**: Automated 50% partial profit locking at +1.0R with positive fee-buffered Breakeven trailing (+0.15R) to protect floating returns.
+- **Multi-Engine Execution**: SMC Silver Bullet (5m Fair Value Gaps, Liquidity Sweeps), Multi-Timeframe Breakout (15m/1h), and Funding Rate Arbitrage (1h delta-neutral on majors).
+- **Post-Only Limit Order Execution (v1.6)**: Guaranteed maker rebates (0.002% vs 0.02% taker) with automatic fallback to market orders after 2 bars.
+- **Volatility-Targeted Position Sizing (v1.6)**: Dynamic risk scaling inversely to realized ATR volatility targeting 2% daily portfolio vol.
+- **Dynamic Scale-Out**: Automated 33% partial profit locking at +1.0R with positive fee-buffered Breakeven trailing (+0.15R) to protect floating returns.
 - **Institutional Risk Safeguards**: Aggregate open risk caps, margin exhaustion throttles, drawdown dampeners, and correlation-cluster concurrency limits.
 - **Full Operational Web Stack**: Ultra-low-latency FastAPI web terminal with TradingView charts, WIB-normalized PnL calendar, and an immutable cryptographic version release registry.
 
@@ -53,24 +55,25 @@ This repository hosts an autonomous, quantitative trading system operating 24/7 
 
 ---
 
-## 🪙 Asset Universe & Correlation Clusters
+## 🪙 Asset Universe & Correlation Clusters (v1.6)
 
-The book currently trades **10 high-conviction alpha assets** across **30 active strategy slots**, partitioned into 5 independent correlation clusters. Each asset operates **3 synchronized time horizons simultaneously**:
+The book currently trades **13 assets** across **33 active strategy slots**, partitioned into **6 independent correlation clusters**. 10 assets operate **3 synchronized time horizons simultaneously** (Scalp 5m, Intraday 15m, Swing 1h). 3 major assets (BTC, ETH, SOL) run **Funding Rate Arbitrage only** (1h delta-neutral perp positions).
 
-| Cluster | Category | Assets | Active Multi-Horizon Strategy Stacks |
+| Cluster | Category | Assets | Active Strategy Stacks |
 |---|---|---|---|
 | **Cluster A** | Ecosystem Hyperliquid | `ENA` | 5m SMC Scalp + 15m Intraday Breakout + 1h Swing Breakout |
 | **Cluster B** | Alt Momentum | `WLD`, `NEAR` | 5m SMC Scalp + 15m Intraday Breakout + 1h Swing Breakout |
 | **Cluster C** | Layer 2 & High-Beta DeFi | `INJ`, `ZEC`, `ARB` | 5m SMC Scalp + 15m Intraday Breakout + 1h Swing Breakout |
 | **Cluster D** | Alternate L1 / AI Narrative | `AVAX`, `TAO`, `SUI` | 5m SMC Scalp + 15m Intraday Breakout + 1h Swing Breakout |
 | **Cluster E** | Macro Commodities & Metals | `PAXG` (Paxos Gold) | 5m SMC Scalp + 15m Intraday Breakout + 1h Swing Breakout |
+| **Cluster F** | **Majors - Funding Arb Only** | `BTC`, `ETH`, `SOL` | **1h Funding Rate Arbitrage (Delta-Neutral)** |
 
 ---
 
-## 🛡️ Risk Management Parameters (v1.5 Release)
+## 🛡️ Risk Management Parameters (v1.6 Release)
 
 ```yaml
-Base Risk per Trade: 0.45% of total equity (Strictly Normalized Dollar Risk)
+Base Risk per Trade: 0.45% of total equity (Vol-Adjusted: 0.5x-2.0x scaling)
 Aggregate Open Risk Ceiling: 6.00%
 Maximum Concurrent Positions: 20
 Maximum Margin Utilization: 75% of equity
@@ -85,6 +88,9 @@ Runner Position: 67% retained to run for full +2.0R / +2.5R expansion
 Breakeven Trailing: Shift SL to Entry + 0.15R positive fee buffer at +1.2R MFE
 Autonomous Loss Cooldown: 45 minutes timeout per coin following a stopout
 Limit Order Engine: FVG/Sweep zone entries (0.15-0.25R improvement over market)
+Post-Only Limit Orders: True (Maker rebate 0.002% vs Taker 0.02% = 10x fee savings)
+Volatility Targeting: 2% daily portfolio vol via ATR(14), capped 0.5x-2.0x risk scale
+Funding Rate Arbitrage: Delta-neutral perp on BTC/ETH/SOL @ |funding| > 0.01%/8h (13.7% APR)
 ```
 
 ---
@@ -166,7 +172,8 @@ Access the local monitoring dashboard at `http://localhost:8899`.
 
 ## 📜 Release Cadence
 
-- **`v1.5` (Current Active)**: Regime Detection (BULL/BEAR/CHOP via EMA alignment), Limit Order Engine (FVG/Sweep/Breakout levels with 0.15-0.25R improvement), Variable Leverage per Horizon (Scalp 15x, Intraday 10x, Swing 5x), full multi-horizon stacking across 10 assets.
+- **`v1.6` (Current Active)**: Post-Only Limit Orders (maker rebate 0.002%), Volatility-Targeted Sizing (2% daily vol), Funding Rate Arbitrage on BTC/ETH/SOL (delta-neutral, 13.7% APR), Universe expansion to 13 assets (Cluster F), 33 strategy slots.
+- **`v1.5` (Superseded)**: Regime Detection (BULL/BEAR/CHOP via EMA alignment), Limit Order Engine (FVG/Sweep/Breakout levels with 0.15-0.25R improvement), Variable Leverage per Horizon (Scalp 15x, Intraday 10x, Swing 5x), full multi-horizon stacking across 10 assets.
 - **`v1.4` (Superseded)**: Symmetric Multi-Horizon Stacking (Scalp 5m, Intraday 15m, Swing 1h) across all 10 assets, strict dollar risk normalization (0.45% flat), anti-hedging directional guard, and calibrated 1:2.5R breakout targets.
 - **`v1.3` (Superseded)**: Delisted toxic chop assets (`HYPE`, `PUMP`), upgraded scale-out ratio to 33% @ 1.0R (67% runner), deployed 45m loss cooldown, and normalized 10-asset universe.
 - **`v1.2` (Superseded)**: Dynamic Scale-Out (50% partial at 1.0R), calibrated RR 1:2.0, positive fee-buffered Breakeven trailing, and strict 1h short filtering.

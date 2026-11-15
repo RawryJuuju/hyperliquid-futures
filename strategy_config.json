@@ -36,11 +36,16 @@
       "SUI",
       "TAO"
     ],
-    "_max_per_cluster": 3,
-    "_note": "A: corr 0.89-0.95 (sangat tinggi). B: 0.76-0.88. C: ZEC negatif -0.73 s/d -0.82 (diversifier). D: SOL netral.",
     "E": [
       "PAXG"
-    ]
+    ],
+    "F": [
+      "BTC",
+      "ETH",
+      "SOL"
+    ],
+    "_max_per_cluster": 3,
+    "_note": "A: corr 0.89-0.95 (sangat tinggi). B: 0.76-0.88. C: ZEC negatif -0.73 s/d -0.82 (diversifier). D: SOL netral. E: PAXG gold. F: Majors - funding arb only, delta-neutral exposure."
   },
   "_exit_management": {
     "_status": "OPTIONAL \u2014 default OFF. Data 120d: BE & partial MERUSAK edge (lihat _backtest).",
@@ -533,6 +538,51 @@
             "htf_ema": 20,
             "hold": 48,
             "slope_min": 1.5
+          },
+          "risk_weight": 1.0
+        }
+      ],
+      "weight": 0.1
+    },
+    "BTC": {
+      "cluster": "F",
+      "strategies": [
+        {
+          "name": "funding_arb",
+          "timeframe": "1h",
+          "params": {
+            "min_funding_8h_pct": 0.01,
+            "max_hold_hours": 48
+          },
+          "risk_weight": 1.0
+        }
+      ],
+      "weight": 0.1
+    },
+    "ETH": {
+      "cluster": "F",
+      "strategies": [
+        {
+          "name": "funding_arb",
+          "timeframe": "1h",
+          "params": {
+            "min_funding_8h_pct": 0.01,
+            "max_hold_hours": 48
+          },
+          "risk_weight": 1.0
+        }
+      ],
+      "weight": 0.1
+    },
+    "SOL": {
+      "cluster": "F",
+      "strategies": [
+        {
+          "name": "funding_arb",
+          "timeframe": "1h",
+          "params": {
+            "min_funding_8h_pct": 0.01,
+            "max_hold_hours": 48
           },
           "risk_weight": 1.0
         }

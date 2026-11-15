@@ -44,6 +44,16 @@ LEVERAGE_MAP = {
 }
 LEVERAGE = 10  # default fallback
 
+# Variable Leverage per Horizon (v1.5)
+# Scalp (5m): higher leverage for quick moves
+# Intraday (15m): medium leverage
+# Swing (1h): lower leverage for wider stops
+HORIZON_LEVERAGE = {
+    "5m": {"WLD": 15, "ZEC": 15, "ENA": 15, "NEAR": 15, "ARB": 15, "INJ": 5, "PAXG": 10, "AVAX": 15, "TAO": 15, "SUI": 15},
+    "15m": {"WLD": 10, "ZEC": 10, "ENA": 10, "NEAR": 10, "ARB": 10, "INJ": 5, "PAXG": 8, "AVAX": 10, "TAO": 10, "SUI": 10},
+    "1h": {"WLD": 5, "ZEC": 5, "ENA": 5, "NEAR": 5, "ARB": 5, "INJ": 5, "PAXG": 5, "AVAX": 5, "TAO": 5, "SUI": 5},
+}
+
 MAX_RISK_PCT_PRICE = 0.035      # SL max 3.5% (ATR kegedean -> skip)
 MIN_RISK_PCT_PRICE = 0.0015     # SL min 0.15% (sanity only, bukan filter fee)
 MAX_TOTAL_MARGIN_PCT = 0.75     # total margin semua posisi max 75% equity (aggressive mode)
@@ -83,7 +93,14 @@ def candles(coin, interval, limit):
     ttl = 20 if interval == "5m" else 90
     if key in _CACHE and now - _CACHE[key][0] < ttl:
         return _CACHE[key][1]
-    step = {"5m": 300_000, "15m": 900_000, "1h": 3_600_000}[interval]
+    step = {
+        "5m": 300_000,
+        "15m": 900_000,
+        "30m": 1_800_000,
+        "1h": 3_600_000,
+        "4h": 14_400_000,
+        "1d": 86_400_000
+    }[interval]
     start = int(time.time() * 1000) - limit * step
     try:
         raw = post_info({"type": "candleSnapshot",
@@ -188,12 +205,13 @@ def log_equity(s):
 # ============================================================
 def _common(coin, tf="5m"):
     """Fetch candles untuk TF eksekusi + 2 TF di atasnya sebagai filter tren."""
-    TF_UP = {"5m": ("15m", "1h"), "15m": ("1h", "4h"), "1h": ("4h", "1d")}
+    # Hyperliquid supported: 5m, 15m, 30m, 1h, 4h, 1d (but 4h seems broken)
+    TF_UP = {"5m": ("15m", "1h"), "15m": ("1h", "1h"), "1h": ("1h", "1h")}
     up1, up2 = TF_UP.get(tf, ("15m", "1h"))
-    LIM = {"5m": 120, "15m": 120, "1h": 120, "4h": 100, "1d": 80}
+    LIM = {"5m": 120, "15m": 120, "1h": 120, "30m": 100, "1d": 80}
     ce = candles(coin, tf, LIM.get(tf, 120))
-    c1 = candles(coin, up1, LIM.get(up1, 100))
-    c2 = candles(coin, up2, LIM.get(up2, 80))
+    c1 = candles(coin, up1, LIM.get(up1, 120))
+    c2 = candles(coin, up2, LIM.get(up2, 120))
     if len(ce) < 60 or len(c1) < 25 or len(c2) < 25:
         return None
     return ce, c1, c2
@@ -376,6 +394,118 @@ ENGINES = {
 
 
 # ============================================================
+#  REGIME DETECTION (v1.5)
+# ============================================================
+def detect_regime(coin, c5, c15, c1h):
+    """
+    Multi-timeframe regime classification:
+    - BULL: 1h uptrend (EMA20 > EMA50, price > EMA20) + 15m confirmation
+    - BEAR: 1h downtrend (EMA20 < EMA50, price < EMA20) + 15m confirmation
+    - CHOP: Conflicting signals or flat EMAs
+    Returns: ("BULL"|"BEAR"|"CHOP", strength 0-1, bias "LONG"|"SHORT"|"NEUTRAL")
+    """
+    try:
+        closes_1h = [x["c"] for x in c1h[:-1]]
+        closes_15 = [x["c"] for x in c15[:-1]]
+        closes_5 = [x["c"] for x in c5[:-1]]
+
+        ema20_1h = ema(closes_1h, 20)
+        ema50_1h = ema(closes_1h, 50)
+        ema20_15 = ema(closes_15, 20)
+        ema50_15 = ema(closes_15, 50)
+
+        if None in (ema20_1h, ema50_1h, ema20_15, ema50_15):
+            return "CHOP", 0.0, "NEUTRAL"
+
+        price = c5[-2]["c"]
+
+        # 1h trend
+        trend_1h = ema20_1h - ema50_1h
+        price_vs_ema20_1h = price - ema20_1h
+
+        # 15m confirmation
+        trend_15 = ema20_15 - ema50_15
+        price_vs_ema20_15 = c15[-2]["c"] - ema20_15
+
+        # ATR for volatility context
+        atr_1h = atr(c1h[:-1], 14)
+        atr_5 = atr(c5[:-1], 14)
+
+        if atr_1h is None or atr_5 is None:
+            return "CHOP", 0.0, "NEUTRAL"
+
+        # Strength based on trend separation normalized by ATR
+        strength_1h = abs(trend_1h) / atr_1h if atr_1h > 0 else 0
+        strength_15 = abs(trend_15) / atr_1h if atr_1h > 0 else 0  # normalize to 1h ATR
+
+        # BULL: both timeframes aligned bullish
+        if trend_1h > 0 and price_vs_ema20_1h > 0 and trend_15 > 0 and price_vs_ema20_15 > 0:
+            strength = min(1.0, (strength_1h + strength_15) / 4)
+            return "BULL", strength, "LONG"
+
+        # BEAR: both timeframes aligned bearish
+        if trend_1h < 0 and price_vs_ema20_1h < 0 and trend_15 < 0 and price_vs_ema20_15 < 0:
+            strength = min(1.0, (strength_1h + strength_15) / 4)
+            return "BEAR", strength, "SHORT"
+
+        return "CHOP", 0.0, "NEUTRAL"
+
+    except Exception:
+        return "CHOP", 0.0, "NEUTRAL"
+
+
+def get_limit_entry(coin, sig, c5, c15, c1h, regime_bias):
+    """
+    Calculate limit entry price at key levels (FVG, Order Block, Sweep zone)
+    Returns: (limit_price, entry_type) or (None, "market") if no good level
+    """
+    try:
+        direction = sig["dir"]
+        if direction != regime_bias and regime_bias != "NEUTRAL":
+            # Against regime - be more aggressive, use market
+            return None, "market"
+
+        # For SMC signals, we can use the FVG or sweep level as limit
+        if sig["strategy"] == "smc_silver_bullet":
+            # The SMC engine already identifies sweep + FVG
+            # We can place limit at the FVG midpoint or sweep level
+            entry = sig["entry"]
+            sl = sig["sl"]
+            risk = abs(entry - sl)
+
+            # Limit at 0.25R improvement from market
+            if direction == "LONG":
+                limit = entry - risk * 0.25
+            else:
+                limit = entry + risk * 0.25
+
+            # Only use limit if it's reasonable (within 0.5% of market)
+            if abs(limit - entry) / entry < 0.005:
+                return round(limit, 8), "limit_fvg"
+
+        # For breakout, use the breakout level as limit (slightly better)
+        elif sig["strategy"] == "breakout":
+            entry = sig["entry"]
+            sl = sig["sl"]
+            risk = abs(entry - sl)
+
+            # Limit at breakout level (already the close price)
+            # Can improve by 0.15R
+            if direction == "LONG":
+                limit = entry - risk * 0.15
+            else:
+                limit = entry + risk * 0.15
+
+            if abs(limit - entry) / entry < 0.005:
+                return round(limit, 8), "limit_breakout"
+
+        return None, "market"
+
+    except Exception:
+        return None, "market"
+
+
+# ============================================================
 #  MONEY MANAGEMENT
 # ============================================================
 def current_risk_pct(state, cfg):
@@ -457,7 +587,9 @@ def can_open(state, coin, cfg, new_risk_pct, sig_dir=None):
 
 def size_position(state, sig, risk_pct_equity):
     equity = state["equity"]
-    lev = LEVERAGE_MAP.get(sig["coin"], LEVERAGE)
+    coin = sig["coin"]
+    tf = sig.get("timeframe", "5m")
+    lev = HORIZON_LEVERAGE.get(tf, {}).get(coin, LEVERAGE_MAP.get(coin, LEVERAGE))
     risk_usd = equity * risk_pct_equity / 100
     notional = risk_usd / (sig["risk_pct"] / 100)
     margin = notional / lev
@@ -688,6 +820,28 @@ def main():
                     if not sig:
                         continue
 
+                    # REGIME DETECTION (v1.5): Get market regime for directional bias
+                    c5 = candles(coin, "5m", 100)
+                    c15 = candles(coin, "15m", 100)
+                    c1h = candles(coin, "1h", 100)
+                    regime, regime_strength, regime_bias = detect_regime(coin, c5, c15, c1h)
+                    
+                    # LIMIT ORDER ENGINE (v1.5): Try to get better entry at key levels
+                    limit_price, entry_type = get_limit_entry(coin, sig, c5, c15, c1h, regime_bias)
+                    if limit_price:
+                        sig["entry"] = limit_price
+                        sig["entry_type"] = entry_type
+                        # Recalculate SL/TP based on new entry
+                        risk = abs(limit_price - sig["sl"])
+                        if sig["dir"] == "LONG":
+                            sig["tp"] = round(limit_price + risk * sig["rr"], 8)
+                            sig["sl"] = round(limit_price - risk, 8)
+                        else:
+                            sig["tp"] = round(limit_price - risk * sig["rr"], 8)
+                            sig["sl"] = round(limit_price + risk, 8)
+                        sig["risk_px"] = round(risk, 8)
+                        sig["risk_pct"] = round(risk / limit_price * 100, 3)
+
                     # RISK NORMALIZATION (v1.4):
                     # Each position risks exactly base_risk (0.45% of equity)
                     # Eliminates risk disparity where a single loss wiped out 5 wins.
@@ -710,11 +864,12 @@ def main():
 
                     log(f"🔔 {slot} {sig['dir']} risk ${sizing['risk_usd']:.2f} "
                         f"({sizing['risk_pct_equity']:.2f}% eq)")
-                    tg(f"🔔 *SIGNAL* {coin} {sig['dir']} ({sig['strategy']} {tf})\n"
+                    tg(f"🔔 *SIGNAL* {coin} {sig['dir']} ({sig['strategy']} {tf}) {sig.get('entry_type', 'market')}\n"
+                       f"• Regime: {regime} ({regime_strength:.0%}) | Bias: {regime_bias}\n"
                        f"• Entry: ${sig['entry']:,.6g}\n"
                        f"• SL: ${sig['sl']:,.6g} (-{sig['risk_pct']}%)\n"
                        f"• TP: ${sig['tp']:,.6g} (RR 1:{sig['rr']})\n"
-                       f"• Risk: ${sizing['risk_usd']:.2f} ({sizing['risk_pct_equity']:.2f}% equity)\n"
+                       f"• Risk: ${sizing['risk_usd']:.2f} ({sizing['risk_pct_equity']:.2f}% equity) | Lev: {sizing['leverage']}x\n"
                        f"• Equity: ${state['equity']:.2f}")
 
             # LATENCY MONITOR: execution reality test -> delay 1 bar = -44% edge

@@ -67,7 +67,7 @@ The book currently trades **10 high-conviction alpha assets** across **30 active
 
 ---
 
-## 🛡️ Risk Management Parameters (v1.4 Release)
+## 🛡️ Risk Management Parameters (v1.5 Release)
 
 ```yaml
 Base Risk per Trade: 0.45% of total equity (Strictly Normalized Dollar Risk)
@@ -78,10 +78,13 @@ Correlation Cluster Max: 3 concurrent positions per cluster
 Risk-to-Reward Model: Calibrated 1:2.0 target (SMC Scalp) / 1:2.5 target (Breakout)
 Multi-Horizon Stacking: Scalp (5m), Intraday (15m), Swing (1h) concurrent entries enabled
 Anti-Hedging Guard: Prohibits opposite-direction positions on the same asset
+Variable Leverage by Horizon: Scalp 15x | Intraday 10x | Swing 5x (INJ capped 5x)
+Regime Detection: EMA20/50 alignment on 1h + 15m (BULL/BEAR/CHOP)
 Dynamic Partial Take Profit: 33% closed at +1.0R (Realized Cashflow Lock)
 Runner Position: 67% retained to run for full +2.0R / +2.5R expansion
 Breakeven Trailing: Shift SL to Entry + 0.15R positive fee buffer at +1.2R MFE
 Autonomous Loss Cooldown: 45 minutes timeout per coin following a stopout
+Limit Order Engine: FVG/Sweep zone entries (0.15-0.25R improvement over market)
 ```
 
 ---
@@ -163,7 +166,8 @@ Access the local monitoring dashboard at `http://localhost:8899`.
 
 ## 📜 Release Cadence
 
-- **`v1.4` (Current Active)**: Symmetric Multi-Horizon Stacking (Scalp 5m, Intraday 15m, Swing 1h) across all 10 assets, strict dollar risk normalization (0.45% flat), anti-hedging directional guard, and calibrated 1:2.5R breakout targets.
+- **`v1.5` (Current Active)**: Regime Detection (BULL/BEAR/CHOP via EMA alignment), Limit Order Engine (FVG/Sweep/Breakout levels with 0.15-0.25R improvement), Variable Leverage per Horizon (Scalp 15x, Intraday 10x, Swing 5x), full multi-horizon stacking across 10 assets.
+- **`v1.4` (Superseded)**: Symmetric Multi-Horizon Stacking (Scalp 5m, Intraday 15m, Swing 1h) across all 10 assets, strict dollar risk normalization (0.45% flat), anti-hedging directional guard, and calibrated 1:2.5R breakout targets.
 - **`v1.3` (Superseded)**: Delisted toxic chop assets (`HYPE`, `PUMP`), upgraded scale-out ratio to 33% @ 1.0R (67% runner), deployed 45m loss cooldown, and normalized 10-asset universe.
 - **`v1.2` (Superseded)**: Dynamic Scale-Out (50% partial at 1.0R), calibrated RR 1:2.0, positive fee-buffered Breakeven trailing, and strict 1h short filtering.
 - **`v1.1` (Superseded)**: SMC/ICT Silver Bullet integration, Killzone time filtering, and universe expansion to 12 assets (including Gold PAXG).

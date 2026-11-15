@@ -1,0 +1,42 @@
+Fetching trades existing 9 coins...
+  PUMP   232 trades
+  WLD    196 trades
+  ZEC    356 trades
+  ENA    210 trades
+  NEAR   317 trades
+  HYPE   195 trades
+  ETH    54 trades
+  SOL    35 trades
+  XRP    48 trades
+
+Fetching candidate trades...
+  ARB     46 trades
+  ZRO     155 trades
+  INJ     148 trades
+  CRV     170 trades
+  UNI     121 trades
+  LINK    47 trades
+  AAVE    67 trades
+  STRK    157 trades
+  kPEPE   56 trades
+
+====================================================================================================
+KORELASI KANDIDAT vs PORTFOLIO EXISTING (max abs corr)
+====================================================================================================
+CAND      max|corr|vs coin     avg|corr|  OOS_PF   OOS_R     VERDICT
+----------------------------------------------------------------------------------------------------
+ARB            0.72ETH              0.27    1.62    +9.0          OK
+ZRO            0.87PUMP             0.53    1.79   +33.5TERLALU MIRIP
+INJ            0.67ZEC              0.29    1.74   +31.2          OK
+CRV            0.92SOL              0.47    1.31   +19.7TERLALU MIRIP
+UNI            0.85SOL              0.45    1.43   +15.2TERLALU MIRIP
+LINK           0.80SOL              0.41    2.11   +18.9TERLALU MIRIP
+AAVE           0.83WLD              0.49    1.44   +10.1TERLALU MIRIP
+STRK           0.88SOL              0.46    1.83   +31.0TERLALU MIRIP
+kPEPE          0.65ZEC              0.32    1.50   +10.2          OK
+----------------------------------------------------------------------------------------------------
+
+=== REKOMENDASI (corr < 0.75 + PF >= 1.4) ===
+  INJ      corr=0.67 (vs ZEC)  PF=1.74  R=+31.2  -> OK
+  kPEPE    corr=0.65 (vs ZEC)  PF=1.50  R=+10.2  -> OK
+  ARB      corr=0.72 (vs ETH)  PF=1.62  R=+9.0  -> OK

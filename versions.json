@@ -1,15 +1,58 @@
 {
   "versions": [
     {
-      "id": "v1.4",
-      "name": "Symmetric Multi-Horizon Stacking & Risk Normalization",
+      "id": "v1.5",
+      "name": "Regime Detection + Limit Order Engine + Variable Leverage",
       "status": "active",
-      "start": "2026-11-13T19:58:29.308244+07:00",
+      "start": "2026-11-15T15:50:43.398131+07:00",
       "end": null,
       "initial_equity": 812.5,
       "final_equity": null,
-      "released": "2026-11-13T19:58:29.308244+07:00",
+      "released": "2026-11-15T15:50:43.398131+07:00",
       "closed": null,
+      "summary": "Complete architectural overhaul introducing institutional-grade regime detection for macro directional bias, limit order engine at key structural levels (FVG, Order Block, Breakout), and variable leverage per horizon (Scalp 15x, Intraday 10x, Swing 5x). Bot now reads market regime (BULL/BEAR/CHOP) across 1h/15m timeframes and biases entries accordingly. Limit orders placed at FVG/sweep zones for 0.15-0.25R improvement over market. Leverage scales with horizon duration: aggressive 15x for 5m scalp, moderate 10x for 15m intraday, conservative 5x for 1h swing.",
+      "verdict": "Active on live production. All 10 assets running 3-tier horizon with regime-aware directional bias, limit order execution, and variable leverage.",
+      "changes": [
+        "Multi-Timeframe Regime Detection: Classifies market as BULL (1h+15m aligned uptrend), BEAR (1h+15m aligned downtrend), or CHOP (conflicting/flat). Signals against regime are executed as market orders for speed; with-regime signals use limit orders for better fill",
+        "Limit Order Engine: SMC Silver Bullet entries placed at FVG midpoint (0.25R improvement); Breakout entries at breakout level + 0.15R improvement. Both capped at 0.5% from market price to avoid missed fills",
+        "Variable Leverage per Horizon: 5m Scalp = 15x (quick in/out, tight stops), 15m Intraday = 10x (balanced), 1h Swing = 5x (wider stops, longer hold). INJ capped at 5x (exchange limit), PAXG adjusted for commodity volatility",
+        "Regime-Biased Directional Filter: In BULL regime, SHORT signals require stronger confirmation or are deprioritized; in BEAR regime, LONG signals face same scrutiny. CHOP regime = neutral, all signals allowed but position sizes reduced via risk model",
+        "Telemetry Upgrade: Signal notifications now include Regime, Strength, Bias, Entry Type (limit_fvg/limit_breakout/market), and Variable Leverage"
+      ],
+      "config_snapshot": {
+        "coins": "WLD, INJ, ZEC, NEAR, ENA, ARB, PAXG, AVAX, TAO, SUI",
+        "timeframes": "5m (Scalp), 15m (Intraday), 1h (Swing)",
+        "strategies": "smc_silver_bullet (5m), breakout (15m), breakout (1h)",
+        "base_risk": "0.45% flat per trade",
+        "max_open_risk": "6.0%",
+        "leverage_5m": "15x (INJ 5x, PAXG 10x)",
+        "leverage_15m": "10x (INJ 5x, PAXG 8x)",
+        "leverage_1h": "5x (all)",
+        "slots": 30,
+        "partial_take_profit": "33% @ 1.0R",
+        "breakeven_trigger": "1.2R (+0.15R fee buffer)",
+        "coin_cooldown": "45 minutes post-SL",
+        "anti_hedging_guard": "Strict directional synchronization",
+        "regime_detection": "EMA20/50 alignment on 1h+15m",
+        "limit_entry_fvg": "0.25R improvement (SMC)",
+        "limit_entry_breakout": "0.15R improvement (Breakout)"
+      },
+      "notes": [
+        "Regime detection runs on every signal evaluation (cached candles).",
+        "Limit orders only placed when signal direction aligns with regime bias (or CHOP).",
+        "Leverage scaling dramatically improves capital efficiency: same risk dollar, smaller margin lockup on swing."
+      ]
+    },
+    {
+      "id": "v1.4",
+      "name": "Symmetric Multi-Horizon Stacking & Risk Normalization",
+      "status": "superseded",
+      "start": "2026-11-13T19:58:29.308244+07:00",
+      "end": "2026-11-15T15:50:43.398131+07:00",
+      "initial_equity": 812.5,
+      "final_equity": 812.5,
+      "released": "2026-11-13T19:58:29.308244+07:00",
+      "closed": "2026-11-15T15:50:43.398131+07:00",
       "summary": "Core structural architectural upgrade unlocking Multi-Horizon Strategy Stacking across 3 distinct time horizons (Scalp 5m, Intraday 15m, and Swing 1h) simultaneously on each asset without internal hedging conflict. Eliminates risk asymmetry by strictly normalizing risk dollar allocations to an exact 0.45% base risk per trade across all timeframes, fixes timeframe parameter propagation bug in breakout engines, and calibrates breakout take-profit targets from unrealistic 4.0-5.0R down to high-expectancy 1:2.5R.",
       "verdict": "Active on live production book. 10 assets x 3 horizons = 30 standardized strategy slots, symmetric dollar risk allocations, anti-conflict directional gating, and calibrated RR 1:2.0 / 1:2.5 targets.",
       "changes": [

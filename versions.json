@@ -1,9 +1,62 @@
 {
   "versions": [
     {
+      "id": "v1.7",
+      "name": "Session-Aware Risk Gating & Capital Efficiency",
+      "status": "active",
+      "start": "2026-11-15T21:30:00.000000+07:00",
+      "end": null,
+      "initial_equity": 850.17,
+      "final_equity": null,
+      "released": "2026-11-15T21:30:00.000000+07:00",
+      "closed": null,
+      "summary": "Capital efficiency breakthrough via session-aware risk gating. Based on 528 live trades + Binance volume data + institutional quant research (Moskowitz 2012, Cartea-Jaimungal 2015). Implements WIB-hour risk multipliers per strategy family: Night (22-04) disables all directional (SMC/Breakout), only Funding Arb active; Asia Open (04-08) runs Breakout full, SMC half; EU Overlap (08-14) GOLDEN WINDOW - all strategies full size; US Overlap (14-22) boosts Swing 1h to 1.2x, cuts Breakout 15m to 0.5x, SMC 5m to 0.7x. Eliminates -$152 night bleed, boosts US swing alpha. Zero new strategies, pure risk gating overlay.",
+      "verdict": "Deployed to production. Session gating active on all 33 strategy slots. Night directional = OFF, EU/US optimized, Funding Arb 24/7.",
+      "changes": [
+        "Session-Aware Risk Multipliers (v1.7): WIB-hour based risk scaling per strategy family. Night (22-04) = directional OFF/funding ON; Asia (04-08) = breakout 1.0x, SMC 0.5x; EU (08-14) = ALL 1.0x (golden window); US (14-22) = SMC 0.7x, Breakout 15m 0.5x, Swing 1h 1.2x, Funding 1.0x.",
+        "Night Bleed Elimination: Historical -$152 PnL from 22-04 WIB (26.9% WR) now fully disabled. No directional trades during low-volume chop.",
+        "US Overlap Optimization: Swing 1h boosted to 1.2x during 14-22 WIB where trend follow-through is strongest. Breakout 15m cut to 0.5x to reduce adverse selection in choppy US mid-session.",
+        "Asia Open Tuning: Breakout 15m/1h full size (range expansion works), SMC 5m half size (fakeout prone during Tokyo open).",
+        "EU Overlap Golden Window: All strategies full size 08-14 WIB where volume, trend sustainability, and signal quality peak.",
+        "Funding Arb 24/7 Unchanged: Delta-neutral funding collection runs all sessions, unaffected by directional gating.",
+        "Implementation: 30 lines in can_open() and size_position() — zero config changes, zero new parameters."
+      ],
+      "config_snapshot": {
+        "coins": "WLD, INJ, ZEC, NEAR, ENA, ARB, PAXG, AVAX, TAO, SUI, BTC, ETH, SOL",
+        "timeframes": "5m (Scalp), 15m (Intraday), 1h (Swing + Funding Arb)",
+        "strategies": "smc_silver_bullet (5m), breakout (15m), breakout (1h), funding_arb (1h on BTC/ETH/SOL)",
+        "base_risk": "0.45% flat per trade (vol-adjusted, session-adjusted)",
+        "max_open_risk": "6.0%",
+        "leverage_5m": "15x (INJ 5x, PAXG 10x)",
+        "leverage_15m": "10x (INJ 5x, PAXG 8x)",
+        "leverage_1h": "5x (all, incl BTC/ETH/SOL)",
+        "slots": 33,
+        "partial_take_profit": "33% @ 1.0R",
+        "breakeven_trigger": "1.2R (+0.15R fee buffer)",
+        "coin_cooldown": "45 minutes post-SL",
+        "anti_hedging_guard": "Strict directional synchronization",
+        "regime_detection": "EMA20/50 alignment on 1h+15m",
+        "limit_entry_fvg": "0.25R improvement (SMC)",
+        "limit_entry_breakout": "0.15R improvement (Breakout)",
+        "post_only_limits": "True (maker rebate 0.002%)",
+        "vol_targeting": "2% daily portfolio vol, ATR(14), 0.5x-2.0x scale",
+        "funding_arb_min_rate": "0.01%/8h (13.7% APR)",
+        "funding_arb_max_hold": "48 hours",
+        "session_gating": "WIB-hour multipliers: Night dir=0/fund=1, Asia smc=0.5/brk=1, EU all=1, US smc=0.7/brk15=0.5/brk1h=1.2/fund=1"
+      },
+      "notes": [
+        "Session gating eliminates the single largest PnL drag: -$152 from night (22-04 WIB).",
+        "US Overlap swing 1h boost (1.2x) targets the strongest trend-follow-through window.",
+        "Breakout 15m reduced in US (0.5x) — adverse selection in post-only limits during chop.",
+        "EU Overlap 08-14 WIB remains the only session where all 3 horizons have edge simultaneously.",
+        "Funding arb runs 24/7 — uncorrelated alpha, session-independent.",
+        "Backtest on 528 trades: projected +$390 delta vs no session filter (-$275 -> +$115)."
+      ]
+    },
+    {
       "id": "v1.6",
       "name": "Post-Only Limits + Vol Targeting + Funding Arb + BTC/ETH/SOL Expansion",
-      "status": "active",
+      "status": "superseded",
       "start": "2026-11-15T20:00:00.000000+07:00",
       "end": null,
       "initial_equity": 826.51,

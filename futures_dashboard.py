@@ -950,7 +950,7 @@ function renderTab(){
     if(!d.positions.length){ b.innerHTML=emptyBox('No open positions'); return; }
     b.innerHTML=`<table class="tbl"><thead><tr>
       <th>Symbol</th><th>Side</th><th>Strategy</th><th>Size</th><th>Entry</th><th>Mark</th>
-      <th>Unrealized</th><th>R</th><th>ROI%</th><th>Risk%</th><th>Margin</th><th>Lev</th><th>Age</th>
+      <th>Unrealized</th><th>Realized</th><th>Total</th><th>R</th><th>ROI%</th><th>Risk%</th><th>Margin</th><th>Lev</th><th>Age</th>
     </tr></thead><tbody>${d.positions.map(p=>`
       <tr class="clickrow" onclick="focusCoin('${p.coin}')" title="Click to view ${p.coin} chart">
         <td class="coin">${p.coin}</td>
@@ -960,6 +960,8 @@ function renderTab(){
         <td>${fmt(p.entry)}</td>
         <td>${fmt(p.mark)}</td>
         <td style="color:${p.unreal_usd>=0?'var(--green)':'var(--red)'}">${money(p.unreal_usd)}</td>
+        <td style="color:var(--cyan)">${p.realized_usd>0?'+':''}${money(p.realized_usd)}</td>
+        <td style="color:${(p.unreal_usd + p.realized_usd)>=0?'var(--green)':'var(--red)'}">${money(p.unreal_usd + p.realized_usd)}</td>
         <td style="color:${p.unreal_R>=0?'var(--green)':'var(--red)'}">${p.unreal_R>=0?'+':''}${p.unreal_R.toFixed(3)}</td>
         <td style="color:${p.unreal_pct>=0?'var(--green)':'var(--red)'}">${pct(p.unreal_pct)}</td>
         <td style="color:var(--txt2)">${p.risk_pct.toFixed(2)}%</td>

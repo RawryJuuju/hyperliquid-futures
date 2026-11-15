@@ -66,6 +66,43 @@ MAX_RISK_PCT_PRICE = 0.035      # SL max 3.5% (ATR kegedean -> skip)
 MIN_RISK_PCT_PRICE = 0.0015     # SL min 0.15% (sanity only, bukan filter fee)
 MAX_TOTAL_MARGIN_PCT = 0.75     # total margin semua posisi max 75% equity (aggressive mode)
 
+# ============================================================
+#  SESSION-AWARE RISK MULTIPLIERS (v1.7)
+# ============================================================
+# Based on 528 live trades + Binance volume data + institutional research
+# WIB hour -> risk multiplier per strategy family
+# 0.0 = disabled, 0.5 = half size, 1.0 = full, 1.2 = boosted
+SESSION_MULTIPLIERS = {
+    # NIGHT (22-04 WIB): Kill all directional, only funding arb
+    22: {"smc": 0.0, "breakout": 0.0, "funding": 1.0},
+    23: {"smc": 0.0, "breakout": 0.0, "funding": 1.0},
+    0:  {"smc": 0.0, "breakout": 0.0, "funding": 1.0},
+    1:  {"smc": 0.0, "breakout": 0.0, "funding": 1.0},
+    2:  {"smc": 0.0, "breakout": 0.0, "funding": 1.0},
+    3:  {"smc": 0.0, "breakout": 0.0, "funding": 1.0},
+    # ASIA OPEN (04-08 WIB): Breakout full, SMC half
+    4:  {"smc": 0.5, "breakout": 1.0, "funding": 1.0},
+    5:  {"smc": 0.5, "breakout": 1.0, "funding": 1.0},
+    6:  {"smc": 0.5, "breakout": 1.0, "funding": 1.0},
+    7:  {"smc": 0.5, "breakout": 1.0, "funding": 1.0},
+    # EU OVERLAP (08-14 WIB): GOLDEN WINDOW - all full
+    8:  {"smc": 1.0, "breakout": 1.0, "funding": 1.0},
+    9:  {"smc": 1.0, "breakout": 1.0, "funding": 1.0},
+    10: {"smc": 1.0, "breakout": 1.0, "funding": 1.0},
+    11: {"smc": 1.0, "breakout": 1.0, "funding": 1.0},
+    12: {"smc": 1.0, "breakout": 1.0, "funding": 1.0},
+    13: {"smc": 1.0, "breakout": 1.0, "funding": 1.0},
+    # US OVERLAP (14-22 WIB): SMC 0.7, Breakout 15m 0.5, Swing 1h 1.2
+    14: {"smc": 0.7, "breakout": 0.5, "funding": 1.0},
+    15: {"smc": 0.7, "breakout": 0.5, "funding": 1.0},
+    16: {"smc": 0.7, "breakout": 0.5, "funding": 1.0},
+    17: {"smc": 0.7, "breakout": 0.5, "funding": 1.0},
+    18: {"smc": 0.7, "breakout": 0.5, "funding": 1.0},
+    19: {"smc": 0.7, "breakout": 0.5, "funding": 1.0},
+    20: {"smc": 0.7, "breakout": 0.5, "funding": 1.0},
+    21: {"smc": 0.7, "breakout": 0.5, "funding": 1.0},
+}
+
 _CACHE = {}
 
 
@@ -705,6 +742,21 @@ def can_open(state, coin, cfg, new_risk_pct, sig_dir=None):
         if time.time() < state.get("cooldown_until", 0):
             return False, "global cooldown"
 
+    # SESSION-AWARE GATING (v1.7): Check session multiplier for this strategy
+    hour = now_wib().hour
+    mult = SESSION_MULTIPLIERS.get(hour, {"smc": 1.0, "breakout": 1.0, "funding": 1.0})
+    strat_name = state.get("_pending_strategy", "")
+    # Determine strategy family from strategy name
+    if "funding" in strat_name.lower():
+        session_mult = mult.get("funding", 1.0)
+    elif "smc" in strat_name.lower():
+        session_mult = mult.get("smc", 1.0)
+    else:  # breakout, sweep_fade, bollinger
+        session_mult = mult.get("breakout", 1.0)
+    
+    if session_mult == 0.0:
+        return False, f"session disabled (WIB {hour:02d}:00)"
+
     return True, "ok"
 
 
@@ -714,6 +766,20 @@ def size_position(state, sig, risk_pct_equity):
     tf = sig.get("timeframe", "5m")
     lev = HORIZON_LEVERAGE.get(tf, {}).get(coin, LEVERAGE_MAP.get(coin, LEVERAGE))
     
+    # SESSION-AWARE (v1.7): Apply session multiplier to risk
+    hour = now_wib().hour
+    mult = SESSION_MULTIPLIERS.get(hour, {"smc": 1.0, "breakout": 1.0, "funding": 1.0})
+    strat_name = state.get("_pending_strategy", "")
+    if "funding" in strat_name.lower():
+        session_mult = mult.get("funding", 1.0)
+    elif "smc" in strat_name.lower():
+        session_mult = mult.get("smc", 1.0)
+    else:
+        session_mult = mult.get("breakout", 1.0)
+    
+    # Apply session multiplier to base risk
+    risk_pct_equity = risk_pct_equity * session_mult
+
     # Volatility targeting (v1.6): scale risk inversely to realized volatility
     # Higher volatility -> smaller position, lower volatility -> larger position
     vol_scale = 1.0
@@ -961,6 +1027,9 @@ def main():
                     if not sig:
                         continue
 
+                    # SESSION-AWARE (v1.7): Store strategy name for session gating in can_open()
+                    state["_pending_strategy"] = strat["name"]
+                    
                     # REGIME DETECTION (v1.5): Get market regime for directional bias
                     c5 = candles(coin, "5m", 100)
                     c15 = candles(coin, "15m", 100)

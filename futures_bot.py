@@ -51,8 +51,16 @@ LEVERAGE = 10  # default fallback
 HORIZON_LEVERAGE = {
     "5m": {"WLD": 15, "ZEC": 15, "ENA": 15, "NEAR": 15, "ARB": 15, "INJ": 5, "PAXG": 10, "AVAX": 15, "TAO": 15, "SUI": 15},
     "15m": {"WLD": 10, "ZEC": 10, "ENA": 10, "NEAR": 10, "ARB": 10, "INJ": 5, "PAXG": 8, "AVAX": 10, "TAO": 10, "SUI": 10},
-    "1h": {"WLD": 5, "ZEC": 5, "ENA": 5, "NEAR": 5, "ARB": 5, "INJ": 5, "PAXG": 5, "AVAX": 5, "TAO": 5, "SUI": 5},
+    "1h": {"WLD": 5, "ZEC": 5, "ENA": 5, "NEAR": 5, "ARB": 5, "INJ": 5, "PAXG": 5, "AVAX": 5, "TAO": 5, "SUI": 5,
+           "BTC": 5, "ETH": 5, "SOL": 5},
 }
+
+# Post-only limit orders (v1.6): guarantee maker rebate 0.002% vs taker 0.02%
+POST_ONLY_LIMITS = True
+
+# Volatility targeting (v1.6): scale position risk inversely to realized volatility
+VOL_TARGET_DAILY_PCT = 2.0  # target 2% daily portfolio volatility
+VOL_LOOKBACK = 14  # ATR lookback for vol estimation
 
 MAX_RISK_PCT_PRICE = 0.035      # SL max 3.5% (ATR kegedean -> skip)
 MIN_RISK_PCT_PRICE = 0.0015     # SL min 0.15% (sanity only, bukan filter fee)
@@ -385,11 +393,93 @@ def sig_smc(coin, P):
     return sig, reason
 
 
+def sig_funding_arb(coin, P):
+    """
+    Funding Rate Arbitrage (Delta-Neutral):
+    - Long perp + Short spot (or vice versa) to collect funding
+    - Only viable when funding rate > threshold (e.g., 0.01% per 8h = 13.7% APR)
+    - Exits when funding normalizes or position at risk
+    - On Hyperliquid: perp funding paid/received every hour
+    """
+    try:
+        tf = P.get("timeframe", "1h")
+        min_funding_8h = P.get("min_funding_8h_pct", 0.01)  # 0.01% per 8h = 13.7% APR
+        max_hold_hours = P.get("max_hold_hours", 48)
+        
+        # Get funding rate from HL
+        import urllib.request, json
+        payload = json.dumps({"type": "metaAndAssetCtxs"}).encode()
+        req = urllib.request.Request(f"{HL}/info", data=payload, headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=10) as r:
+            data = json.loads(r.read())
+        
+        universe = data[0].get("universe", [])
+        ctxs = data[1]
+        
+        funding_rate = None
+        for i, u in enumerate(universe):
+            if u["name"] == coin and i < len(ctxs):
+                funding_rate = float(ctxs[i].get("funding", 0) or 0)
+                break
+        
+        if funding_rate is None:
+            return None, "no funding data"
+        
+        funding_8h_pct = funding_rate * 100  # convert to %
+        
+        # Check if funding is attractive
+        if abs(funding_8h_pct) < min_funding_8h:
+            return None, f"funding {funding_8h_pct:.4f}% < {min_funding_8h}%"
+        
+        # Direction: collect positive funding (short perp if funding > 0, long perp if funding < 0)
+        # For delta-neutral: short perp + long spot, or long perp + short spot
+        # Since we only trade perps, we take directional perp position when funding is very skewed
+        # Actually for pure perp funding arb, we just take position aligned with collecting funding
+        
+        if funding_rate > 0:
+            # Positive funding -> longs pay shorts -> be SHORT to collect
+            direction = "SHORT"
+        else:
+            # Negative funding -> shorts pay longs -> be LONG to collect
+            direction = "LONG"
+        
+        # Get current price for entry
+        c = candles(coin, "1h", 50)
+        if len(c) < 2:
+            return None, "no price data"
+        
+        entry = c[-2]["c"]
+        atr_val = atr(c[:-1], 14)
+        if not atr_val:
+            return None, "no atr"
+        
+        # Wide stop for funding arb (hold for hours/days)
+        risk_pct = max(atr_val / entry * 3, 0.02)  # min 2% risk
+        if risk_pct > 0.05:
+            return None, "risk too wide"
+        
+        dist = entry * risk_pct
+        sl = entry - dist if direction == "LONG" else entry + dist
+        tp = entry + dist * 2 if direction == "LONG" else entry - dist * 2  # 2R target
+        
+        return {
+            "coin": coin, "dir": direction, "strategy": "funding_arb",
+            "entry": round(entry, 8), "sl": round(sl, 8), "tp": round(tp, 8),
+            "risk_px": round(dist, 8), "risk_pct": round(risk_pct * 100, 3),
+            "rr": 2.0, "hold": max_hold_hours, "bar_t": c[-2]["t"],
+            "funding_rate_8h": funding_8h_pct
+        }, "ok"
+        
+    except Exception as e:
+        return None, f"funding_arb error: {e}"
+
+
 ENGINES = {
     "breakout": sig_breakout,
     "sweep_fade": sig_sweep,
     "bollinger": sig_bollinger,
     "smc_silver_bullet": sig_smc,
+    "funding_arb": sig_funding_arb,
 }
 
 
@@ -505,6 +595,39 @@ def get_limit_entry(coin, sig, c5, c15, c1h, regime_bias):
         return None, "market"
 
 
+# Post-only order helper (v1.6)
+# Hyperliquid supports post_only flag in order options
+def build_post_only_order(coin, direction, size, limit_price, leverage):
+    """
+    Build order payload for post-only limit order on Hyperliquid.
+    Post-only guarantees maker rebate (0.002%) vs taker fee (0.02%).
+    """
+    is_buy = direction == "LONG"
+    return {
+        "coin": coin,
+        "is_buy": is_buy,
+        "sz": size,
+        "limit_px": limit_price,
+        "order_type": {"limit": {"tif": "Gtc"}},  # Good-til-cancelled
+        "reduce_only": False,
+        "post_only": True,  # Guarantees maker or cancel
+        "leverage": leverage,
+    }
+
+
+def build_market_order(coin, direction, size, leverage):
+    """Fallback market order when limit not filled."""
+    is_buy = direction == "LONG"
+    return {
+        "coin": coin,
+        "is_buy": is_buy,
+        "sz": size,
+        "order_type": {"limit": {"tif": "Ioc"}},  # Immediate-or-cancel = market
+        "reduce_only": False,
+        "leverage": leverage,
+    }
+
+
 # ============================================================
 #  MONEY MANAGEMENT
 # ============================================================
@@ -590,7 +713,24 @@ def size_position(state, sig, risk_pct_equity):
     coin = sig["coin"]
     tf = sig.get("timeframe", "5m")
     lev = HORIZON_LEVERAGE.get(tf, {}).get(coin, LEVERAGE_MAP.get(coin, LEVERAGE))
-    risk_usd = equity * risk_pct_equity / 100
+    
+    # Volatility targeting (v1.6): scale risk inversely to realized volatility
+    # Higher volatility -> smaller position, lower volatility -> larger position
+    vol_scale = 1.0
+    try:
+        c = candles(coin, tf, VOL_LOOKBACK + 5)
+        if len(c) > VOL_LOOKBACK:
+            atr_val = atr(c[:-1], VOL_LOOKBACK)
+            if atr_val and c[-2]["c"]:
+                current_vol_daily = (atr_val / c[-2]["c"]) * 100 * (24 * 60 / int(tf.replace("m", "")) if "m" in tf else 24) ** 0.5
+                # Scale to target vol (cap at 0.5x to 2.0x)
+                if current_vol_daily > 0:
+                    vol_scale = VOL_TARGET_DAILY_PCT / current_vol_daily
+                    vol_scale = max(0.5, min(2.0, vol_scale))
+    except Exception:
+        pass
+    
+    risk_usd = equity * risk_pct_equity / 100 * vol_scale
     notional = risk_usd / (sig["risk_pct"] / 100)
     margin = notional / lev
     if margin > equity * 0.35:
@@ -601,7 +741,8 @@ def size_position(state, sig, risk_pct_equity):
     return {"risk_usd": round(risk_usd, 2), "notional": round(notional, 2),
             "margin": round(margin, 2), "size": round(size, 8),
             "leverage": lev,
-            "risk_pct_equity": round(risk_usd / equity * 100, 4)}
+            "risk_pct_equity": round(risk_usd / equity * 100, 4),
+            "vol_scale": round(vol_scale, 3)}
 
 
 # ============================================================

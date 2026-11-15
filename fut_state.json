@@ -1,171 +1,541 @@
 {
- "day": "2026-10-23",
- "week": "2026-W42",
- "initial_equity": 1000.0,
- "equity": 909.43,
- "peak_equity": 1021.0586960255454,
- "week_start_equity": 1000.0,
- "day_pnl": -31.638168181039813,
- "open": {},
- "last_bar": {
-  "WLD:breakout:5m": 1792715700000,
-  "WLD:breakout:15m": 1792714500000,
-  "WLD:breakout:1h": 1792710000000,
-  "INJ:breakout:5m": 1792701600000,
-  "INJ:breakout:15m": 1792714500000,
-  "INJ:breakout:1h": 1792710000000,
-  "ZEC:breakout:5m": 1792715700000,
-  "ZEC:breakout:15m": 1792714500000,
-  "ZEC:breakout:1h": 1792710000000,
-  "NEAR:breakout:5m": 1792715700000,
-  "NEAR:breakout:15m": 1792714500000,
-  "NEAR:breakout:1h": 1792710000000,
-  "HYPE:breakout:5m": 1792707300000,
-  "HYPE:breakout:15m": 1792714500000,
-  "HYPE:breakout:1h": 1792710000000,
-  "ENA:breakout:5m": 1792715700000,
-  "ENA:breakout:15m": 1792714500000,
-  "ENA:breakout:1h": 1792710000000,
-  "PUMP:breakout:5m": 1792715400000,
-  "PUMP:breakout:15m": 1792714500000,
-  "PUMP:breakout:1h": 1792710000000
- },
- "stats": {
-  "NEAR:breakout": {
-   "n": 17,
-   "w": 5,
-   "l": 12,
-   "R": 0.6754721058527791,
-   "usd": 9.941286192294928
+  "day": "2026-11-15",
+  "week": "2026-W45",
+  "initial_equity": 1000.0,
+  "equity": 850.1696300732565,
+  "peak_equity": 1021.0586960255454,
+  "week_start_equity": 909.43,
+  "day_pnl": 64.47994633836004,
+  "open": {
+    "INJ:smc_silver_bullet:5m": {
+      "coin": "INJ",
+      "dir": "LONG",
+      "strategy": "smc_silver_bullet",
+      "entry": 6.9717,
+      "sl": 6.9913392855000005,
+      "tp": 7.23355714,
+      "risk_px": 0.13092857,
+      "risk_pct": 1.878,
+      "rr": 2.0,
+      "hold": 48,
+      "bar_t": 1794733500000,
+      "session": "LONDON_KILLZONE",
+      "size_multiplier": 1.2,
+      "fvg": {
+        "type": "bullish",
+        "top": 7.0011,
+        "bottom": 6.9423,
+        "mid": 6.9717,
+        "size_pct": 0.836,
+        "t": 1794733200000
+      },
+      "sweep": null,
+      "timeframe": "5m",
+      "risk_usd": 1.273,
+      "notional": 101.34,
+      "margin": 20.27,
+      "size": 9.738989450499998,
+      "leverage": 5,
+      "risk_pct_equity": 0.225,
+      "opened_ts": 1794733807.9432535,
+      "mode": "shadow",
+      "partial_done": true,
+      "realized_usd": 0.627,
+      "be_done": true
+    },
+    "ZEC:smc_silver_bullet:5m": {
+      "coin": "ZEC",
+      "dir": "LONG",
+      "strategy": "smc_silver_bullet",
+      "entry": 901.728375,
+      "sl": 903.46610625,
+      "tp": 924.898125,
+      "risk_px": 11.584875,
+      "risk_pct": 1.285,
+      "rr": 2.0,
+      "hold": 48,
+      "bar_t": 1794733500000,
+      "session": "LONDON_KILLZONE",
+      "size_multiplier": 1.2,
+      "fvg": {
+        "type": "bullish",
+        "top": 910.75,
+        "bottom": 900.43,
+        "mid": 905.59,
+        "size_pct": 1.1282,
+        "t": 1794733200000
+      },
+      "sweep": null,
+      "timeframe": "5m",
+      "entry_type": "limit_fvg",
+      "risk_usd": 1.273,
+      "notional": 148.11,
+      "margin": 9.87,
+      "size": 0.1100447463,
+      "leverage": 15,
+      "risk_pct_equity": 0.225,
+      "opened_ts": 1794733810.665117,
+      "mode": "shadow",
+      "partial_done": true,
+      "realized_usd": 0.627,
+      "be_done": true
+    },
+    "ARB:smc_silver_bullet:5m": {
+      "coin": "ARB",
+      "dir": "LONG",
+      "strategy": "smc_silver_bullet",
+      "entry": 0.133755,
+      "sl": 0.13100057,
+      "tp": 0.13926386,
+      "risk_px": 0.00275443,
+      "risk_pct": 2.059,
+      "rr": 2.0,
+      "hold": 48,
+      "bar_t": 1794733500000,
+      "session": "LONDON_KILLZONE",
+      "size_multiplier": 1.2,
+      "fvg": {
+        "type": "bullish",
+        "top": 0.13441,
+        "bottom": 0.1331,
+        "mid": 0.133755,
+        "size_pct": 0.9704,
+        "t": 1794733200000
+      },
+      "sweep": null,
+      "timeframe": "5m",
+      "risk_usd": 1.9,
+      "notional": 92.43,
+      "margin": 6.16,
+      "size": 691.04606606,
+      "leverage": 15,
+      "risk_pct_equity": 0.225,
+      "opened_ts": 1794733817.7655733,
+      "mode": "shadow"
+    },
+    "AVAX:smc_silver_bullet:5m": {
+      "coin": "AVAX",
+      "dir": "LONG",
+      "strategy": "smc_silver_bullet",
+      "entry": 7.19485,
+      "sl": 7.2099917499999995,
+      "tp": 7.39674,
+      "risk_px": 0.100945,
+      "risk_pct": 1.403,
+      "rr": 2.0,
+      "hold": 48,
+      "bar_t": 1794733500000,
+      "session": "LONDON_KILLZONE",
+      "size_multiplier": 1.2,
+      "fvg": {
+        "type": "bullish",
+        "top": 7.2254,
+        "bottom": 7.1643,
+        "mid": 7.19485,
+        "size_pct": 0.8429,
+        "t": 1794733200000
+      },
+      "sweep": null,
+      "timeframe": "5m",
+      "risk_usd": 1.273,
+      "notional": 135.65,
+      "margin": 9.04,
+      "size": 12.631902325199999,
+      "leverage": 15,
+      "risk_pct_equity": 0.225,
+      "opened_ts": 1794733821.6992228,
+      "mode": "shadow",
+      "partial_done": true,
+      "realized_usd": 0.627,
+      "be_done": true
+    },
+    "SUI:smc_silver_bullet:5m": {
+      "coin": "SUI",
+      "dir": "LONG",
+      "strategy": "smc_silver_bullet",
+      "entry": 0.71789648,
+      "sl": 0.7191670625,
+      "tp": 0.73483758,
+      "risk_px": 0.00847055,
+      "risk_pct": 1.18,
+      "rr": 2.0,
+      "hold": 48,
+      "bar_t": 1794733500000,
+      "session": "LONDON_KILLZONE",
+      "size_multiplier": 1.2,
+      "fvg": {
+        "type": "bullish",
+        "top": 0.72414,
+        "bottom": 0.7173,
+        "mid": 0.72072,
+        "size_pct": 0.9406,
+        "t": 1794733200000
+      },
+      "sweep": null,
+      "timeframe": "5m",
+      "entry_type": "limit_fvg",
+      "risk_usd": 1.273,
+      "notional": 161.28,
+      "margin": 10.75,
+      "size": 150.5235120409,
+      "leverage": 15,
+      "risk_pct_equity": 0.225,
+      "opened_ts": 1794733824.4248073,
+      "mode": "shadow",
+      "partial_done": true,
+      "realized_usd": 0.627,
+      "be_done": true
+    },
+    "TAO:smc_silver_bullet:5m": {
+      "coin": "TAO",
+      "dir": "LONG",
+      "strategy": "smc_silver_bullet",
+      "entry": 188.85273214,
+      "sl": 189.1552526755,
+      "tp": 192.88633928,
+      "risk_px": 2.01680357,
+      "risk_pct": 1.068,
+      "rr": 2.0,
+      "hold": 48,
+      "bar_t": 1794733500000,
+      "session": "LONDON_KILLZONE",
+      "size_multiplier": 1.2,
+      "fvg": {
+        "type": "bullish",
+        "top": 190.22,
+        "bottom": 188.83,
+        "mid": 189.525,
+        "size_pct": 0.7278,
+        "t": 1794733200000
+      },
+      "sweep": null,
+      "timeframe": "5m",
+      "entry_type": "limit_fvg",
+      "risk_usd": 1.2796999999999998,
+      "notional": 178.46,
+      "margin": 11.9,
+      "size": 0.6331360372,
+      "leverage": 15,
+      "risk_pct_equity": 0.225,
+      "opened_ts": 1794733845.832036,
+      "mode": "shadow",
+      "partial_done": true,
+      "realized_usd": 0.6303,
+      "be_done": true
+    }
   },
-  "PUMP:sweep_fade": {
-   "n": 2,
-   "w": 0,
-   "l": 2,
-   "R": -2.1817401813818185,
-   "usd": -13.693484552175615
+  "last_bar": {
+    "WLD:breakout:5m": 1794573900000,
+    "WLD:breakout:15m": 1794734100000,
+    "WLD:breakout:1h": 1794729600000,
+    "INJ:breakout:5m": 1794572700000,
+    "INJ:breakout:15m": 1794734100000,
+    "INJ:breakout:1h": 1794729600000,
+    "ZEC:breakout:5m": 1794573900000,
+    "ZEC:breakout:15m": 1794734100000,
+    "ZEC:breakout:1h": 1794729600000,
+    "NEAR:breakout:5m": 1794573900000,
+    "NEAR:breakout:15m": 1794734100000,
+    "NEAR:breakout:1h": 1794729600000,
+    "HYPE:breakout:5m": 1794565800000,
+    "HYPE:breakout:15m": 1794564000000,
+    "HYPE:breakout:1h": 1794560400000,
+    "ENA:breakout:5m": 1794573900000,
+    "ENA:breakout:15m": 1794734100000,
+    "ENA:breakout:1h": 1794729600000,
+    "PUMP:breakout:5m": 1794565800000,
+    "PUMP:breakout:15m": 1794564900000,
+    "PUMP:breakout:1h": 1794560400000,
+    "WLD:smc_silver_bullet:5m": 1794735000000,
+    "INJ:smc_silver_bullet:5m": 1794733500000,
+    "ZEC:smc_silver_bullet:5m": 1794733500000,
+    "NEAR:smc_silver_bullet:5m": 1794733500000,
+    "HYPE:smc_silver_bullet:5m": 1794565800000,
+    "ENA:smc_silver_bullet:5m": 1794735000000,
+    "PUMP:smc_silver_bullet:5m": 1794565200000,
+    "ARB:smc_silver_bullet:5m": 1794733500000,
+    "ARB:breakout:15m": 1794734100000,
+    "PAXG:smc_silver_bullet:5m": 1794735000000,
+    "PAXG:breakout:15m": 1794734100000,
+    "AVAX:smc_silver_bullet:5m": 1794733500000,
+    "AVAX:breakout:15m": 1794734100000,
+    "TAO:smc_silver_bullet:5m": 1794733500000,
+    "TAO:breakout:15m": 1794734100000,
+    "SUI:smc_silver_bullet:5m": 1794733500000,
+    "SUI:breakout:15m": 1794734100000,
+    "ARB:breakout:1h": 1794729600000,
+    "PAXG:breakout:1h": 1794729600000,
+    "AVAX:breakout:1h": 1794729600000,
+    "TAO:breakout:1h": 1794729600000,
+    "SUI:breakout:1h": 1794729600000
   },
-  "ZEC:bollinger": {
-   "n": 6,
-   "w": 2,
-   "l": 4,
-   "R": -1.8266767549469238,
-   "usd": -7.648602688467932
+  "stats": {
+    "NEAR:breakout": {
+      "n": 24,
+      "w": 5,
+      "l": 19,
+      "R": -3.792201283949478,
+      "usd": 2.853994188845428
+    },
+    "PUMP:sweep_fade": {
+      "n": 2,
+      "w": 0,
+      "l": 2,
+      "R": -2.1817401813818185,
+      "usd": -13.693484552175615
+    },
+    "ZEC:bollinger": {
+      "n": 6,
+      "w": 2,
+      "l": 4,
+      "R": -1.8266767549469238,
+      "usd": -7.648602688467932
+    },
+    "ZEC:breakout": {
+      "n": 26,
+      "w": 9,
+      "l": 17,
+      "R": 4.171066885016842,
+      "usd": 7.622327022796581
+    },
+    "WLD:breakout": {
+      "n": 24,
+      "w": 8,
+      "l": 16,
+      "R": 0.8292774169608024,
+      "usd": 6.370863540589038
+    },
+    "HYPE:breakout": {
+      "n": 31,
+      "w": 8,
+      "l": 23,
+      "R": -11.148870073260502,
+      "usd": -25.065474181464783
+    },
+    "ETH:sweep_fade": {
+      "n": 2,
+      "w": 0,
+      "l": 2,
+      "R": -2.6631892006117956,
+      "usd": -7.174862769432686
+    },
+    "ENA:sweep_fade": {
+      "n": 5,
+      "w": 1,
+      "l": 4,
+      "R": -0.6671669170929162,
+      "usd": -4.08919426436109
+    },
+    "WLD:sweep_fade": {
+      "n": 1,
+      "w": 0,
+      "l": 1,
+      "R": -1.0594985411967814,
+      "usd": -4.937263201977002
+    },
+    "XRP:sweep_fade": {
+      "n": 2,
+      "w": 0,
+      "l": 2,
+      "R": -2.5112870126093902,
+      "usd": -3.7008227050763756
+    },
+    "INJ:breakout": {
+      "n": 25,
+      "w": 6,
+      "l": 19,
+      "R": -1.9901102094667507,
+      "usd": -3.215843712172577
+    },
+    "NEAR:bollinger": {
+      "n": 3,
+      "w": 0,
+      "l": 3,
+      "R": -3.251554818982757,
+      "usd": -8.573145615479401
+    },
+    "HYPE:sweep_fade": {
+      "n": 1,
+      "w": 0,
+      "l": 1,
+      "R": -1.1645749836280204,
+      "usd": -5.555022671905657
+    },
+    "ENA:breakout": {
+      "n": 21,
+      "w": 4,
+      "l": 17,
+      "R": -9.92292342911548,
+      "usd": -18.59301134190889
+    },
+    "ARB:sweep_fade": {
+      "n": 1,
+      "w": 0,
+      "l": 1,
+      "R": -1.1264063515288563,
+      "usd": -2.7934877517915635
+    },
+    "PUMP:breakout": {
+      "n": 9,
+      "w": 1,
+      "l": 8,
+      "R": -3.713292615789056,
+      "usd": -7.087913267977021
+    },
+    "INJ:breakout:5m": {
+      "n": 1,
+      "w": 1,
+      "l": 0,
+      "R": 0.11242516827493604,
+      "usd": 0.1559424473750143
+    },
+    "HYPE:breakout:5m": {
+      "n": 1,
+      "w": 0,
+      "l": 1,
+      "R": -1.0579933390607452,
+      "usd": -0.7285044379599983
+    },
+    "ENA:breakout:5m": {
+      "n": 1,
+      "w": 0,
+      "l": 1,
+      "R": -0.523421537219684,
+      "usd": -0.3571490852907989
+    },
+    "ENA:smc_silver_bullet": {
+      "n": 39,
+      "w": 19,
+      "l": 20,
+      "R": 3.607712510883524,
+      "usd": 3.8636257323400134
+    },
+    "ZEC:smc_silver_bullet": {
+      "n": 33,
+      "w": 7,
+      "l": 26,
+      "R": -21.12751667360361,
+      "usd": -34.03570291040789
+    },
+    "SUI:smc_silver_bullet": {
+      "n": 29,
+      "w": 10,
+      "l": 19,
+      "R": -8.704039819188674,
+      "usd": -22.678777591352084
+    },
+    "NEAR:smc_silver_bullet": {
+      "n": 38,
+      "w": 15,
+      "l": 23,
+      "R": -2.549735562106361,
+      "usd": -6.532056764881798
+    },
+    "HYPE:smc_silver_bullet": {
+      "n": 13,
+      "w": 2,
+      "l": 11,
+      "R": -8.71411049091543,
+      "usd": -14.847511693959946
+    },
+    "AVAX:smc_silver_bullet": {
+      "n": 27,
+      "w": 9,
+      "l": 18,
+      "R": -4.981123845089603,
+      "usd": -8.397367618479464
+    },
+    "PUMP:smc_silver_bullet": {
+      "n": 12,
+      "w": 2,
+      "l": 10,
+      "R": -11.295770957847507,
+      "usd": -22.021201232388183
+    },
+    "INJ:smc_silver_bullet": {
+      "n": 29,
+      "w": 9,
+      "l": 20,
+      "R": -8.497270068835963,
+      "usd": -15.268389379711213
+    },
+    "WLD:smc_silver_bullet": {
+      "n": 31,
+      "w": 10,
+      "l": 21,
+      "R": -5.635054625048896,
+      "usd": -6.347836521399466
+    },
+    "TAO:smc_silver_bullet": {
+      "n": 27,
+      "w": 5,
+      "l": 22,
+      "R": -12.444341299362074,
+      "usd": -16.569267209655962
+    },
+    "ARB:smc_silver_bullet": {
+      "n": 32,
+      "w": 9,
+      "l": 23,
+      "R": -10.628833494801071,
+      "usd": -18.348058254202737
+    },
+    "ARB:breakout": {
+      "n": 4,
+      "w": 0,
+      "l": 4,
+      "R": -4.06046588653294,
+      "usd": -8.271041164289255
+    },
+    "AVAX:breakout": {
+      "n": 2,
+      "w": 0,
+      "l": 2,
+      "R": -3.74643224673929,
+      "usd": -10.654076132081322
+    },
+    "SUI:breakout": {
+      "n": 1,
+      "w": 1,
+      "l": 0,
+      "R": 3.301858774678233,
+      "usd": 6.0871301661696995
+    },
+    "PAXG:smc_silver_bullet": {
+      "n": 6,
+      "w": 0,
+      "l": 6,
+      "R": -3.9756490737820056,
+      "usd": -3.8997477747754625
+    },
+    "TAO:breakout": {
+      "n": 1,
+      "w": 0,
+      "l": 1,
+      "R": -0.25818038176827174,
+      "usd": 1.0200019750686264
+    },
+    "PAXG:breakout": {
+      "n": 1,
+      "w": 0,
+      "l": 1,
+      "R": -2.3417948914097466,
+      "usd": -6.439935951376803
+    }
   },
-  "ZEC:breakout": {
-   "n": 24,
-   "w": 9,
-   "l": 15,
-   "R": 5.45240056900775,
-   "usd": 8.616972108107902
+  "coin_cooldown": {
+    "PUMP": 1794570475.9583073,
+    "ENA": 1794734059.0687122,
+    "WLD": 1794735902.2055724,
+    "NEAR": 1794738092.3055136,
+    "TAO": 1794731260.6964912,
+    "AVAX": 1794731260.2942822,
+    "INJ": 1794731812.6839688,
+    "ARB": 1794733165.5840313,
+    "PAXG": 1794725389.4178514,
+    "ZEC": 1794721405.47383,
+    "SUI": 1794731360.279772
   },
-  "WLD:breakout": {
-   "n": 21,
-   "w": 6,
-   "l": 15,
-   "R": -5.648934189775933,
-   "usd": -1.7858167661645026
-  },
-  "HYPE:breakout": {
-   "n": 24,
-   "w": 6,
-   "l": 18,
-   "R": -10.579645809913703,
-   "usd": -22.146733069015056
-  },
-  "ETH:sweep_fade": {
-   "n": 2,
-   "w": 0,
-   "l": 2,
-   "R": -2.6631892006117956,
-   "usd": -7.174862769432686
-  },
-  "ENA:sweep_fade": {
-   "n": 5,
-   "w": 1,
-   "l": 4,
-   "R": -0.6671669170929162,
-   "usd": -4.08919426436109
-  },
-  "WLD:sweep_fade": {
-   "n": 1,
-   "w": 0,
-   "l": 1,
-   "R": -1.0594985411967814,
-   "usd": -4.937263201977002
-  },
-  "XRP:sweep_fade": {
-   "n": 2,
-   "w": 0,
-   "l": 2,
-   "R": -2.5112870126093902,
-   "usd": -3.7008227050763756
-  },
-  "INJ:breakout": {
-   "n": 19,
-   "w": 5,
-   "l": 14,
-   "R": -1.8354595592039809,
-   "usd": -2.795578963961855
-  },
-  "NEAR:bollinger": {
-   "n": 3,
-   "w": 0,
-   "l": 3,
-   "R": -3.251554818982757,
-   "usd": -8.573145615479401
-  },
-  "HYPE:sweep_fade": {
-   "n": 1,
-   "w": 0,
-   "l": 1,
-   "R": -1.1645749836280204,
-   "usd": -5.555022671905657
-  },
-  "ENA:breakout": {
-   "n": 19,
-   "w": 4,
-   "l": 15,
-   "R": -6.72889911353705,
-   "usd": -15.013927790213323
-  },
-  "ARB:sweep_fade": {
-   "n": 1,
-   "w": 0,
-   "l": 1,
-   "R": -1.1264063515288563,
-   "usd": -2.7934877517915635
-  },
-  "PUMP:breakout": {
-   "n": 7,
-   "w": 1,
-   "l": 6,
-   "R": -2.7838293079571264,
-   "usd": -8.228701860980298
-  },
-  "INJ:breakout:5m": {
-   "n": 1,
-   "w": 1,
-   "l": 0,
-   "R": 0.11242516827493604,
-   "usd": 0.1559424473750143
-  },
-  "HYPE:breakout:5m": {
-   "n": 1,
-   "w": 0,
-   "l": 1,
-   "R": -1.0579933390607452,
-   "usd": -0.7285044379599983
-  },
-  "ENA:breakout:5m": {
-   "n": 1,
-   "w": 0,
-   "l": 1,
-   "R": -0.523421537219684,
-   "usd": -0.3571490852907989
-  }
- },
- "coin_cooldown": {},
- "consec_loss": 3,
- "cooldown_until": 0
+  "consec_loss": 1,
+  "cooldown_until": 0
 }

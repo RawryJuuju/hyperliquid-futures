@@ -1,0 +1,62 @@
+Fetching 120d data untuk 15 kandidat...
+  ARB     ok (5030 candles)
+  ZRO     ok (5013 candles)
+  SUI     ok (5028 candles)
+  INJ     ok (5029 candles)
+  CRV     ok (5027 candles)
+  ONDO    ok (5032 candles)
+  UNI     ok (5016 candles)
+  LINK    ok (5026 candles)
+  AAVE    ok (5022 candles)
+  DOGE    ok (5029 candles)
+  XPL     ok (5034 candles)
+  STRK    ok (5029 candles)
+  XMR     ok (5024 candles)
+  kPEPE   ok (5028 candles)
+  TAO     ok (5027 candles)
+
+================================================================================================================
+KANDIDAT LOLOS (OOS_PF >= 1.30, OOS_R > 0, n >= 15)
+================================================================================================================
+COIN    FAMILY         IS_PF   IS_R  OOS_PF   OOS_R  OOS_WR  OOS_DD    N
+----------------------------------------------------------------------------------------------------------------
+ZRO     breakout        1.12    7.4    1.79    33.5   41.8%    -6.8   67
+INJ     breakout        1.07    4.3    1.74    31.2   41.8%   -10.7   67
+STRK    breakout        1.79   46.6    1.83    31.0   43.5%    -4.4   62
+CRV     breakout        1.37   22.2    1.31    19.7   34.1%    -9.1   85
+LINK    sweep_fade      1.41    7.3    2.11    18.9   41.7%    -3.8   24
+UNI     breakout        1.08    3.4    1.43    15.2   40.0%    -7.3   55
+kPEPE   sweep_fade      1.40    7.6    1.50    10.2   34.5%   -11.5   29
+AAVE    sweep_fade      1.24    6.3    1.44    10.1   38.7%    -5.7   31
+ARB     sweep_fade      1.08    1.6    1.62     9.0   35.0%    -3.4   20
+
+=== PARAMS KANDIDAT LOLOS ===
+
+ZRO | breakout | OOS_PF=1.79 OOS_R=+33.5 N=67
+  {'look': 10, 'atr_mult': 1.5, 'rr': 3.0, 'min_body': 0.6, 'htf_ema': 20, 'hold': 72}
+
+INJ | breakout | OOS_PF=1.74 OOS_R=+31.2 N=67
+  {'look': 10, 'atr_mult': 2.0, 'rr': 3.0, 'min_body': 0.4, 'htf_ema': 20, 'hold': 72}
+
+STRK | breakout | OOS_PF=1.83 OOS_R=+31.0 N=62
+  {'look': 10, 'atr_mult': 1.5, 'rr': 3.0, 'min_body': 0.4, 'htf_ema': 20, 'hold': 72}
+
+CRV | breakout | OOS_PF=1.31 OOS_R=+19.7 N=85
+  {'look': 10, 'atr_mult': 1.5, 'rr': 3.0, 'min_body': 0.6, 'htf_ema': 20, 'hold': 72}
+
+LINK | sweep_fade | OOS_PF=2.11 OOS_R=+18.9 N=24
+  {'look': 10, 'atr_mult': 1.5, 'rr': 4.0, 'min_body': 0.5, 'htf_ema': 20, 'hold': 72}
+
+UNI | breakout | OOS_PF=1.43 OOS_R=+15.2 N=55
+  {'look': 10, 'atr_mult': 2.0, 'rr': 3.0, 'min_body': 0.6, 'htf_ema': 20, 'hold': 72}
+
+kPEPE | sweep_fade | OOS_PF=1.5 OOS_R=+10.2 N=29
+  {'look': 6, 'atr_mult': 2.0, 'rr': 4.0, 'min_body': 0.3, 'htf_ema': 20, 'hold': 72}
+
+AAVE | sweep_fade | OOS_PF=1.44 OOS_R=+10.1 N=31
+  {'look': 6, 'atr_mult': 1.5, 'rr': 3.0, 'min_body': 0.5, 'htf_ema': 20, 'hold': 72}
+
+ARB | sweep_fade | OOS_PF=1.62 OOS_R=+9.0 N=20
+  {'look': 6, 'atr_mult': 2.0, 'rr': 4.0, 'min_body': 0.5, 'htf_ema': 20, 'hold': 72}
+
+Disimpan: candidate_coins.json (9 kandidat lolos)

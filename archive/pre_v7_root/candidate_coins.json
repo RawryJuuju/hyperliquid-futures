@@ -1,0 +1,182 @@
+{
+  "ARB": {
+    "coin": "ARB",
+    "family": "sweep_fade",
+    "is_pf": 1.08,
+    "is_R": 1.6,
+    "is_n": 25,
+    "oos_pf": 1.62,
+    "oos_R": 9.0,
+    "oos_n": 20,
+    "oos_wr": 35.0,
+    "oos_dd": -3.4,
+    "params": {
+      "look": 6,
+      "atr_mult": 2.0,
+      "rr": 4.0,
+      "min_body": 0.5,
+      "htf_ema": 20,
+      "hold": 72
+    }
+  },
+  "ZRO": {
+    "coin": "ZRO",
+    "family": "breakout",
+    "is_pf": 1.12,
+    "is_R": 7.4,
+    "is_n": 83,
+    "oos_pf": 1.79,
+    "oos_R": 33.5,
+    "oos_n": 67,
+    "oos_wr": 41.8,
+    "oos_dd": -6.8,
+    "params": {
+      "look": 10,
+      "atr_mult": 1.5,
+      "rr": 3.0,
+      "min_body": 0.6,
+      "htf_ema": 20,
+      "hold": 72
+    }
+  },
+  "INJ": {
+    "coin": "INJ",
+    "family": "breakout",
+    "is_pf": 1.07,
+    "is_R": 4.3,
+    "is_n": 78,
+    "oos_pf": 1.74,
+    "oos_R": 31.2,
+    "oos_n": 67,
+    "oos_wr": 41.8,
+    "oos_dd": -10.7,
+    "params": {
+      "look": 10,
+      "atr_mult": 2.0,
+      "rr": 3.0,
+      "min_body": 0.4,
+      "htf_ema": 20,
+      "hold": 72
+    }
+  },
+  "CRV": {
+    "coin": "CRV",
+    "family": "breakout",
+    "is_pf": 1.37,
+    "is_R": 22.2,
+    "is_n": 80,
+    "oos_pf": 1.31,
+    "oos_R": 19.7,
+    "oos_n": 85,
+    "oos_wr": 34.1,
+    "oos_dd": -9.1,
+    "params": {
+      "look": 10,
+      "atr_mult": 1.5,
+      "rr": 3.0,
+      "min_body": 0.6,
+      "htf_ema": 20,
+      "hold": 72
+    }
+  },
+  "UNI": {
+    "coin": "UNI",
+    "family": "breakout",
+    "is_pf": 1.08,
+    "is_R": 3.4,
+    "is_n": 60,
+    "oos_pf": 1.43,
+    "oos_R": 15.2,
+    "oos_n": 55,
+    "oos_wr": 40.0,
+    "oos_dd": -7.3,
+    "params": {
+      "look": 10,
+      "atr_mult": 2.0,
+      "rr": 3.0,
+      "min_body": 0.6,
+      "htf_ema": 20,
+      "hold": 72
+    }
+  },
+  "LINK": {
+    "coin": "LINK",
+    "family": "sweep_fade",
+    "is_pf": 1.41,
+    "is_R": 7.3,
+    "is_n": 22,
+    "oos_pf": 2.11,
+    "oos_R": 18.9,
+    "oos_n": 24,
+    "oos_wr": 41.7,
+    "oos_dd": -3.8,
+    "params": {
+      "look": 10,
+      "atr_mult": 1.5,
+      "rr": 4.0,
+      "min_body": 0.5,
+      "htf_ema": 20,
+      "hold": 72
+    }
+  },
+  "AAVE": {
+    "coin": "AAVE",
+    "family": "sweep_fade",
+    "is_pf": 1.24,
+    "is_R": 6.3,
+    "is_n": 35,
+    "oos_pf": 1.44,
+    "oos_R": 10.1,
+    "oos_n": 31,
+    "oos_wr": 38.7,
+    "oos_dd": -5.7,
+    "params": {
+      "look": 6,
+      "atr_mult": 1.5,
+      "rr": 3.0,
+      "min_body": 0.5,
+      "htf_ema": 20,
+      "hold": 72
+    }
+  },
+  "STRK": {
+    "coin": "STRK",
+    "family": "breakout",
+    "is_pf": 1.79,
+    "is_R": 46.6,
+    "is_n": 90,
+    "oos_pf": 1.83,
+    "oos_R": 31.0,
+    "oos_n": 62,
+    "oos_wr": 43.5,
+    "oos_dd": -4.4,
+    "params": {
+      "look": 10,
+      "atr_mult": 1.5,
+      "rr": 3.0,
+      "min_body": 0.4,
+      "htf_ema": 20,
+      "hold": 72
+    }
+  },
+  "kPEPE": {
+    "coin": "kPEPE",
+    "family": "sweep_fade",
+    "is_pf": 1.4,
+    "is_R": 7.6,
+    "is_n": 27,
+    "oos_pf": 1.5,
+    "oos_R": 10.2,
+    "oos_n": 29,
+    "oos_wr": 34.5,
+    "oos_dd": -11.5,
+    "params": {
+      "look": 6,
+      "atr_mult": 2.0,
+      "rr": 4.0,
+      "min_body": 0.3,
+      "htf_ema": 20,
+      "hold": 72
+    }
+  }
+}

@@ -19,6 +19,9 @@ import time
 import statistics
 import urllib.request
 from datetime import datetime, timezone, timedelta
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent / "scripts"))
 from smc_lib import evaluate_smc_scalp_signal, get_killzone_status
 
 WIB = timezone(timedelta(hours=7))

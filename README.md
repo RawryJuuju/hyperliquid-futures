@@ -22,6 +22,7 @@ This repository hosts an autonomous, quantitative trading system operating 24/7 
 
 ### Core Capabilities
 - **Multi-Engine Execution**: SMC Silver Bullet (5m Fair Value Gaps, Liquidity Sweeps), Multi-Timeframe Breakout (15m/1h), and Funding Rate Arbitrage (1h delta-neutral on majors).
+- **Session-Aware Risk Gating (v1.7)**: WIB-hour based risk multipliers per strategy family — Night (22-04) disables directional, only Funding Arb; Asia (04-08) Breakout full/SMC half; EU (08-14) ALL full; US (14-22) Swing 1h 1.2x, Breakout 15m 0.5x, SMC 0.7x.
 - **Post-Only Limit Order Execution (v1.6)**: Guaranteed maker rebates (0.002% vs 0.02% taker) with automatic fallback to market orders after 2 bars.
 - **Volatility-Targeted Position Sizing (v1.6)**: Dynamic risk scaling inversely to realized ATR volatility targeting 2% daily portfolio vol.
 - **Dynamic Scale-Out**: Automated 33% partial profit locking at +1.0R with positive fee-buffered Breakeven trailing (+0.15R) to protect floating returns.
@@ -33,12 +34,12 @@ This repository hosts an autonomous, quantitative trading system operating 24/7 
 ## 📐 System Architecture
 
 ```text
-                               ┌──────────────────────────────────────────────┐
-                               │             Hyperliquid L1 Node              │
-                               │          (Perpetuals Matching Engine)        │
-                               └──────────────────────┬───────────────────────┘
-                                                      │ WebSocket / REST Info
-                                                      ▼
+                              ┌──────────────────────────────────────────────┐
+                              │             Hyperliquid L1 Node              │
+                              │          (Perpetuals Matching Engine)        │
+                              └──────────────────────┬───────────────────────┘
+                                                     │ WebSocket / REST Info
+                                                     ▼
 ┌────────────────────────┐         ┌──────────────────────────────────────────┐
 │   FastAPI Web Terminal │ <────── │          Execution Daemon                │
 │   • TradingView Charts │  State  │           (futures_bot.py)               │
@@ -55,7 +56,7 @@ This repository hosts an autonomous, quantitative trading system operating 24/7 
 
 ---
 
-## 🪙 Asset Universe & Correlation Clusters (v1.6)
+## 🪙 Asset Universe & Correlation Clusters (v1.7)
 
 The book currently trades **13 assets** across **33 active strategy slots**, partitioned into **6 independent correlation clusters**. 10 assets operate **3 synchronized time horizons simultaneously** (Scalp 5m, Intraday 15m, Swing 1h). 3 major assets (BTC, ETH, SOL) run **Funding Rate Arbitrage only** (1h delta-neutral perp positions).
 
@@ -70,10 +71,10 @@ The book currently trades **13 assets** across **33 active strategy slots**, par
 
 ---
 
-## 🛡️ Risk Management Parameters (v1.6 Release)
+## 🛡️ Risk Management Parameters (v1.7 Release)
 
 ```yaml
-Base Risk per Trade: 0.45% of total equity (Vol-Adjusted: 0.5x-2.0x scaling)
+Base Risk per Trade: 0.45% of total equity (Vol-Adjusted: 0.5x-2.0x scaling, Session-Adjusted: 0.0x-1.2x)
 Aggregate Open Risk Ceiling: 6.00%
 Maximum Concurrent Positions: 20
 Maximum Margin Utilization: 75% of equity
@@ -91,6 +92,7 @@ Limit Order Engine: FVG/Sweep zone entries (0.15-0.25R improvement over market)
 Post-Only Limit Orders: True (Maker rebate 0.002% vs Taker 0.02% = 10x fee savings)
 Volatility Targeting: 2% daily portfolio vol via ATR(14), capped 0.5x-2.0x risk scale
 Funding Rate Arbitrage: Delta-neutral perp on BTC/ETH/SOL @ |funding| > 0.01%/8h (13.7% APR)
+Session-Aware Gating (v1.7): WIB-hour multipliers — Night dir=0/fund=1, Asia smc=0.5/brk=1, EU all=1, US smc=0.7/brk15=0.5/brk1h=1.2/fund=1
 ```
 
 ---
@@ -99,25 +101,48 @@ Funding Rate Arbitrage: Delta-neutral perp on BTC/ETH/SOL @ |funding| > 0.01%/8h
 
 ```text
 .
-├── futures_bot.py              # 24/7 autonomous trading loop daemon
-├── smc_lib.py                  # SMC/ICT quantitative indicators (FVG, Sweeps, Killzones)
+├── futures_bot.py              # 24/7 autonomous trading loop daemon (v1.7 session gating)
 ├── futures_dashboard.py        # Real-time FastAPI terminal & API gateway
-├── calendar_gen.py             # WIB-based daily PnL calendar generator
-├── versions_gen.py             # Version release & performance report builder
-├── versions_style.py           # Editorial dark-mode aesthetic styling
-├── versions.json               # Immutable release catalog and trade performance ledgers
 ├── strategy_config.json        # Production configuration, asset parameters & risk rules
-├── engine.py                   # Vectorized backtesting simulator & candle ingestion
-├── stratlib.py                 # Technical indicator mathematics library
-├── check_state.py              # CLI state viewer for active books and margins
-├── close_all.py                # Emergency position flattener
-├── sharpe.py                   # Historical Sharpe, Sortino, and Calmar metrics calculator
+├── versions.json               # Immutable release catalog and trade performance ledgers
+├── fut_state.json              # Runtime state (positions, equity, cooldowns)
+├── scripts/                    # Research & backtest scripts (gitignored)
+│   ├── backtest_smc.py
+│   ├── check_meta.py
+│   ├── dashboard.py
+│   ├── engine.py
+│   ├── hl_live_bot.py
+│   ├── hl_trader.py
+│   ├── research.py
+│   ├── research2.py
+│   ├── research3.py
+│   ├── research4.py
+│   ├── research5.py
+│   ├── research6.py
+│   ├── research_breakout.py
+│   ├── research_cand.py
+│   ├── research_final.py
+│   ├── research_grid.py
+│   ├── research_multi.py
+│   ├── scan_top30.py
+│   ├── scan_volume.py
+│   ├── stratlib.py
+│   ├── stratlib2.py
+│   ├── smc_lib.py
+│   ├── candidate_coins.json
+│   └── versions_gen.py
 ├── static/                     # Static production assets
 │   ├── about.html              # System philosophy and methodology page
 │   ├── calendar.html           # Rendered daily PnL performance calendar
-│   └── versions.html           # Rendered version release history
-├── archive/                    # Deprecated research prototypes
-└── tests & research/           # Walk-forward analysis and parameter robustness tests
+│   ├── versions.html           # Rendered version release history
+│   ├── hl-apple-touch-icon.png
+│   ├── hl-favicon-16x16.png
+│   ├── hl-favicon-32x32.png
+│   └── lightweight-charts.js   # TradingView lightweight-charts library
+├── .control_pin                # Dashboard access PIN (chmod 600, gitignored)
+├── .control_pin.example        # Template for PIN setup
+├── futures-bot.service         # systemd service for trading daemon
+└── futures-dashboard.service   # systemd service for web terminal
 ```
 
 ---
@@ -167,12 +192,14 @@ Access the local monitoring dashboard at `http://localhost:8899`.
 - **Zero Credential Exposure**: Private keys and notification tokens are never committed to version control. They are resolved at runtime via external credential directories with strict POSIX permissions (`chmod 600`).
 - **PIN Protected Controls**: All manual overrides (emergency close, parameter modifications) require cryptographic verification.
 - **Production Data Stripping**: All public API endpoints strip proprietary infrastructure comments, internal backtest paths, and private host metadata.
+- **State & Logs Gitignored**: Runtime state (`fut_state.json`, `equity_curve.jsonl`, `fut_trades.jsonl`) and logs are excluded from version control.
 
 ---
 
 ## 📜 Release Cadence
 
-- **`v1.6` (Current Active)**: Post-Only Limit Orders (maker rebate 0.002%), Volatility-Targeted Sizing (2% daily vol), Funding Rate Arbitrage on BTC/ETH/SOL (delta-neutral, 13.7% APR), Universe expansion to 13 assets (Cluster F), 33 strategy slots.
+- **`v1.7` (Current Active)**: Session-Aware Risk Gating — WIB-hour risk multipliers per strategy family. Night (22-04) directional OFF/funding ON; Asia (04-08) breakout 1.0x/SMC 0.5x; EU (08-14) ALL 1.0x (golden window); US (14-22) SMC 0.7x/Breakout 15m 0.5x/Swing 1h 1.2x. Eliminates -$152 night bleed. Zero new strategies, pure risk gating overlay.
+- **`v1.6` (Superseded)**: Post-Only Limit Orders (maker rebate 0.002%), Volatility-Targeted Sizing (2% daily vol), Funding Rate Arbitrage on BTC/ETH/SOL (delta-neutral, 13.7% APR), Universe expansion to 13 assets (Cluster F), 33 strategy slots.
 - **`v1.5` (Superseded)**: Regime Detection (BULL/BEAR/CHOP via EMA alignment), Limit Order Engine (FVG/Sweep/Breakout levels with 0.15-0.25R improvement), Variable Leverage per Horizon (Scalp 15x, Intraday 10x, Swing 5x), full multi-horizon stacking across 10 assets.
 - **`v1.4` (Superseded)**: Symmetric Multi-Horizon Stacking (Scalp 5m, Intraday 15m, Swing 1h) across all 10 assets, strict dollar risk normalization (0.45% flat), anti-hedging directional guard, and calibrated 1:2.5R breakout targets.
 - **`v1.3` (Superseded)**: Delisted toxic chop assets (`HYPE`, `PUMP`), upgraded scale-out ratio to 33% @ 1.0R (67% runner), deployed 45m loss cooldown, and normalized 10-asset universe.

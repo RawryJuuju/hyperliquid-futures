@@ -19,6 +19,17 @@ credentials/
 
 # Runtime logs
 *.log
+bot.log
+futures_bot.log
+futures_dashboard.log
+
+# State files (regenerated)
+fut_state.json
+equity_curve.jsonl
+fut_trades.jsonl
+
+# Scripts directory (old research, not for production)
+scripts/
 
 # OS & editor artifacts
 .DS_Store

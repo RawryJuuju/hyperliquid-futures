@@ -6,8 +6,8 @@
   "_start_equity": 1000.0,
   "_risk_model": {
     "mode": "fixed_fractional",
-    "base_risk_pct": 0.45,
-    "_rationale": "Calibrated 2026-10-20: base 0.55% -> 6 posisi = 2.17% risk (cap 2.25%). Leverage 10x uniform: margin 22.5% equity, liq buffer 6.4x SL terlebar. MC 500x: DD median -16%, worst -33%, ruin 0%.",
+    "base_risk_pct": 0.75,
+    "_rationale": "Calibrated 2026-11-16: base 0.75% -> 8 posisi = 6% risk (cap 6%). Leverage 10x uniform: margin ~40% equity, liq buffer ~3.5x SL. MC 500x: DD controlled.",
     "_leverage_note": "Leverage TIDAK mempengaruhi fee drag (fee/risk = 0.08%/SL%). Leverage hanya mengubah margin terkunci & jarak likuidasi.",
     "max_total_open_risk_pct": 6.0,
     "daily_loss_cap_pct": 99.0,
@@ -16,7 +16,7 @@
     "reduce_factor": 0.5,
     "coin_cooldown_min": 45,
     "consec_loss_trigger": 999,
-    "max_concurrent": 20
+    "max_concurrent": 8
   },
   "_correlation_clusters": {
     "A": [
@@ -127,7 +127,7 @@
             "min_body": 0.5,
             "htf_ema": 20,
             "hold": 48,
-            "slope_min": 1.5
+            "slope_min": 2.5
           },
           "risk_weight": 1.0
         },
@@ -141,7 +141,7 @@
             "min_body": 0.5,
             "htf_ema": 20,
             "hold": 48,
-            "slope_min": 1.5
+            "slope_min": 2.5
           },
           "risk_weight": 1.0
         }
@@ -171,7 +171,7 @@
             "min_body": 0.5,
             "htf_ema": 20,
             "hold": 48,
-            "slope_min": 1.5
+            "slope_min": 2.5
           },
           "risk_weight": 1.0
         },
@@ -185,7 +185,7 @@
             "min_body": 0.5,
             "htf_ema": 20,
             "hold": 48,
-            "slope_min": 1.5
+            "slope_min": 2.5
           },
           "risk_weight": 1.0
         }
@@ -215,7 +215,7 @@
             "min_body": 0.5,
             "htf_ema": 20,
             "hold": 48,
-            "slope_min": 1.5
+            "slope_min": 2.5
           },
           "risk_weight": 1.0
         },
@@ -229,7 +229,7 @@
             "min_body": 0.5,
             "htf_ema": 20,
             "hold": 48,
-            "slope_min": 1.5
+            "slope_min": 2.5
           },
           "risk_weight": 1.0
         }
@@ -259,7 +259,7 @@
             "min_body": 0.5,
             "htf_ema": 20,
             "hold": 48,
-            "slope_min": 1.5
+            "slope_min": 2.5
           },
           "risk_weight": 1.0
         },
@@ -273,7 +273,7 @@
             "min_body": 0.5,
             "htf_ema": 20,
             "hold": 48,
-            "slope_min": 1.5
+            "slope_min": 2.5
           },
           "risk_weight": 1.0
         }
@@ -292,34 +292,6 @@
             "hold": 48
           },
           "risk_weight": 1.0
-        },
-        {
-          "name": "breakout",
-          "timeframe": "15m",
-          "params": {
-            "look": 10,
-            "atr_mult": 1.5,
-            "rr": 2.5,
-            "min_body": 0.5,
-            "htf_ema": 20,
-            "hold": 48,
-            "slope_min": 1.5
-          },
-          "risk_weight": 1.0
-        },
-        {
-          "name": "breakout",
-          "timeframe": "1h",
-          "params": {
-            "look": 12,
-            "atr_mult": 2.0,
-            "rr": 2.5,
-            "min_body": 0.5,
-            "htf_ema": 20,
-            "hold": 48,
-            "slope_min": 1.5
-          },
-          "risk_weight": 1.0
         }
       ],
       "weight": 0.1
@@ -336,78 +308,6 @@
             "hold": 48
           },
           "risk_weight": 1.0
-        },
-        {
-          "name": "breakout",
-          "timeframe": "15m",
-          "params": {
-            "look": 10,
-            "atr_mult": 1.5,
-            "rr": 2.5,
-            "min_body": 0.5,
-            "htf_ema": 20,
-            "hold": 48,
-            "slope_min": 1.5
-          },
-          "risk_weight": 1.0
-        },
-        {
-          "name": "breakout",
-          "timeframe": "1h",
-          "params": {
-            "look": 12,
-            "atr_mult": 2.0,
-            "rr": 2.5,
-            "min_body": 0.5,
-            "htf_ema": 20,
-            "hold": 48,
-            "slope_min": 1.5
-          },
-          "risk_weight": 1.0
-        }
-      ],
-      "weight": 0.1
-    },
-    "PAXG": {
-      "cluster": "E",
-      "strategies": [
-        {
-          "name": "smc_silver_bullet",
-          "timeframe": "5m",
-          "params": {
-            "aggressive": true,
-            "rr": 2.0,
-            "hold": 48
-          },
-          "risk_weight": 1.0
-        },
-        {
-          "name": "breakout",
-          "timeframe": "15m",
-          "params": {
-            "look": 10,
-            "atr_mult": 1.5,
-            "rr": 2.5,
-            "min_body": 0.5,
-            "htf_ema": 20,
-            "hold": 48,
-            "slope_min": 1.5
-          },
-          "risk_weight": 1.0
-        },
-        {
-          "name": "breakout",
-          "timeframe": "1h",
-          "params": {
-            "look": 12,
-            "atr_mult": 2.0,
-            "rr": 2.5,
-            "min_body": 0.5,
-            "htf_ema": 20,
-            "hold": 48,
-            "slope_min": 1.5
-          },
-          "risk_weight": 1.0
         }
       ],
       "weight": 0.1
@@ -422,34 +322,6 @@
             "aggressive": true,
             "rr": 2.0,
             "hold": 48
-          },
-          "risk_weight": 1.0
-        },
-        {
-          "name": "breakout",
-          "timeframe": "15m",
-          "params": {
-            "look": 10,
-            "atr_mult": 1.5,
-            "rr": 2.5,
-            "min_body": 0.5,
-            "htf_ema": 20,
-            "hold": 48,
-            "slope_min": 1.5
-          },
-          "risk_weight": 1.0
-        },
-        {
-          "name": "breakout",
-          "timeframe": "1h",
-          "params": {
-            "look": 12,
-            "atr_mult": 2.0,
-            "rr": 2.5,
-            "min_body": 0.5,
-            "htf_ema": 20,
-            "hold": 48,
-            "slope_min": 1.5
           },
           "risk_weight": 1.0
         }
@@ -479,7 +351,7 @@
             "min_body": 0.5,
             "htf_ema": 20,
             "hold": 48,
-            "slope_min": 1.5
+            "slope_min": 2.5
           },
           "risk_weight": 1.0
         },
@@ -493,7 +365,7 @@
             "min_body": 0.5,
             "htf_ema": 20,
             "hold": 48,
-            "slope_min": 1.5
+            "slope_min": 2.5
           },
           "risk_weight": 1.0
         }
@@ -523,7 +395,7 @@
             "min_body": 0.5,
             "htf_ema": 20,
             "hold": 48,
-            "slope_min": 1.5
+            "slope_min": 2.5
           },
           "risk_weight": 1.0
         },
@@ -537,7 +409,7 @@
             "min_body": 0.5,
             "htf_ema": 20,
             "hold": 48,
-            "slope_min": 1.5
+            "slope_min": 2.5
           },
           "risk_weight": 1.0
         }

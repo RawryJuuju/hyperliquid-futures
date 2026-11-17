@@ -1,15 +1,67 @@
 {
   "versions": [
     {
+      "id": "v1.8",
+      "name": "Breakout Optimization & Double Penalty Cap",
+      "status": "active",
+      "start": "2026-11-17T13:35:00.000000+07:00",
+      "end": null,
+      "initial_equity": 851.63,
+      "final_equity": null,
+      "released": "2026-11-17T13:35:00.000000+07:00",
+      "closed": null,
+      "summary": "Breakout strategy optimization via coin blacklist + slope_min increase + double penalty cap. Removed breakout from 5 worst coins (HYPE, ENA, AVAX, PUMP, ARB) contributing -4.52 combined (0-37% WR). Increased slope_min from 1.5 to 2.5 on remaining breakout slots to filter weak setups. Capped double penalty: when DD reduce factor is active, volatility targeting is skipped (vol_scale=1.0) to prevent compounding risk reduction that shrinks positions below effective size. PAXG already removed in prior hotfix (-1.12, 0% WR breakout). Total active coins: 31 (PAXG removed, 5 coins breakout disabled).",
+      "verdict": "Deployed to production. Breakout now only on ZEC, WLD, NEAR, SUI, INJ, TAO with stricter slope filter. Risk sizing no longer double-penalized during drawdown.",
+      "changes": [
+        "Breakout Coin Blacklist (v1.8): Disabled breakout strategy on HYPE, ENA, AVAX, PUMP, ARB \u2014 5 coins responsible for -4.52 combined PnL (avg WR 20.8%). Breakout retained only on ZEC (+.66), WLD (+.36), NEAR (+/usr/bin/bash.81), SUI (+.09), INJ (-.19), TAO (-/usr/bin/bash.06).",
+        "Slope Min Increase (v1.8): Breakout slope_min raised from 1.5 to 2.5 across all remaining coins. Filters low-momentum channel breaks that frequently fake out. Based on 185 historical breakout trades analysis showing sub-2.5 slope = negative expectancy.",
+        "Double Penalty Cap (v1.8): When drawdown reduction is active (DD >= reduce_after_dd_pct), volatility targeting scale (vol_scale) is set to 1.0 instead of compounding. Previously: DD reduce (0.5x) * vol_scale (0.53x BTC) = 0.265x effective risk. Now: DD reduce only (0.5x). Prevents positions shrinking to ineffective size during drawdown recovery.",
+        "PAXG Removal (hotfix): Gold (PAXG) completely removed from universe. Breakout PAXG was 0% WR, -1.12 across 5 trades. SMC PAXG also negative (-.26, 16.7% WR). Gold volatility profile incompatible with crypto-optimized engines."
+      ],
+      "config_snapshot": {
+        "coins": "WLD, INJ, ZEC, NEAR, ENA, ARB, AVAX, TAO, SUI, BTC, ETH, SOL (31 total, PAXG removed)",
+        "breakout_enabled": "ZEC, WLD, NEAR, SUI, INJ, TAO (6 coins, 12 slots)",
+        "breakout_disabled": "HYPE, ENA, AVAX, PUMP, ARB (5 coins, 10 slots removed)",
+        "timeframes": "5m (Scalp), 15m (Intraday), 1h (Swing + Funding Arb)",
+        "strategies": "smc_silver_bullet (5m), breakout (15m/1h), funding_arb (1h on BTC/ETH/SOL)",
+        "base_risk": "0.75% flat per trade (vol-adjusted, session-adjusted, DD-adjusted)",
+        "max_open_risk": "6.0%",
+        "leverage_5m": "15x (INJ 5x)",
+        "leverage_15m": "10x (INJ 5x)",
+        "leverage_1h": "5x (all, incl BTC/ETH/SOL)",
+        "slots": "28 directional + 3 funding = 31 strategy slots",
+        "partial_take_profit": "33% @ 1.0R",
+        "breakeven_trigger": "1.2R (+0.15R fee buffer)",
+        "coin_cooldown": "45 minutes post-SL",
+        "anti_hedging_guard": "Strict directional synchronization",
+        "regime_detection": "EMA20/50 alignment on 1h+15m",
+        "limit_entry_fvg": "0.25R improvement (SMC)",
+        "limit_entry_breakout": "0.15R improvement (Breakout)",
+        "post_only_limits": "True (maker rebate 0.002%)",
+        "vol_targeting": "2% daily portfolio vol, ATR(14), 0.5x-2.0x scale (disabled when DD reduce active)",
+        "funding_arb_min_rate": "0.01%/8h (13.7% APR)",
+        "funding_arb_max_hold": "48 hours",
+        "session_gating": "WIB-hour multipliers: Night dir=0/fund=1, Asia smc=0.5/brk=1, EU all=1, US smc=0.7/brk15=0.5/brk1h=1.2/fund=1",
+        "breakout_slope_min": "2.5 (raised from 1.5)"
+      },
+      "notes": [
+        "Breakout was the single worst strategy: 185 trades, -5.79, 30.8% WR, -0.258 avg R.",
+        "5 worst breakout coins (HYPE/ENA/AVAX/PUMP/ARB) = -4.52 = 85% of breakout losses.",
+        "ZEC, WLD, NEAR, SUI breakout were positive \u2014 kept with stricter filter.",
+        "Double penalty fix restores position sizing during drawdown: BTC risk went from 0.20% -> 0.375% equity.",
+        "No new strategies. Pure optimization of existing breakout + risk model."
+      ]
+    },
+    {
       "id": "v1.7",
       "name": "Session-Aware Risk Gating & Capital Efficiency",
-      "status": "active",
+      "status": "superseded",
       "start": "2026-11-15T21:30:00.000000+07:00",
-      "end": null,
+      "end": "2026-11-17T13:35:00.000000+07:00",
       "initial_equity": 850.17,
-      "final_equity": null,
+      "final_equity": 851.63,
       "released": "2026-11-15T21:30:00.000000+07:00",
-      "closed": null,
+      "closed": "2026-11-17T13:35:00.000000+07:00",
       "summary": "Capital efficiency breakthrough via session-aware risk gating. Based on 528 live trades + Binance volume data + institutional quant research (Moskowitz 2012, Cartea-Jaimungal 2015). Implements WIB-hour risk multipliers per strategy family: Night (22-04) disables all directional (SMC/Breakout), only Funding Arb active; Asia Open (04-08) runs Breakout full, SMC half; EU Overlap (08-14) GOLDEN WINDOW - all strategies full size; US Overlap (14-22) boosts Swing 1h to 1.2x, cuts Breakout 15m to 0.5x, SMC 5m to 0.7x. Eliminates -$152 night bleed, boosts US swing alpha. Zero new strategies, pure risk gating overlay.",
       "verdict": "Deployed to production. Session gating active on all 33 strategy slots. Night directional = OFF, EU/US optimized, Funding Arb 24/7.",
       "changes": [
@@ -19,7 +71,7 @@
         "Asia Open Tuning: Breakout 15m/1h full size (range expansion works), SMC 5m half size (fakeout prone during Tokyo open).",
         "EU Overlap Golden Window: All strategies full size 08-14 WIB where volume, trend sustainability, and signal quality peak.",
         "Funding Arb 24/7 Unchanged: Delta-neutral funding collection runs all sessions, unaffected by directional gating.",
-        "Implementation: 30 lines in can_open() and size_position() — zero config changes, zero new parameters."
+        "Implementation: 30 lines in can_open() and size_position() \u2014 zero config changes, zero new parameters."
       ],
       "config_snapshot": {
         "coins": "WLD, INJ, ZEC, NEAR, ENA, ARB, PAXG, AVAX, TAO, SUI, BTC, ETH, SOL",
@@ -47,9 +99,9 @@
       "notes": [
         "Session gating eliminates the single largest PnL drag: -$152 from night (22-04 WIB).",
         "US Overlap swing 1h boost (1.2x) targets the strongest trend-follow-through window.",
-        "Breakout 15m reduced in US (0.5x) — adverse selection in post-only limits during chop.",
+        "Breakout 15m reduced in US (0.5x) \u2014 adverse selection in post-only limits during chop.",
         "EU Overlap 08-14 WIB remains the only session where all 3 horizons have edge simultaneously.",
-        "Funding arb runs 24/7 — uncorrelated alpha, session-independent.",
+        "Funding arb runs 24/7 \u2014 uncorrelated alpha, session-independent.",
         "Backtest on 528 trades: projected +$390 delta vs no session filter (-$275 -> +$115)."
       ]
     },

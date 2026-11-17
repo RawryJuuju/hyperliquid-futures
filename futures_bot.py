@@ -118,14 +118,55 @@ def log(m):
 
 
 def tg(m):
-    try:
-        tok = open(TG_TOKEN_FILE).read().strip()
-        p = json.dumps({"chat_id": TG_CHAT, "text": m, "parse_mode": "Markdown"}).encode()
-        req = urllib.request.Request(f"https://api.telegram.org/bot{tok}/sendMessage",
-                                     data=p, headers={"Content-Type": "application/json"})
-        urllib.request.urlopen(req, timeout=8)
-    except Exception:
-        pass
+    """Send Telegram notification with retry + logging."""
+    import urllib.request
+    import urllib.error
+    import re as _re
+    max_retries = 3
+    base_delay = 1.0
+    tok = open(TG_TOKEN_FILE).read().strip()
+    # Markdown chokes on underscores inside identifiers (funding_arb, smc_silver_bullet).
+    # Escape intra-word underscores, leave *bold* markers alone.
+    m = _re.sub(r"(?<=[A-Za-z0-9])_(?=[A-Za-z0-9])", r"\\_", m)
+    
+    for attempt in range(max_retries):
+        try:
+            p = json.dumps({"chat_id": TG_CHAT, "text": m, "parse_mode": "Markdown"}).encode()
+            req = urllib.request.Request(
+                f"https://api.telegram.org/bot{tok}/sendMessage",
+                data=p, headers={"Content-Type": "application/json"}
+            )
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                result = json.loads(resp.read().decode())
+                if not result.get("ok"):
+                    raise Exception(f"API error: {result.get('description', 'unknown')}")
+            return True
+        except urllib.error.HTTPError as e:
+            if e.code == 429:  # rate limited
+                retry_after = int(e.headers.get("Retry-After", 2))
+                log(f"TG rate limited, waiting {retry_after}s")
+                time.sleep(retry_after)
+                continue
+            if e.code == 400:
+                # Markdown parse failure (strategy names contain underscores) -> retry plain text
+                log("TG 400 (markdown parse) — retrying without parse_mode")
+                try:
+                    p2 = json.dumps({"chat_id": TG_CHAT, "text": m}).encode()
+                    req2 = urllib.request.Request(
+                        f"https://api.telegram.org/bot{tok}/sendMessage",
+                        data=p2, headers={"Content-Type": "application/json"})
+                    with urllib.request.urlopen(req2, timeout=10) as r2:
+                        if json.loads(r2.read().decode()).get("ok"):
+                            return True
+                except Exception as e2:
+                    log(f"TG plain-text retry failed: {e2}")
+            log(f"TG HTTP {e.code}: {e.reason}")
+        except Exception as e:
+            log(f"TG send failed (attempt {attempt+1}/{max_retries}): {e}")
+            if attempt < max_retries - 1:
+                time.sleep(base_delay * (attempt + 1))
+    log(f"TG FAILED after {max_retries} retries: {m[:80]}...")
+    return False
 
 
 def post_info(payload):
@@ -465,7 +506,8 @@ def sig_funding_arb(coin, P):
         if funding_rate is None:
             return None, "no funding data"
         
-        funding_8h_pct = funding_rate * 100  # convert to %
+        # HL `funding` field is HOURLY rate (decimal). Convert to 8h-equivalent percent.
+        funding_8h_pct = funding_rate * 8 * 100
         
         # Check if funding is attractive
         if abs(funding_8h_pct) < min_funding_8h:
@@ -799,6 +841,13 @@ def size_position(state, sig, risk_pct_equity):
     except Exception:
         pass
     
+    # v1.8: CAP DOUBLE PENALTY — if DD reduce active, skip vol_scale (don't compound)
+    rm = state.get("_risk_model_cfg") or {}
+    peak = state.get("peak_equity", equity)
+    dd = (peak - equity) / peak * 100 if peak > 0 else 0
+    if dd >= rm.get("reduce_after_dd_pct", 999):
+        vol_scale = 1.0  # skip vol targeting when drawdown reduce is active
+    
     risk_usd = equity * risk_pct_equity / 100 * vol_scale
     notional = risk_usd / (sig["risk_pct"] / 100)
     margin = notional / lev
@@ -1028,6 +1077,9 @@ def main():
                     engine_params = {**strat["params"], "timeframe": tf}
                     sig, reason = fn(coin, engine_params)
                     if not sig:
+                        # Night session: funding_arb is the only live strategy — log its skips
+                        if strat["name"] == "funding_arb" and reason:
+                            log(f"  skip {slot}: {reason}")
                         continue
 
                     # SESSION-AWARE (v1.7): Store strategy name for session gating in can_open()

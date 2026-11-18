@@ -83,18 +83,18 @@ SESSION_MULTIPLIERS = {
     1:  {"smc": 0.0, "breakout": 0.0, "funding": 1.0},
     2:  {"smc": 0.0, "breakout": 0.0, "funding": 1.0},
     3:  {"smc": 0.0, "breakout": 0.0, "funding": 1.0},
-    # ASIA OPEN (04-08 WIB): Breakout full, SMC half
-    4:  {"smc": 0.5, "breakout": 1.0, "funding": 1.0},
-    5:  {"smc": 0.5, "breakout": 1.0, "funding": 1.0},
-    6:  {"smc": 0.5, "breakout": 1.0, "funding": 1.0},
-    7:  {"smc": 0.5, "breakout": 1.0, "funding": 1.0},
-    # EU OVERLAP (08-14 WIB): GOLDEN WINDOW - all full
-    8:  {"smc": 1.0, "breakout": 1.0, "funding": 1.0},
-    9:  {"smc": 1.0, "breakout": 1.0, "funding": 1.0},
-    10: {"smc": 1.0, "breakout": 1.0, "funding": 1.0},
-    11: {"smc": 1.0, "breakout": 1.0, "funding": 1.0},
-    12: {"smc": 1.0, "breakout": 1.0, "funding": 1.0},
-    13: {"smc": 1.0, "breakout": 1.0, "funding": 1.0},
+    # ASIA OPEN (04-08 WIB): GOLDEN WINDOW - SMC full, Breakout full
+    4:  {"smc": 1.0, "breakout": 1.0, "funding": 1.0},
+    5:  {"smc": 1.0, "breakout": 1.0, "funding": 1.0},
+    6:  {"smc": 1.0, "breakout": 1.0, "funding": 1.0},
+    7:  {"smc": 1.0, "breakout": 1.0, "funding": 1.0},
+    # EU OVERLAP (08-14 WIB): TOXIC - SMC reduced, Breakout DISABLED
+    8:  {"smc": 0.3, "breakout": 0.0, "funding": 1.0},
+    9:  {"smc": 0.3, "breakout": 0.0, "funding": 1.0},
+    10: {"smc": 0.3, "breakout": 0.0, "funding": 1.0},
+    11: {"smc": 0.3, "breakout": 0.0, "funding": 1.0},
+    12: {"smc": 0.3, "breakout": 0.0, "funding": 1.0},
+    13: {"smc": 0.3, "breakout": 0.0, "funding": 1.0},
     # US OVERLAP (14-22 WIB): SMC 0.7, Breakout 15m 0.5, Swing 1h 1.2
     14: {"smc": 0.7, "breakout": 0.5, "funding": 1.0},
     15: {"smc": 0.7, "breakout": 0.5, "funding": 1.0},
@@ -923,6 +923,25 @@ def check_exits(state, cfg):
                    f"• SL digeser ke entry (+fee buffer) — bebas risiko")
 
         hit = None
+        # --- trailing logic (price-action based) ---
+        trail_mult = pos.get("trail_atr_mult")
+        if trail_mult and trail_mult > 0 and r_now >= 1.5:
+            # Get 15m ATR for trailing
+            c15 = candles(coin, "15m", 30)
+            atr_15 = atr(c15, 14) if len(c15) >= 15 else None
+            if atr_15 and atr_15 > 0:
+                trail_dist = atr_15 * trail_mult
+                if d == "LONG":
+                    new_sl = p - trail_dist
+                    if new_sl > pos["sl"]:
+                        pos["sl"] = round(new_sl, 8)
+                        pos["trail_active"] = True
+                else:
+                    new_sl = p + trail_dist
+                    if new_sl < pos["sl"]:
+                        pos["sl"] = round(new_sl, 8)
+                        pos["trail_active"] = True
+
         if d == "LONG":
             if p <= pos["sl"]:
                 hit = ("SL", pos["sl"])

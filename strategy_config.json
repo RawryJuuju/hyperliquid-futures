@@ -48,7 +48,7 @@
     "_note": "A: corr 0.89-0.95 (sangat tinggi). B: 0.76-0.88. C: ZEC negatif -0.73 s/d -0.82 (diversifier). D: SOL netral. E: PAXG gold. F: Majors - funding arb only, delta-neutral exposure."
   },
   "_exit_management": {
-    "_status": "OPTIONAL \u2014 default OFF. Data 120d: BE & partial MERUSAK edge (lihat _backtest).",
+    "_status": "OPTIONAL — HYBRID SCALP→SWING (v1.8.2+). Partial 50% @ 1.5R (NO BE). Runner 50% → Structure TP + Trail 1.5×ATR after 2.5R.",
     "_backtest": {
       "baseline_no_be_no_partial": {
         "totR": 162.9,
@@ -81,11 +81,11 @@
         "pf": 0.95
       }
     },
-    "_why": "Strategi RR 1:2-1:4 butuh winner besar. BE mematikan winner yang mundur dulu sebelum TP. Win rate naik (40->55%) tapi R hancur.",
-    "enabled": false,
+    "_why": "BE KILLS winners that retrace before TP. Win rate up (40→55%) but R destroyed. Hybrid: lock 1.5R on 50%, let 50% run to structure (≥2.5R) with trail 1.5×ATR after 2.5R. NO BE LOCK.",
+    "enabled": true,
     "be_at_R": null,
-    "partial_at_R": null,
-    "partial_frac": 0.33,
+    "partial_at_R": 1.5,
+    "partial_frac": 0.5,
     "_presets": {
       "safe_visual_only": {
         "be_at_R": null,

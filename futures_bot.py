@@ -83,11 +83,11 @@ SESSION_MULTIPLIERS = {
     1:  {"smc": 0.0, "breakout": 0.0, "funding": 1.0},
     2:  {"smc": 0.0, "breakout": 0.0, "funding": 1.0},
     3:  {"smc": 0.0, "breakout": 0.0, "funding": 1.0},
-    # ASIA OPEN (04-08 WIB): GOLDEN WINDOW - SMC full, Breakout full
-    4:  {"smc": 1.0, "breakout": 1.0, "funding": 1.0},
-    5:  {"smc": 1.0, "breakout": 1.0, "funding": 1.0},
-    6:  {"smc": 1.0, "breakout": 1.0, "funding": 1.0},
-    7:  {"smc": 1.0, "breakout": 1.0, "funding": 1.0},
+    # ASIA OPEN (04-08 WIB): SMC reduced (data shows 45% WR), Breakout DISABLED (0% WR)
+    4:  {"smc": 0.5, "breakout": 0.0, "funding": 1.0},
+    5:  {"smc": 0.5, "breakout": 0.0, "funding": 1.0},
+    6:  {"smc": 0.5, "breakout": 0.0, "funding": 1.0},
+    7:  {"smc": 0.5, "breakout": 0.0, "funding": 1.0},
     # EU OVERLAP (08-14 WIB): TOXIC - SMC reduced, Breakout DISABLED
     8:  {"smc": 0.3, "breakout": 0.0, "funding": 1.0},
     9:  {"smc": 0.3, "breakout": 0.0, "funding": 1.0},
@@ -95,15 +95,15 @@ SESSION_MULTIPLIERS = {
     11: {"smc": 0.3, "breakout": 0.0, "funding": 1.0},
     12: {"smc": 0.3, "breakout": 0.0, "funding": 1.0},
     13: {"smc": 0.3, "breakout": 0.0, "funding": 1.0},
-    # US OVERLAP (14-22 WIB): SMC 0.7, Breakout 15m 0.5, Swing 1h 1.2
-    14: {"smc": 0.7, "breakout": 0.5, "funding": 1.0},
-    15: {"smc": 0.7, "breakout": 0.5, "funding": 1.0},
-    16: {"smc": 0.7, "breakout": 0.5, "funding": 1.0},
-    17: {"smc": 0.7, "breakout": 0.5, "funding": 1.0},
-    18: {"smc": 0.7, "breakout": 0.5, "funding": 1.0},
-    19: {"smc": 0.7, "breakout": 0.5, "funding": 1.0},
-    20: {"smc": 0.7, "breakout": 0.5, "funding": 1.0},
-    21: {"smc": 0.7, "breakout": 0.5, "funding": 1.0},
+    # US OVERLAP (14-22 WIB): SMC 0.7, Breakout DISABLED (0% WR all sessions)
+    14: {"smc": 0.7, "breakout": 0.0, "funding": 1.0},
+    15: {"smc": 0.7, "breakout": 0.0, "funding": 1.0},
+    16: {"smc": 0.7, "breakout": 0.0, "funding": 1.0},
+    17: {"smc": 0.7, "breakout": 0.0, "funding": 1.0},
+    18: {"smc": 0.7, "breakout": 0.0, "funding": 1.0},
+    19: {"smc": 0.7, "breakout": 0.0, "funding": 1.0},
+    20: {"smc": 0.7, "breakout": 0.0, "funding": 1.0},
+    21: {"smc": 0.7, "breakout": 0.0, "funding": 1.0},
 }
 
 _CACHE = {}
@@ -887,45 +887,36 @@ def check_exits(state, cfg):
         # R saat ini
         r_now = ((p - entry) if d == "LONG" else (entry - p)) / risk
 
-        # ---- exit management (opsional, default OFF) ----
+        # ---- exit management: HYBRID SCALP->SWING (v1.8.2+) ----
+        # Partial TP 50% @ 1.5R (NO BE LOCK)
+        # Runner 50% -> Structure TP (>=2.5R) + Trail 1.5xATR after 2.5R
         if em_on:
-            # partial TP
+            # Partial TP (no BE after)
             if part_at and not pos.get("partial_done") and r_now >= part_at:
-                frac = part_frac
+                frac = part_frac  # 0.5
                 gain = frac * part_at * pos["risk_usd"]
-                state["equity"] += gain
-                state["day_pnl"] += gain
+                # NOTE: gain TIDAK ditambahkan ke equity di sini.
+                # Disimpan di realized_usd dan baru masuk equity saat posisi close
+                # (usd = R*risk_usd + realized_usd). Menambah di sini = double count.
                 pos["partial_done"] = True
                 pos["realized_usd"] = pos.get("realized_usd", 0) + gain
                 pos["risk_usd"] = pos["risk_usd"] * (1 - frac)
                 pos["size"] = pos["size"] * (1 - frac)
-                # BE setelah partial dengan buffer penutup fee
-                be_fee_offset = risk * 0.15
-                pos["sl"] = (entry + be_fee_offset) if d == "LONG" else (entry - be_fee_offset)
-                pos["be_done"] = True
+                # NO BE LOCK -- SL stays at original swing level
                 save_state(state)
-                log(f"💰 PARTIAL {coin} {frac*100:.0f}% @ {part_at}R (+${gain:.2f}) — SL→BE+buffer")
+                log(f"💰 PARTIAL {coin} {frac*100:.0f}% @ {part_at}R (+${gain:.2f}) -- Runner active")
                 tg(f"💰 *PARTIAL TP* {coin} {d}\n"
                    f"• Tutup {frac*100:.0f}% di +{part_at}R\n"
                    f"• Locked: +${gain:.2f}\n"
-                   f"• Sisa posisi SL digeser ke BE (+fee buffer)")
+                   f"• Runner 50% -> Structure TP + Trail")
 
-            # BE lock
-            elif be_at and not pos.get("be_done") and r_now >= be_at:
-                # Add small buffer to cover round-trip taker fee (0.09%) + slippage
-                be_fee_offset = risk * 0.15
-                pos["sl"] = (entry + be_fee_offset) if d == "LONG" else (entry - be_fee_offset)
-                pos["be_done"] = True
-                save_state(state)
-                log(f"🛡️ BE {coin} @ {be_at}R — SL→entry+buffer")
-                tg(f"🛡️ *BREAKEVEN LOCK* {coin} {d}\n"
-                   f"• Posisi +{r_now:.2f}R\n"
-                   f"• SL digeser ke entry (+fee buffer) — bebas risiko")
-
+            # BE lock DISABLED (be_at_R is null)
+            # elif be_at and not pos.get("be_done") and r_now >= be_at:
+            #     pass
         hit = None
         # --- trailing logic (price-action based) ---
         trail_mult = pos.get("trail_atr_mult")
-        if trail_mult and trail_mult > 0 and r_now >= 1.5:
+        if trail_mult and trail_mult > 0 and r_now >= 2.5:
             # Get 15m ATR for trailing
             c15 = candles(coin, "15m", 30)
             atr_15 = atr(c15, 14) if len(c15) >= 15 else None

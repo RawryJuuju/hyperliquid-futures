@@ -137,11 +137,12 @@ def read_json(path, default):
         return default
 
 
-def read_lines(path, n):
+def read_lines(path, n=None):
     if not os.path.exists(path):
         return []
     try:
-        lines = open(path).read().strip().split("\n")[-n:]
+        raw = open(path).read().strip().split("\n")
+        lines = raw[-n:] if n else raw
         return [json.loads(l) for l in lines if l.strip()]
     except Exception:
         return []
@@ -228,7 +229,7 @@ def api_state():
             "rr": p.get("rr", 0), "status": "active",
         })
 
-    history = read_lines(TRADE_LOG, 60)
+    history = read_lines(TRADE_LOG)
     eq_curve = read_lines(EQUITY_LOG, 600)
     logs = []
     if os.path.exists(FUT_LOG):

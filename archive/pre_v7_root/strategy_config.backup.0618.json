@@ -82,7 +82,7 @@
       "safe_visual_only": {
         "be_at_R": null,
         "partial_at_R": null,
-        "_note": "Biarkan TP penuh. Dashboard tetap tampilkan locked-profit virtual."
+        "_note": "Leave TP full. Dashboard keeps showing locked profit."
       },
       "aggressive_BE": {
         "be_at_R": 1.0,

@@ -35,7 +35,7 @@ TG_TOKEN_FILE = "/home/ubuntu/credentials/gweilovejuujubot_bot_tele_token.txt"
 TG_CHAT = "1341231370"
 HL = "https://api.hyperliquid.xyz"
 
-MODE = os.environ.get("FUT_MODE", "shadow").lower()
+MODE = os.environ.get("FUT_MODE", "active").lower()
 DISPLAY_MODE = "LIVE"
 
 # Per-coin leverage: uniform 10x = 10% liquidation distance for every asset

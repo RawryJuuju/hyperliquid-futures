@@ -248,7 +248,7 @@ def api_state():
             "day_pnl": round(st.get("day_pnl", 0.0), 2),
             "unrealized": round(total_unreal, 2),
             "open_risk_pct": round(total_risk, 3),
-            "mode": "LIVE",
+            "mode": "ACTIVE",
             "running": running,
         },
         "positions": positions,
@@ -491,7 +491,7 @@ a.pill{display:inline-flex;align-items:center;gap:4px}
   <div class="brand"><div class="dot" id="statusDot"></div>HYPERLIQUID FUTURES<span class="sub">TERMINAL</span></div>
   <div class="tb-sep"></div>
   <div class="chipbar">
-    <span class="pill p-green" id="modePill">LIVE</span>
+    <span class="pill p-green" id="modePill">ACTIVE</span>
     <a href="/versions" class="pill p-grey" title="Versions">VERSIONS</a>
     <a href="/calendar" class="pill p-grey" title="PnL Calendar">PNL CALENDAR</a>
     <a href="/" class="pill p-cyan" title="About">ABOUT ↗</a>
@@ -833,7 +833,7 @@ function render(d){
 
   document.getElementById('statusDot').style.background=a.running?'var(--green)':'var(--red)';
   const mp=document.getElementById('modePill');
-  if(mp){ mp.textContent=a.running?'LIVE':'STOPPED';
+  if(mp){ mp.textContent=a.running?'ACTIVE':'STOPPED';
     mp.className='pill '+(a.running?'p-green':'p-red'); }
 
   // watchlist with real 24h change

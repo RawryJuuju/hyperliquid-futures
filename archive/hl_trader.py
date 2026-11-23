@@ -2,7 +2,7 @@
 """
 Hyperliquid REAL Futures Execution Engine
 ==========================================
-Not order execution. These are real orders to Hyperliquid L1 perpetuals.
+These are real orders to Hyperliquid L1 perpetuals.
 
 Mode:
   --network mainnet   -> api.hyperliquid-testnet.xyz (full mechanics)

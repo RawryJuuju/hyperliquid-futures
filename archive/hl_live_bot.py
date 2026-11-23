@@ -2,17 +2,17 @@
 """
 Hyperliquid REAL Futures Bot — Strategy Q4 (validated)
 ======================================================
-Strategi : Pro-trend pullback sweep (5m entry, 15m+1h trend gate)
-Entry    : limit di 50% retrace candle sweep
-SL       : ATR(14) x 1.0 dari entry
+strategy : Pro-trend pullback sweep (5m entry, 15m+1h trend gate)
+entry    : limit di 50% retrace candle sweep
+SL       : ATR(14) x 1.0 from entry
 TP       : 2.0R
-BE       : geser SL ke entry saat +1.0R
+BE       : move SL to entry at +1.0R
 Filter   : 1h slope + trend strength >=1.0 ATR + body ratio >=0.45
-Instrument: ETH saja (BTC tidak lolos validasi)
-Max hold : 60 bar 5m (5 jam)
+Instrument: ETH only (BTC not lolos validasi)
+Max hold : 60 bar 5m (5 hours)
 
-Order dikirim SUNGGUHAN ke Hyperliquid. SL & TP dipasang sebagai
-trigger order reduce-only di exchange, jadi tetap jalan walau bot mati.
+Orders are REALLY sent to Hyperliquid. SL & TP are placed as
+reduce-only trigger orders live on the exchange, so they survive even if the bot dies.
 """
 import os
 import sys
@@ -34,16 +34,16 @@ BASE_URL = ("https://api.hyperliquid-testnet.xyz" if NETWORK == "testnet"
 
 # ==== RISK PARAMETERS ====
 COIN = "ETH"
-MARGIN_USD = 50.0          # margin per posisi
-LEVERAGE = 3               # 3x -> notional $150, liq jauh
+MARGIN_USD = 50.0          # margin per position
+LEVERAGE = 3               # 3x -> $150 notional, distant liquidation
 MAX_NOTIONAL = 200.0
 MAX_OPEN = 1
-DAILY_LOSS_CAP = 30.0      # stop kalau rugi hari ini > $30
+DAILY_LOSS_CAP = 30.0      # stop if loss today > $30
 SL_ATR_MULT = 1.0
 RR = 2.0
 BE_AT_R = 1.0
 MAX_HOLD_BARS = 60
-TTL_BARS = 20              # limit order expiry (20 x 5m = 100 menit)
+TTL_BARS = 20              # limit order expiry (20 x 5m = 100 minutes)
 MIN_BODY = 0.45
 MIN_STRENGTH = 1.0
 
@@ -113,7 +113,7 @@ def load_state():
         "day_pnl": 0.0,
         "trades_today": 0,
         "pending": None,          # limit order menunggu fill
-        "position": None,         # posisi aktif
+        "position": None,         # active position
         "last_bar": None,
         "consec_loss": 0,
         "cooldown_until": 0,
@@ -157,12 +157,12 @@ def tg(msg):
 #  SIGNAL
 # ============================================================
 def evaluate_signal():
-    """Return dict signal atau None. Pakai candle 5m yang SUDAH CLOSED."""
+    """Return dict signal or None. using candle 5m that already CLOSED."""
     c5 = get_candles(COIN, "5m", 120)
     c15 = get_candles(COIN, "15m", 60)
     c1h = get_candles(COIN, "1h", 60)
     if len(c5) < 60 or len(c15) < 25 or len(c1h) < 55:
-        return None, "data kurang"
+        return None, "insufficient data"
 
     cur = c5[-2]  # last closed
     a = atr(c5[:-1], 14)
@@ -192,7 +192,7 @@ def evaluate_signal():
     body = abs(cur["c"] - cur["o"])
     rngc = max(cur["h"] - cur["l"], 1e-9)
     if body / rngc < MIN_BODY:
-        return None, f"body kecil ({body/rngc:.2f})"
+        return None, f"body small ({body/rngc:.2f})"
 
     direction = None
     if cur["l"] < ll and cur["c"] > ll and up15 and up1h and slope_up:
@@ -200,7 +200,7 @@ def evaluate_signal():
     elif cur["h"] > lh and cur["c"] < lh and (not up15) and (not up1h) and (not slope_up):
         direction = "short"
     if not direction:
-        return None, "tidak ada sweep searah tren"
+        return None, "none sweep searah tren"
 
     entry = (cur["l"] + cur["c"]) / 2 if direction == "long" else (cur["h"] + cur["c"]) / 2
     sl_dist = a * SL_ATR_MULT
@@ -208,9 +208,9 @@ def evaluate_signal():
     tp = entry + sl_dist * RR if direction == "long" else entry - sl_dist * RR
 
     if sl_dist / entry > 0.02:
-        return None, "SL terlalu lebar (>2%)"
+        return None, "SL too wide (>2%)"
     if sl_dist / entry < 0.0012:
-        return None, "SL terlalu sempit"
+        return None, "SL too tight"
 
     return {
         "direction": direction,
@@ -234,7 +234,7 @@ def submit_limit(sig, state):
     ai = next((x for x in post_info({"type": "meta"})["universe"]
                if x["name"] == COIN), None)
     if not ai:
-        return False, "coin tidak ada"
+        return False, "coin none"
     sz_dec = ai["szDecimals"]
 
     notional = MARGIN_USD * LEVERAGE
@@ -283,17 +283,17 @@ def submit_limit(sig, state):
 
     log(f"LIMIT PLACED {sig['direction']} {COIN} sz={sz} @ {sig['entry']} oid={oid}")
     tg(f"📥 *LIMIT PLACED* {COIN} {sig['direction'].upper()}\n"
-       f"• Entry : ${sig['entry']:,.2f}\n"
+       f"• entry : ${sig['entry']:,.2f}\n"
        f"• SL    : ${sig['sl']:,.2f} ({sig['risk_px']:.2f} = {sig['risk_px']/sig['entry']*100:.2f}%)\n"
        f"• TP    : ${sig['tp']:,.2f} (RR 1:{RR:.1f})\n"
        f"• Size  : {sz} {COIN} (${notional:.0f} notional, {LEVERAGE}x)\n"
        f"• OID   : `{oid}`\n"
-       f"• TTL   : {TTL_BARS*5} menit")
+       f"• TTL   : {TTL_BARS*5} minutes")
     return True, oid
 
 
 def sync_pending(state):
-    """Cek apakah limit sudah fill / expired. Kalau fill -> pasang SL & TP."""
+    """check apakah limit already fill / expired. if fill -> pasang SL & TP."""
     p = state.get("pending")
     if not p:
         return
@@ -346,11 +346,11 @@ def sync_pending(state):
         save_state(state)
 
         tg(f"⚡ *FILLED* {COIN} {p['direction'].upper()}\n"
-           f"• Entry : ${entry_px:,.2f}\n"
+           f"• entry : ${entry_px:,.2f}\n"
            f"• Size  : {sz} {COIN}\n"
            f"• SL    : ${p['sl']:,.2f} ({sl_res.get('status')})\n"
            f"• TP    : ${p['tp']:,.2f} ({tp_res.get('status')})\n"
-           f"• Status: bracket aktif di exchange (aman walau bot mati)")
+           f"• Status: bracket live on the exchange (safe even if the bot dies)")
         return
 
     # Expired?
@@ -361,7 +361,7 @@ def sync_pending(state):
             exch.cancel(COIN, int(p["oid"])) if p.get("oid") else None
         except Exception as e:
             log(f"cancel warn: {e}")
-        tg(f"⚠️ *LIMIT EXPIRED* {COIN} {p['direction'].upper()} @ ${p['entry']:,.2f} — tidak kejemput, dibatalkan.")
+        tg(f"⚠️ *LIMIT EXPIRED* {COIN} {p['direction'].upper()} @ ${p['entry']:,.2f} — not kejemput, dibatalkan.")
         state["pending"] = None
         save_state(state)
 
@@ -382,14 +382,14 @@ def manage_position(state):
             break
 
     if not live:
-        # posisi sudah tutup (kena SL/TP)
+        # position already closed (SL/TP hit)
         pnl = float(st.get("marginSummary", {}).get("accountValue", 0) or 0)
         log(f"POSITION CLOSED. accountValue=${pnl:,.2f}")
         tg(f"🏁 *POSITION CLOSED* {COIN} {pos['direction'].upper()}\n"
-           f"• Entry : ${pos['entry_px']:,.2f}\n"
+           f"• entry : ${pos['entry_px']:,.2f}\n"
            f"• SL/TP : ${pos['sl']:,.2f} / ${pos['tp']:,.2f}\n"
-           f"• Account value sekarang: ${pnl:,.2f}\n"
-           f"• Bot siap cari setup berikutnya.")
+           f"• Account value now: ${pnl:,.2f}\n"
+           f"• Bot siap find setup berikutnya.")
         with open(TRADE_LOG, "a") as f:
             f.write(json.dumps({"closed": now_wib().isoformat(), **pos, "acct": pnl}) + "\n")
         state["position"] = None
@@ -417,19 +417,19 @@ def manage_position(state):
             save_state(state)
             log(f"BE SET @ {entry_px}")
             tg(f"🛡️ *BREAKEVEN LOCK* {COIN} {pos['direction'].upper()}\n"
-               f"• Posisi sudah +{r_now:.2f}R\n"
-               f"• SL digeser ke entry ${entry_px:,.2f} — bebas risiko")
+               f"• position already +{r_now:.2f}R\n"
+               f"• SL moved to entry ${entry_px:,.2f} — risk free")
         except Exception as e:
             log(f"BE fail: {e}")
 
     # time exit
     bars_held = (time.time() - pos["filled_ts"]) / 300
     if bars_held > MAX_HOLD_BARS:
-        log(f"TIME EXIT after {bars_held:.0f} bars")
+        log(f"TIME exit after {bars_held:.0f} bars")
         try:
             exch, _ = get_exchange()
             exch.market_close(COIN)
-            tg(f"⏱️ *TIME EXIT* {COIN} — posisi ditutup setelah {bars_held:.0f} bar (>{MAX_HOLD_BARS*5} menit)")
+            tg(f"⏱️ *TIME exit* {COIN} — position ditutup setelah {bars_held:.0f} bar (>{MAX_HOLD_BARS*5} minutes)")
         except Exception as e:
             log(f"close fail: {e}")
 
@@ -447,7 +447,7 @@ def daily_reset(state):
 def main_loop():
     log(f"=== HL REAL FUTURES BOT | {NETWORK.upper()} | {COIN} ===")
     if os.path.exists(KILL_SWITCH):
-        log(f"KILL SWITCH aktif ({KILL_SWITCH}) — berhenti.")
+        log(f"KILL SWITCH active ({KILL_SWITCH}) — stopping.")
         return
 
     state = load_state()
@@ -457,9 +457,9 @@ def main_loop():
     log(f"wallet {address} | accountValue ${av:,.2f}")
 
     if av <= 0:
-        log("SALDO $0 — bot tidak bisa trade. Isi dulu / pakai faucet testnet.")
-        tg(f"⛔ *BOT BERHENTI* — saldo {NETWORK} wallet `{address}` = $0.00\n"
-           f"Isi dana dulu, lalu jalankan ulang.")
+        log("BALANCE $0 — the bot cannot trade. Fund it first, or use the testnet faucet.")
+        tg(f"⛔ *BOT STOPPED* — {NETWORK} wallet balance `{address}` = $0.00\n"
+           f"Fund the account first, then run again.")
         return
 
     while True:
@@ -470,7 +470,7 @@ def main_loop():
             daily_reset(state)
 
             if state.get("day_pnl", 0) <= -DAILY_LOSS_CAP:
-                log(f"DAILY LOSS CAP tercapai (${state['day_pnl']:.2f}) — stop hari ini.")
+                log(f"DAILY LOSS CAP tercapai (${state['day_pnl']:.2f}) — stop today.")
                 tg(f"🛑 *DAILY LOSS CAP* ${state['day_pnl']:.2f} — bot stop sampai besok.")
                 break
 
@@ -486,7 +486,7 @@ def main_loop():
                 if sig:
                     ok, info = submit_limit(sig, state)
                     if not ok:
-                        log(f"submit gagal: {info}")
+                        log(f"submit failed: {info}")
                 else:
                     log(f"scan: {reason}")
 

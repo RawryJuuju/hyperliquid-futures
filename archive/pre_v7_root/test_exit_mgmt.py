@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-TEST: BE dan Partial TP di level tinggi (2R, 2.5R, 3R)
-Pertanyaan user: kalau TP di 4R, dan sudah profit 2R, kenapa tidak pasang SL di entry?
+TEST: BE and Partial TP at higher levels (2R, 2.5R, 3R)
+User question: with TP at 4R and 2R of profit booked, why not move the stop to entry?
 
 Logika:
-  BE@2R untung  : trade yang pullback ke -1R jadi 0R (+1R)
-  BE@2R rugi    : trade yang pullback ke 0R lalu lanjut 4R jadi 0R (-4R)
+  BE@2R profit  : trades that pull back to -1R become 0R (+1R)
+  BE@2R loss    : trades that pull back to 0R then run to 4R end at 0R (-4R)
 
-Yang menentukan: mana yang lebih sering?
+What decides it: which happens more often?
 """
 import json, urllib.request, time
 
@@ -66,9 +66,9 @@ def align(cs, cb):
 def run(ce, c1, c2, P, rr, hold, look, slope_min,
         be_at=None, partial_at=None, partial_frac=0.5, trail_at=None, trail_gap=0.5):
     """
-    Exit management:
-      be_at      : geser SL ke entry saat profit >= be_at R
-      partial_at : tutup partial_frac posisi saat profit >= partial_at R
+    exit management:
+      be_at      : move SL to entry once profit >= be_at R
+      partial_at : close partial_frac of the position once profit >= partial_at R
       trail_at   : mulai trailing setelah trail_at R, jarak trail_gap R
     """
     n = len(ce)
@@ -151,7 +151,7 @@ def run(ce, c1, c2, P, rr, hold, look, slope_min,
                 realized += partial_frac * partial_at
                 remaining -= partial_frac
                 partial_done = True
-                # setelah partial, SL ke entry (kecuali sudah trailing lebih tinggi)
+                # after a partial, SL goes to entry (unless trailing already set it higher)
                 if d == "LONG":
                     cur_sl = max(cur_sl, entry)
                 else:
@@ -163,7 +163,7 @@ def run(ce, c1, c2, P, rr, hold, look, slope_min,
                 cur_sl = entry
                 be_done = True
 
-            # --- cek SL ---
+            # --- check SL ---
             if d == "LONG" and l <= cur_sl:
                 r_exit = (cur_sl - entry) / dist
                 realized += remaining * r_exit
@@ -187,7 +187,7 @@ def run(ce, c1, c2, P, rr, hold, look, slope_min,
                 exit_p = cur_sl
                 break
 
-            # --- cek TP ---
+            # --- check TP ---
             if d == "LONG" and h >= tp:
                 realized += remaining * rr
                 outcome = "TP"
@@ -268,7 +268,7 @@ if __name__ == "__main__":
     ]
 
     print("\n" + "=" * 118)
-    print("EXIT MANAGEMENT TEST — 15m breakout, TP 4R, slope 1.5, 90d, fee+slippage realistis")
+    print("exit MANAGEMENT TEST — 15m breakout, TP 4R, slope 1.5, 90d, fee+slippage realistis")
     print("=" * 118)
     print(f"{'VARIAN':<28}{'N':>5}{'WR%':>7}{'PF':>7}{'TotR':>9}{'AvgR':>8}{'MaxDD':>8}"
           f"{'TP':>5}{'SL':>5}{'BE':>5}{'TRL':>5}")

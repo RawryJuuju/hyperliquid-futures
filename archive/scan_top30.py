@@ -25,7 +25,7 @@ print("-"*52)
 for i, r in enumerate(rows[:30], 1):
     print(f"{i:<3}{r['coin']:<10}{r['vol']:>16,.0f}{r['oi']:>15,.0f}{r['maxLev']:>5}")
 
-# Filter: cukup likuid untuk trading retail
+# Filter: liquid enough for retail trading
 liquid = [r["coin"] for r in rows if r["vol"] >= 20_000_000]
 print(f"\nLikuid (vol >= $20M/24h): {len(liquid)}")
 print(", ".join(liquid))

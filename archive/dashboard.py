@@ -619,7 +619,7 @@ def index():
             <span class="status-tag tag-neutral" id="card_side_badge">-</span>
           </div>
           <div class="ob-row">
-            <span class="ob-lbl">Limit Entry:</span>
+            <span class="ob-lbl">Limit entry:</span>
             <span class="ob-val val-entry" id="card_entry">-</span>
           </div>
           <div class="ob-row">
@@ -688,7 +688,7 @@ def index():
           • <b>Trend Confluence:</b> 1H & 15M EMA20 Directional Filter<br>
           • <b>Execution Trigger:</b> 5M Pro-Trend Pullback Retest<br>
           • <b>Asymmetric Bracket:</b> ✂️ Cut 0.30% | 🎯 Win 1.20% (RR 1:4)<br>
-          • <b>Order TTL:</b> 25 Menit (5 Candle) Auto-Cancel<br>
+          • <b>Order TTL:</b> 25 Minutes (5 Candles) Auto-Cancel<br>
           • <b>Rate-Limit Shield:</b> In-Memory Anti-429 Oracle Cache
         </div>
       </div>
@@ -826,7 +826,7 @@ def index():
       }
     }
 
-    // LUMINOUS CYAN / LIGHT BLUE ENTRY LINE
+    // LUMINOUS CYAN / LIGHT BLUE entry LINE
     function updateChartLines(bracket) {
       lastSavedBracket = bracket;
       const s = candleSeries || areaSeries;

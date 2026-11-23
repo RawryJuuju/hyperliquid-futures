@@ -1,4 +1,4 @@
-# Trade Data Snapshots
+# Trade data Snapshots
 
 Immutable trade history archives, one per major version milestone.
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sensitivity test: apakah edge tahan kalau parameter digeser?"""
+"""Sensitivity test: does the edge survive when parameters are shifted?"""
 import json, urllib.request, time
 
 HL = "https://api.hyperliquid.xyz/info"
@@ -156,7 +156,7 @@ if __name__ == "__main__":
         print(f"  {c} ok")
 
     print("\n" + "=" * 100)
-    print("SENSITIVITY TEST — geser parameter ±20-50%, PF harus tetap > 1.0")
+    print("SENSITIVITY TEST — shift parameters by ±20-50%, PF must stay > 1.0")
     print("=" * 100)
     print(f"{'PARAM':<18}{'VALUE':>8}{'N':>6}{'PF':>7}{'TotR':>9}{'STATUS':>10}")
     print("-" * 100)

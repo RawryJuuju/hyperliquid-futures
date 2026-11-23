@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Studi mendalam: leverage, fee drag, margin, likuidasi, dan sizing optimal.
-Tujuan: tentukan parameter final untuk 9 coin dengan bukti angka.
+Deep study: leverage, fee drag, margin, liquidation and optimal sizing.
+Goal: settle the final parameters for 9 coins with hard numbers.
 """
 import json, urllib.request, time
 
@@ -38,16 +38,16 @@ meta = post({"type": "meta"})
 maxlev = {a["name"]: a.get("maxLeverage", 10) for a in meta["universe"]}
 
 print("=" * 100)
-print("BAGIAN 1: APAKAH LEVERAGE MEMPENGARUHI FEE DRAG?")
+print("PART 1: DOES LEVERAGE AFFECT FEE DRAG?")
 print("=" * 100)
 print()
 print("fee_dollar = notional x 0.08%")
 print("risk_dollar = notional x SL%")
-print("fee/risk = 0.08% / SL%   <-- LEVERAGE TIDAK MUNCUL DI RUMUS")
+print("fee/risk = 0.08% / SL%   <-- LEVERAGE DOES NOT APPEAR IN THE FORMULA")
 print()
 
 print("=" * 100)
-print("BAGIAN 2: SL AKTUAL 9 COIN + FEE DRAG + LEVERAGE AMAN")
+print("PART 2: ACTUAL SL FOR 9 COINS + FEE DRAG + SAFE LEVERAGE")
 print("=" * 100)
 print(f"{'COIN':<7}{'ATR%':>7}{'SL%':>7}{'FEE/RISK':>10}{'MAXLEV':>8}{'LEV PILIH':>11}"
       f"{'LIQ':>7}{'BUFFER':>8}{'MARGIN':>9}{'RISK$':>8}")
@@ -89,20 +89,20 @@ for c in COINS:
           f"{liq:>6.1f}%{buffer:>7.1f}x{margin:>8.0f}${risk_usd:>7.2f}")
 
 print("-" * 100)
-print(f"total margin semua 9 coin: ${sum(r['margin'] for r in rows):.0f}")
-print(f"total risk semua 9 coin  : ${sum(r['risk_usd'] for r in rows):.2f} "
+print(f"total margin across all 9 coins: ${sum(r['margin'] for r in rows):.0f}")
+print(f"total risk across all 9 coins  : ${sum(r['risk_usd'] for r in rows):.2f} "
       f"({sum(r['risk_usd'] for r in rows)/EQUITY*100:.2f}% equity)")
 
 print()
 print("=" * 100)
-print("BAGIAN 3: KALIBRASI BASE RISK agar 6 POSISI MUAT DI CAP 2.25%")
+print("PART 3: CALIBRATE BASE RISK SO 6 POSITIONS FIT UNDER THE 2.25% CAP")
 print("=" * 100)
 print()
 avg_w = sum(r["weight"] for r in rows) / len(rows)
 max_w = max(r["weight"] for r in rows)
 
 for base in [0.75, 0.70, 0.65, 0.60, 0.55, 0.50]:
-    # worst case: 6 coin dengan weight tertinggi
+    # worst case: 6 coin with weight tertinggi
     top6 = sorted(rows, key=lambda r: -r["weight"])[:6]
     tot_risk_pct = sum(base * r["weight"] / max_w for r in top6)
     tot_margin = 0
@@ -113,11 +113,11 @@ for base in [0.75, 0.70, 0.65, 0.60, 0.55, 0.50]:
         tot_margin += no / r["lev"]
     margin_pct = tot_margin / EQUITY * 100
     status = "OK" if tot_risk_pct <= 2.25 and margin_pct <= 60 else "OVER"
-    print(f"base {base:.2f}%: 6 posisi -> risk {tot_risk_pct:.2f}% | margin {margin_pct:.1f}% | {status}")
+    print(f"base {base:.2f}%: 6 position -> risk {tot_risk_pct:.2f}% | margin {margin_pct:.1f}% | {status}")
 
 print()
 print("=" * 100)
-print("BAGIAN 4: SIMULASI 6 POSISI REALISTIS (pilih 6 coin terberat SL)")
+print("PART 4: REALISTIC 6-POSITION SIMULATION (pick the 6 widest-SL coins)")
 print("=" * 100)
 print()
 worst6 = sorted(rows, key=lambda r: -r["sl_pct"])[:6]
@@ -140,7 +140,7 @@ for base in [0.75, 0.65, 0.60, 0.55]:
 
 print()
 print("=" * 100)
-print("BAGIAN 5: RISIKO LIKUIDASI — seberapa aman buffer?")
+print("PART 5: LIQUIDATION RISK — how safe is the buffer?")
 print("=" * 100)
 print()
 for r in sorted(rows, key=lambda x: x["buffer"]):

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Test dampak partial TP + BE terhadap total R. Pakai config aktif."""
+"""Test the impact of partial TP + BE on total R. Uses the active config."""
 import json
 from engine import fetch, FAMILIES, metrics
 
@@ -8,10 +8,10 @@ CFG = json.load(open("/home/ubuntu/hl-futures-engine/strategy_config.json"))["co
 
 def run_with_mgmt(c5, c15, c1h, params, family, partial_at=None, partial_frac=0.5,
                   be_at=None, rr=2.0):
-    """Wrapper: jalankan family, lalu replay trade dengan partial/BE overlay.
+    """Wrapper: run the family, then replay trades with a partial/BE overlay.
 
-    Karena engine asli tidak support partial, kita re-simulate per trade
-    dengan parameter exit yang sama tapi ada partial & BE.
+    Because the original engine has no partial support, we re-simulate per trade
+    with the same exit parameters plus partial & BE.
     """
     import statistics as st
     from engine import ema_series, atr_series

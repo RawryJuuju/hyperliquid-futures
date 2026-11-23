@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Tes 2 hipotesis:
-1. sweep_fade lebih baik dengan RR lebih kecil (1:1.5, 1:2, 1:2.5)?
-2. Kalau RR diturunkan, TP lebih cepat kena -> slot lebih cepat bebas -> capture naik
+test 2 hipotesis:
+1. does sweep_fade do better with a smaller RR (1:1.5, 1:2, 1:2.5)?
+2. Lower RR means TP hits sooner, slots free up faster, capture rises
 """
 import json, urllib.request, time
 from datetime import datetime, timezone, timedelta
@@ -140,8 +140,8 @@ if __name__ == "__main__":
     sweep_coins = {c: cc for c, cc in CFG.items()
                    if any(s["name"] == "sweep_fade" for s in cc["strategies"])}
 
-    print(f"Coin dengan sweep_fade: {len(sweep_coins)}")
-    print("Fetching 7 hari data...\n")
+    print(f"Coins with sweep_fade: {len(sweep_coins)}")
+    print("Fetching 7 days of data...\n")
 
     now_ms = int(time.time() * 1000)
     start_ms = now_ms - 7 * 86400_000
@@ -157,7 +157,7 @@ if __name__ == "__main__":
             print(f"  {c} ERR {e}")
 
     print("=" * 104)
-    print("SWEEP_FADE: VARIASI RR (7 hari, semua coin)")
+    print("SWEEP_FADE: RR VARIANTS (7 days, all coins)")
     print("=" * 104)
     print(f"{'RR':<6}{'N':>5}{'WR%':>7}{'PF':>7}{'TotR':>9}{'TP':>5}{'SL':>5}{'TIME':>6}{'AvgBars':>9}{'AvgMin':>8}")
     print("-" * 104)

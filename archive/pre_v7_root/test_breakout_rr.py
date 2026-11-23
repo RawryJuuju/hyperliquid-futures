@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tes RR variants untuk BREAKOUT (strategi yang profit)."""
+"""Test RR variants for BREAKOUT (the profitable strategy)."""
 import json, urllib.request, time
 from datetime import datetime, timezone, timedelta
 
@@ -137,7 +137,7 @@ if __name__ == "__main__":
     CFG = json.load(open("/home/ubuntu/hl-futures-engine/strategy_config.json"))["coins"]
     bo = {c: cc for c, cc in CFG.items()
           if any(s["name"] == "breakout" for s in cc["strategies"])}
-    print(f"Coin dengan breakout: {len(bo)}\nFetching 14 hari...\n")
+    print(f"Coins with breakout: {len(bo)}\nFetching 14 days...\n")
 
     now = int(time.time() * 1000)
     start = now - 14 * 86400_000
@@ -151,7 +151,7 @@ if __name__ == "__main__":
             print(f"  {c} ERR {e}")
 
     print("=" * 100)
-    print("BREAKOUT: VARIASI RR (14 hari)")
+    print("BREAKOUT: RR VARIANTS (14 days)")
     print("=" * 100)
     print(f"{'RR':<7}{'N':>5}{'WR%':>7}{'PF':>7}{'TotR':>9}{'TP':>5}{'SL':>5}{'AvgMin':>8}")
     print("-" * 100)

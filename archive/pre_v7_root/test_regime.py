@@ -2,11 +2,11 @@
 """
 REGIME FILTER TEST
 ==================
-Prinsip systematic trading: strategi trend-following hanya bekerja di regime trending.
-Mean reversion hanya bekerja di regime ranging.
+Systematic trading principle: trend-following only works in a trending regime.
+Mean reversion only works in a ranging regime.
 
 Test: breakout + filter regime (ADX, ATR percentile, EMA slope strength).
-Tujuan: buang trade di regime yang salah.
+Goal: drop trades taken in the wrong regime.
 """
 import json, urllib.request, time, statistics
 
@@ -121,11 +121,11 @@ def run(ce, c1, c2, P, rr, hold, look, regime=None):
 
         # --- REGIME FILTERS ---
         if regime:
-            # ADX: hanya trade kalau trend kuat
+            # ADX: only trade when the trend is strong
             if "adx" in regime:
                 if adx[i - 1] is None or adx[i - 1] < regime["adx"]:
                     continue
-            # ATR percentile: hanya trade kalau volatilitas di rentang tertentu
+            # ATR percentile: only trade when volatility sits in a given band
             if "atr_pct" in regime:
                 hist = [x for x in a[max(0, i - 100):i] if x]
                 if len(hist) < 40:
@@ -134,7 +134,7 @@ def run(ce, c1, c2, P, rr, hold, look, regime=None):
                 lo, hi = regime["atr_pct"]
                 if not (lo <= pct_rank <= hi):
                     continue
-            # EMA slope strength: seberapa jauh harga dari EMA2
+            # EMA slope strength: how far price sits from EMA2
             if "slope_min" in regime:
                 strength = abs(cl2[k2] - e2[k2]) / a[i - 1]
                 if strength < regime["slope_min"]:
@@ -216,7 +216,7 @@ if __name__ == "__main__":
     P = {"look": 10, "atr_mult": 1.5, "rr": 4.0, "min_body": 0.5, "hold": 48}
     DAYS = 90
 
-    print(f"Fetching {TF} data ({DAYS}d) untuk {len(COINS)} coin...")
+    print(f"Fetching {TF} data ({DAYS}d) for {len(COINS)} coin...")
     data = {}
     for c in COINS:
         try:

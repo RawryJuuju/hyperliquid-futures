@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Hitung SL aktual + margin + kelayakan 3 kandidat finalis."""
+"""Compute actual SL, margin and viability for the 3 finalist candidates."""
 import json, urllib.request, time
 
 HL = "https://api.hyperliquid.xyz/info"
@@ -36,7 +36,7 @@ print("=" * 96)
 print(f"{'COIN':<8}{'ATR%':>7}{'SL%':>7}{'MAXLEV':>8}{'LIQ':>7}{'BUFFER':>8}{'MARGIN':>10}{'FEE/RISK':>10}{'OK?':>6}")
 print("=" * 96)
 
-# bobot: pakai rata-rata weight existing (0.0989) sebagai asumsi awal
+# bobot: use the existing average weight (0.0989) as a starting assumption
 ASSUME_W = 0.09
 MAX_W = 0.198
 BASE = 0.55
@@ -65,19 +65,19 @@ for c, info in CAND.items():
           f"{margin:>9.0f}${fee_ratio:>9.1f}%{ok:>6}")
 
 print("=" * 96)
-print(f"asumsi: base_risk {BASE}%, weight 0.09 (rata-rata), equity ${EQUITY}")
+print(f"assumption: base_risk {BASE}%, weight 0.09 (average), equity ${EQUITY}")
 print()
-print("=== SIMULASI TAMBAH KE PORTFOLIO ===")
+print("=== SIMULATION: ADD TO PORTFOLIO ===")
 print()
-print("Skenario: 9 coin existing + kandidat, buka 6 posisi max")
+print("Scenario: 9 existing coins + candidates, max 6 open positions")
 print()
 
 # existing weights
 CFG = json.load(open("/home/ubuntu/hl-futures-engine/strategy_config.json"))
 ex_w = {c: v["weight"] for c, v in CFG["coins"].items()}
 print(f"total weight existing: {sum(ex_w.values()):.3f}")
-print(f"kalau tambah 1 coin weight 0.09 -> total {sum(ex_w.values())+0.09:.3f}")
-print("-> weight semua coin harus dinormalisasi ulang (dibagi total baru)")
+print(f"if tambah 1 coin weight 0.09 -> total {sum(ex_w.values())+0.09:.3f}")
+print("-> every coin weight must be renormalised (divided by the new total)")
 print()
-print("Dampak: weight coin existing turun ~8.3%, risk per coin turun proporsional")
-print("Tapi jumlah posisi bertambah -> diversifikasi naik")
+print("Impact: existing coin weights fall ~8.3%, per-coin risk falls proportionally")
+print("but position count rises -> better diversification")

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
 Bandingkan 3 model SL:
-  A. ATR-based (sekarang)      : SL = entry ± ATR × mult
-  B. Swing-based (price action): SL = swing low/high terakhir ± buffer
-  C. Hybrid                    : SL = max(ATR, swing) — ambil yang lebih lebar
+  A. ATR-based (current)       : SL = entry ± ATR × mult
+  B. Swing-based (price action): SL = swing low/high last ± buffer
+  C. Hybrid                    : SL = max(ATR, swing) — take the wider one
 
-TP tetap R-multiple supaya perbandingan apple-to-apple.
+TP stays an R-multiple so the comparison is apples to apples.
 """
 import json
 from engine import fetch, ema_series, atr_series, metrics
@@ -95,7 +95,7 @@ def run(c5, c15, c1h, params, family, sl_model, rr):
         entry = cur["c"]
         atr_dist = a[i - 1] * params["atr_mult"]
 
-        # swing terakhir: 10 bar sebelum candle trigger
+        # last swing: 10 bars before the trigger candle
         swing_win = c5[max(0, i - 12):i - 1]
         swing_low = min(x["l"] for x in swing_win)
         swing_high = max(x["h"] for x in swing_win)
@@ -160,7 +160,7 @@ def run(c5, c15, c1h, params, family, sl_model, rr):
 
 
 if __name__ == "__main__":
-    print("Fetching 120d untuk", len(COINS), "coin...", flush=True)
+    print("Fetching 120d for", len(COINS), "coin...", flush=True)
     data = {}
     for c in COINS:
         try:

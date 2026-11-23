@@ -2,17 +2,17 @@
 """
 Hyperliquid REAL Futures Execution Engine
 ==========================================
-Bukan order execution. Ini order sungguhan ke Hyperliquid L1 perpetuals.
+Not order execution. These are real orders to Hyperliquid L1 perpetuals.
 
 Mode:
-  --network mainnet   -> api.hyperliquid-testnet.xyz (uang mainan, mekanik asli)
-  --network mainnet   -> api.hyperliquid.xyz (UANG ASLI)
+  --network mainnet   -> api.hyperliquid-testnet.xyz (full mechanics)
+  --network mainnet   -> api.hyperliquid.xyz (REAL MONEY)
 
 Safety:
   - Wajib private key file (chmod 600)
-  - Wajib --confirm untuk mainnet
+  - Wajib --confirm for mainnet
   - Hard cap notional per order
-  - Hard cap jumlah posisi terbuka
+  - Hard cap on the number of open positions
   - Kill switch file: /home/ubuntu/hl-futures-engine/STOP_TRADING
 """
 import os
@@ -33,11 +33,11 @@ NETWORKS = {
     "mainnet": "https://api.hyperliquid.xyz",
 }
 
-# ==== RISK LIMITS (hard caps, bukan saran) ====
-MAX_NOTIONAL_USD = 500.0      # maksimum ukuran 1 posisi dalam USD
-MAX_OPEN_POSITIONS = 1        # maksimum posisi terbuka bersamaan
-MAX_LEVERAGE = 5              # leverage maksimum yang boleh di-set
-MAX_DAILY_LOSS_USD = 25.0     # stop total kalau rugi harian tembus ini
+# ==== RISK LIMITS (hard caps, not suggestions) ====
+MAX_NOTIONAL_USD = 500.0      # maximum size of a single position in USD
+MAX_OPEN_POSITIONS = 1        # maximum simultaneously open positions
+MAX_LEVERAGE = 5              # maximum leverage that may be set
+MAX_DAILY_LOSS_USD = 25.0     # stop total if loss harian tembus ini
 
 sys.path.insert(0, os.path.join(BASE_DIR, ".venv", "lib", "python3.12", "site-packages"))
 
@@ -48,10 +48,10 @@ def wib_now():
 
 def load_key(path):
     if not os.path.exists(path):
-        raise SystemExit(f"[FATAL] private key file tidak ada: {path}")
+        raise SystemExit(f"[FATAL] private key file none: {path}")
     key = open(path).read().strip()
     if not key.startswith("0x") or len(key) != 66:
-        raise SystemExit(f"[FATAL] format private key tidak valid (harus 0x + 64 hex)")
+        raise SystemExit(f"[FATAL] format private key not valid (must 0x + 64 hex)")
     return key
 
 
@@ -132,9 +132,9 @@ def preflight(network, key_path):
     print(f"BTC mid      : ${btc:,.2f}" if btc else "BTC mid      : n/a")
 
     ok = acct_value > 0
-    print(f"\nTRADING READY: {'YA' if ok else 'TIDAK — saldo $0.00'}")
+    print(f"\nTRADING READY: {'YES' if ok else 'no — balance $0.00'}")
     if not ok:
-        print("Deposit dulu ke address di atas, atau pakai --network mainnet + faucet.")
+        print("Deposit to the address above first, or use --network mainnet + faucet.")
     return ok, acct_value, address, base_url
 
 
@@ -144,7 +144,7 @@ def preflight(network, key_path):
 def place_bracket_order(network, key_path, coin, side, notional_usd,
                         sl_pct, tp_pct, leverage, dry_run=True):
     """
-    Buka posisi + langsung pasang SL & TP sebagai trigger order di exchange.
+    Open the position and immediately place SL & TP as trigger orders on the exchange.
     side: 'long' | 'short'
     """
     Info, Exchange, Account = get_sdk()
@@ -160,19 +160,19 @@ def place_bracket_order(network, key_path, coin, side, notional_usd,
 
     ai = asset_info(base_url, coin)
     if not ai:
-        raise SystemExit(f"[BLOCK] coin {coin} tidak ada di universe")
+        raise SystemExit(f"[BLOCK] coin {coin} none di universe")
     sz_dec = ai["szDecimals"]
 
     mid = get_mid(base_url, coin)
     if not mid:
-        raise SystemExit(f"[BLOCK] tidak dapat harga {coin}")
+        raise SystemExit(f"[BLOCK] no price for {coin}")
 
     is_buy = side == "long"
     sz = round_sz(notional_usd / mid, sz_dec)
     if sz <= 0:
-        raise SystemExit(f"[BLOCK] size kebulat jadi 0 (notional terlalu kecil)")
+        raise SystemExit(f"[BLOCK] rounded size is 0 (notional too small)")
 
-    # SL & TP dari harga eksekusi
+    # SL & TP from the execution price
     if is_buy:
         sl_px = round(mid * (1 - sl_pct), 2 if mid > 1000 else 4)
         tp_px = round(mid * (1 + tp_pct), 2 if mid > 1000 else 4)
@@ -199,7 +199,7 @@ def place_bracket_order(network, key_path, coin, side, notional_usd,
         print(f"  {k:<10}: {v}")
 
     if dry_run:
-        print("\n[DRY-RUN] Order TIDAK dikirim. Hapus --dry-run untuk eksekusi nyata.")
+        print("\n[DRY-RUN] Order not sent. Drop --dry-run for real execution.")
         return plan
 
     # ---- LIVE ----
@@ -210,9 +210,9 @@ def place_bracket_order(network, key_path, coin, side, notional_usd,
     except Exception as e:
         print(f"[WARN] update_leverage: {e}")
 
-    # 1. Entry market
+    # 1. entry market
     order_res = exch.market_open(coin, is_buy, sz, slippage=0.01)
-    print(f"[ENTRY] {order_res}")
+    print(f"[entry] {order_res}")
 
     # 2. Reduce-only SL & TP trigger orders
     sl_res = exch.order(
@@ -265,7 +265,7 @@ if __name__ == "__main__":
     ap.add_argument("--tp-pct", type=float, default=0.012)
     ap.add_argument("--leverage", type=int, default=3)
     ap.add_argument("--dry-run", action="store_true", default=True)
-    ap.add_argument("--live", action="store_true", help="kirim order sungguhan")
+    ap.add_argument("--live", action="store_true", help="send real orders")
     a = ap.parse_args()
 
     if a.preflight:
@@ -274,7 +274,7 @@ if __name__ == "__main__":
         show_positions(a.network, a.key)
     elif a.side and a.notional > 0:
         if a.network == "mainnet" and not a.live:
-            raise SystemExit("[BLOCK] mainnet butuh --live eksplisit")
+            raise SystemExit("[BLOCK] mainnet requires explicit --live")
         place_bracket_order(a.network, a.key, a.coin, a.side, a.notional,
                             a.sl_pct, a.tp_pct, a.leverage,
                             dry_run=not a.live)

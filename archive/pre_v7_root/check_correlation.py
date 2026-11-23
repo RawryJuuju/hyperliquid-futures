@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Cek korelasi kandidat baru vs 9 coin existing + likuiditas + max leverage."""
+"""Check correlation of new candidates vs the 9 existing coins, plus liquidity and max leverage."""
 import json, statistics
 from engine import fetch, FAMILIES, metrics
 
@@ -51,7 +51,7 @@ if __name__ == "__main__":
             print(f"  {c:<7} ERR {e}")
 
     print("\n" + "=" * 100)
-    print("KORELASI KANDIDAT vs PORTFOLIO EXISTING (max abs corr)")
+    print("KORELASI candidate vs PORTFOLIO EXISTING (max abs corr)")
     print("=" * 100)
     print(f"{'CAND':<8}{'max|corr|':>11}{'vs coin':<10}{'avg|corr|':>11}{'OOS_PF':>8}{'OOS_R':>8}{'VERDICT':>12}")
     print("-" * 100)
@@ -79,7 +79,7 @@ if __name__ == "__main__":
         elif maxc < 0.75:
             v = "OK"
         else:
-            v = "TERLALU MIRIP"
+            v = "TOO SIMILAR"
         rows.append((c, maxc, maxcoin, avgc, info["oos_pf"], info["oos_R"], v))
         print(f"{c:<8}{maxc:>11.2f}{maxcoin:<10}{avgc:>11.2f}{info['oos_pf']:>8.2f}"
               f"{info['oos_R']:>+8.1f}{v:>12}")
@@ -90,4 +90,4 @@ if __name__ == "__main__":
     for r in sorted(good, key=lambda x: -x[5]):
         print(f"  {r[0]:<8} corr={r[1]:.2f} (vs {r[2]})  PF={r[4]:.2f}  R={r[5]:+.1f}  -> {r[6]}")
     if not good:
-        print("  (tidak ada)")
+        print("  (none)")

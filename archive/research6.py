@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Round 6: VALIDASI FINAL kandidat R8 vs R4 vs R2. ETH + BTC, IS/OOS split."""
+"""Round 6: VALIDASI FINAL candidate R8 vs R4 vs R2. ETH + BTC, IS/OOS split."""
 from stratlib import fetch, run_v2, stats
 
 CAND = {

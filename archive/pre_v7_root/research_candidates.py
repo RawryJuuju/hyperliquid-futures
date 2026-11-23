@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Kandidat coin baru: walk-forward 120d (IS 60d / OOS 60d).
-Pakai 3 strategi yang sudah terbukti + grid parameter ringkas.
-Hanya lolos kalau OOS_PF >= 1.30 DAN OOS_R > 0 DAN n >= 15.
+candidate coin new: walk-forward 120d (IS 60d / OOS 60d).
+Use the 3 proven strategies plus a compact parameter grid.
+Only passes if OOS_PF >= 1.30 AND OOS_R > 0 AND n >= 15.
 """
 import json, time
 from engine import fetch, FAMILIES, metrics
@@ -26,7 +26,7 @@ GRIDS = {
 }
 
 if __name__ == "__main__":
-    print("Fetching 120d data untuk", len(CANDIDATES), "kandidat...", flush=True)
+    print("Fetching 120d data for", len(CANDIDATES), "candidate...", flush=True)
     data = {}
     for c in CANDIDATES:
         try:
@@ -74,21 +74,21 @@ if __name__ == "__main__":
             best[c] = r
 
     print("\n" + "=" * 112)
-    print("KANDIDAT LOLOS (OOS_PF >= 1.30, OOS_R > 0, n >= 15)")
+    print("candidate LOLOS (OOS_PF >= 1.30, OOS_R > 0, n >= 15)")
     print("=" * 112)
     print(f"{'COIN':<8}{'FAMILY':<13}{'IS_PF':>7}{'IS_R':>7}{'OOS_PF':>8}{'OOS_R':>8}{'OOS_WR':>8}{'OOS_DD':>8}{'N':>5}")
     print("-" * 112)
     if not best:
-        print("  (tidak ada kandidat yang lolos)")
+        print("  (no candidate passed)")
     for c, r in sorted(best.items(), key=lambda kv: -kv[1]["oos_R"]):
         print(f"{c:<8}{r['family']:<13}{r['is_pf']:>7.2f}{r['is_R']:>7.1f}"
               f"{r['oos_pf']:>8.2f}{r['oos_R']:>8.1f}{r['oos_wr']:>7.1f}%{r['oos_dd']:>8.1f}{r['oos_n']:>5}")
 
-    print("\n=== PARAMS KANDIDAT LOLOS ===")
+    print("\n=== PARAMS candidate LOLOS ===")
     for c, r in sorted(best.items(), key=lambda kv: -kv[1]["oos_R"]):
         print(f"\n{c} | {r['family']} | OOS_PF={r['oos_pf']} OOS_R={r['oos_R']:+.1f} N={r['oos_n']}")
         print(f"  {r['params']}")
 
     with open("candidate_coins.json", "w") as f:
         json.dump(best, f, indent=2, default=str)
-    print(f"\nDisimpan: candidate_coins.json ({len(best)} kandidat lolos)")
+    print(f"\nDisimpan: candidate_coins.json ({len(best)} candidate lolos)")

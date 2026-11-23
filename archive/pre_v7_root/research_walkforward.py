@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Walk-forward research: 6 strategi x 14 koin likuid.
-IS = 60 hari pertama, OOS = 60 hari terakhir.
-Output: ranking metode x koin berdasarkan OOS profit factor.
+Walk-forward research: 6 strategies x 14 liquid coins.
+IS = first 60 days, OOS = last 60 days.
+Output: method x coin ranking by OOS profit factor.
 """
 import json, time, itertools, sys
 from engine import (fetch, FAMILIES, metrics)
@@ -84,7 +84,7 @@ if __name__ == "__main__":
         json.dump(results, f, indent=2, default=str)
 
     print("\n" + "="*110)
-    print("TOP 30 — profitable di IS DAN OOS (walk-forward survivors)")
+    print("TOP 30 — profitable in both IS AND OOS (walk-forward survivors)")
     print("="*110)
     print(f"{'#':<3}{'FAMILY':<14}{'COIN':<7}{'IS_PF':>7}{'IS_R':>7}{'OOS_PF':>8}{'OOS_R':>8}{'OOS_WR':>8}{'OOS_DD':>8}{'N':>4}")
     print("-"*110)

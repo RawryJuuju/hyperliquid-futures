@@ -5,7 +5,7 @@ import json, math
 CFG_PATH = "/home/ubuntu/hl-futures-engine/strategy_config.json"
 cfg = json.load(open(CFG_PATH))
 
-# --- data existing (dari config) ---
+# --- existing data (from config) ---
 existing = {}
 for c, v in cfg["coins"].items():
     n = sum(s["n"] for s in v["strategies"])
@@ -13,14 +13,14 @@ for c, v in cfg["coins"].items():
     existing[c] = {"avg_R": round(avg_r, 4), "n": n,
                    "score": max(0.0, avg_r) * math.sqrt(n)}
 
-# --- kandidat baru (dari walk-forward) ---
+# --- new candidates (from walk-forward) ---
 new_coins = {
     "ARB": {
         "family": "sweep_fade",
         "params": {"look": 6, "atr_mult": 2.0, "rr": 4.0, "min_body": 0.5,
                    "htf_ema": 20, "hold": 72},
         "oos_pf": 1.62, "oos_R": 9.0, "n": 20, "cluster": "A",
-        "_corr_note": "max corr 0.72 vs ETH — masih OK, tapi cluster A",
+        "_corr_note": "max corr 0.72 vs ETH — still OK, but cluster A",
         "_lev": 10,
     },
     "INJ": {
@@ -29,7 +29,7 @@ new_coins = {
                    "htf_ema": 20, "hold": 72},
         "oos_pf": 1.74, "oos_R": 31.2, "n": 67, "cluster": "C",
         "_corr_note": "max corr 0.67 vs ZEC — diversifier",
-        "_lev": 5,   # max leverage INJ hanya 5x
+        "_lev": 5,   # INJ max leverage is only 5x
     },
 }
 
@@ -90,7 +90,7 @@ cfg["_expansion_log"] = {
         "UNI": "corr 0.85 vs SOL — duplikasi",
         "LINK": "corr 0.80 vs SOL — duplikasi",
         "AAVE": "corr 0.83 vs WLD — duplikasi",
-        "kPEPE": "PF 1.50 tapi vol $9.5M & fee/risk 20% — tunda",
+        "kPEPE": "PF 1.50 but vol $9.5M & fee/risk 20% — tunda",
     },
     "total_coins": len(cfg["coins"]),
 }

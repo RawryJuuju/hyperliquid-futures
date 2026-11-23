@@ -22,7 +22,7 @@ for coin in list(c["coins"].keys()):
         del c["coins"][coin]
         continue
     cc["strategies"] = new_strats
-    # recompute combined dari strategi tersisa
+    # recompute the combined figure from remaining strategies
     cc["combined_R"] = sum(s["oos_R"] for s in new_strats)
     cc["combined_pf"] = round(sum(s["oos_pf"] * s["n"] for s in new_strats) /
                               sum(s["n"] for s in new_strats), 2)
@@ -52,7 +52,7 @@ for k in ("A", "B", "C", "D"):
 
 c["_revision"] = {
     "date": "2026-10-21",
-    "reason": "Forensic: sweep_fade PF 0.51-0.67 semua RR varian. bollinger live PF 0.34. Breakout RR 1:5 = +17R vs 1:3 = -3.4R. BE lock fatal (-317R).",
+    "reason": "Forensic: sweep_fade PF 0.51-0.67 across all RR variants. bollinger live PF 0.34. Breakout RR 1:5 = +17R vs 1:3 = -3.4R. BE lock is fatal (-317R).",
     "removed_strategies": removed,
     "kept": kept,
     "changes": {

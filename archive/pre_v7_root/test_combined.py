@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """
-Test: apakah menggabungkan 2 strategi per koin (primary + secondary)
-lebih baik dari 1 strategi saja? Ukur di OOS 60d.
+Test: does combining 2 strategies per coin (primary + secondary)
+beat a single strategy? Measured on OOS 60d.
 """
 import json
 from engine import fetch, FAMILIES, metrics
 
-# kandidat terbaik per koin dari research_walkforward.json
+# best candidate per coin from research_walkforward.json
 r = json.load(open("/home/ubuntu/hl-futures-engine/research_walkforward.json"))
 by_coin = {}
 for x in r:
     c = x["coin"]
     by_coin.setdefault(c, []).append(x)
 
-# ambil top-2 distinct family per coin
+# take the top 2 distinct families per coin
 cands = {}
 for c, lst in by_coin.items():
     lst.sort(key=lambda x: -x["oos_R"])
@@ -29,7 +29,7 @@ for c, lst in by_coin.items():
     cands[c] = picks
 
 print("=" * 100)
-print("KANDIDAT 2 STRATEGI PER KOIN")
+print("TWO-STRATEGY CANDIDATES PER COIN")
 print("=" * 100)
 for c, picks in sorted(cands.items()):
     print(f"\n{c}:")

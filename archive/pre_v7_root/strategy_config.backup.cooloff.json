@@ -1,14 +1,14 @@
 {
-  "_note": "v4 FINAL \u2014 dual-strategy per koin. Setiap koin bisa jalan 2 strategi sekaligus (paralel, bukan overlap).",
+  "_note": "v4 FINAL \u2014 dual-strategy per coin. Each coin can run two strategies at once (parallel, not overlapping).",
   "_validated": "2026-10-20",
-  "_method": "walk-forward 120d (IS 60d / OOS 60d), 6 keluarga strategi x 10 koin, 238 survivor",
-  "_combined_test": "OOS 60d: single +173.6R vs combined +242.0R (+39% lebih baik). 6/9 koin improved.",
+  "_method": "walk-forward 120d (IS 60d / OOS 60d), 6 keluarga strategy x 10 coin, 238 survivor",
+  "_combined_test": "OOS 60d: single +173.6R vs combined +242.0R (+39% better). 6/9 coin improved.",
   "_start_equity": 1000.0,
   "_risk_model": {
     "mode": "fixed_fractional",
     "base_risk_pct": 0.55,
-    "_rationale": "Calibrated 2026-10-20: base 0.55% -> 6 posisi = 2.17% risk (cap 2.25%). Leverage 10x uniform: margin 22.5% equity, liq buffer 6.4x SL terlebar. MC 500x: DD median -16%, worst -33%, ruin 0%.",
-    "_leverage_note": "Leverage TIDAK mempengaruhi fee drag (fee/risk = 0.08%/SL%). Leverage hanya mengubah margin terkunci & jarak likuidasi.",
+    "_rationale": "Calibrated 2026-10-20: base 0.55% -> 6 position = 2.17% risk (cap 2.25%). Leverage 10x uniform: margin 22.5% equity, liq buffer 6.4x SL terlebar. MC 500x: DD median -16%, worst -33%, ruin 0%.",
+    "_leverage_note": "Leverage not mempengaruhi fee drag (fee/risk = 0.08%/SL%). Leverage only mengubah margin terkunci & jarak likuidasi.",
     "max_total_open_risk_pct": 2.25,
     "daily_loss_cap_pct": 99.0,
     "weekly_loss_cap_pct": 99.0,
@@ -39,10 +39,10 @@
       "SOL"
     ],
     "_max_per_cluster": 2,
-    "_note": "A: corr 0.89-0.95 (sangat tinggi). B: 0.76-0.88. C: ZEC negatif -0.73 s/d -0.82 (diversifier). D: SOL netral."
+    "_note": "A: corr 0.89-0.95 (very high). B: 0.76-0.88. C: ZEC negative -0.73 to -0.82 (diversifier). D: SOL neutral."
   },
   "_exit_management": {
-    "_status": "OPTIONAL \u2014 default OFF. Data 120d: BE & partial MERUSAK edge (lihat _backtest).",
+    "_status": "OPTIONAL \u2014 default OFF. data 120d: BE & partial DESTROY the edge (see _backtest).",
     "_backtest": {
       "baseline_no_be_no_partial": {
         "totR": 162.9,
@@ -75,7 +75,7 @@
         "pf": 0.95
       }
     },
-    "_why": "Strategi RR 1:2-1:4 butuh winner besar. BE mematikan winner yang mundur dulu sebelum TP. Win rate naik (40->55%) tapi R hancur.",
+    "_why": "Strategy RR 1:2-1:4 needs large winners. BE kills winners that retrace before TP. Win rate rises (40->55%) but R is destroyed.",
     "enabled": false,
     "be_at_R": 1.0,
     "partial_at_R": 1.5,
@@ -403,7 +403,7 @@
       "combined_pf": 1.62,
       "avg_R": 0.45,
       "_added": "2026-10-20",
-      "_corr_note": "max corr 0.72 vs ETH \u2014 masih OK, tapi cluster A",
+      "_corr_note": "max corr 0.72 vs ETH \u2014 still OK, but cluster A",
       "_max_leverage": 10
     },
     "INJ": {
@@ -435,10 +435,10 @@
   },
   "_total_combined_R": 242.0,
   "_excluded": {
-    "BTC": "PF 0.45-0.60 di semua 6 keluarga \u2014 tidak ada edge",
-    "ema_pullback": "0 survivor dari walk-forward",
-    "rsi_rev": "0 survivor dari walk-forward",
-    "ZEC_bollinger_note": "PF 1.06 marginal tapi menambah +3.3R & menurunkan korelasi portfolio"
+    "BTC": "PF 0.45-0.60 di semua 6 keluarga \u2014 none edge",
+    "ema_pullback": "0 survivor from walk-forward",
+    "rsi_rev": "0 survivor from walk-forward",
+    "ZEC_bollinger_note": "PF 1.06 marginal but adds +3.3R and lowers portfolio correlation"
   },
   "_expansion_log": {
     "date": "2026-10-20",
@@ -453,7 +453,7 @@
       "UNI": "corr 0.85 vs SOL \u2014 duplikasi",
       "LINK": "corr 0.80 vs SOL \u2014 duplikasi",
       "AAVE": "corr 0.83 vs WLD \u2014 duplikasi",
-      "kPEPE": "PF 1.50 tapi vol $9.5M & fee/risk 20% \u2014 tunda"
+      "kPEPE": "PF 1.50 but vol $9.5M & fee/risk 20% \u2014 tunda"
     },
     "total_coins": 11
   }

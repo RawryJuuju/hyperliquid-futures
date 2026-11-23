@@ -30,7 +30,7 @@ CFG_FILE = os.path.join(BASE_DIR, "strategy_config.json")
 
 
 def _load_coins():
-    """Ambil daftar coin dari config supaya selalu sinkron."""
+    """Read the coin list from config so it always stays in sync."""
     try:
         c = json.load(open(CFG_FILE))
         ks = list(c.get("coins", {}).keys())
@@ -82,7 +82,7 @@ def mids():
 
 
 def market_stats():
-    """24h change + volume per coin dari metaAndAssetCtxs."""
+    """24h change and volume per coin from metaAndAssetCtxs."""
     now = time.time()
     if "_mstats" in _CACHE and now - _CACHE["_mstats"][0] < 20:
         return _CACHE["_mstats"][1]
@@ -158,7 +158,7 @@ def api_candles(coin: str = Query("ETH"), interval: str = Query("5m"), limit: in
 
 
 def _stats_by_tf(stats):
-    """Agregasi stats per timeframe dari key 'COIN:strategy:tf'."""
+    """Aggregate stats per timeframe from the 'COIN:strategy:tf' key."""
     out = {}
     for key, v in (stats or {}).items():
         parts = key.split(":")
@@ -1037,7 +1037,7 @@ function renderTab(){
 async function toggleBot(){
   const running=lastData?.account?.running;
   const action=running?'stop':'start';
-  const pin=prompt('Masukkan control PIN:');
+  const pin=prompt('Enter control PIN:');
   if(!pin) return;
   try{
     const r=await fetch('/api/control',{method:'POST',

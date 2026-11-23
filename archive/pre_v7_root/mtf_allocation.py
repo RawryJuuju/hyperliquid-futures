@@ -2,15 +2,15 @@
 """
 ALOKASI RISK MULTI-TIMEFRAME
 ============================
-Prinsip: TF besar = conviction tinggi, sinyal sedikit, risk per trade lebih besar.
-         TF kecil = noise tinggi, sinyal banyak, risk per trade lebih kecil.
+Principle: higher TF = higher conviction, fewer signals, larger risk per trade.
+         Lower TF = more noise, more signals, smaller risk per trade.
 
-Input: metrik riil per TF dari research_mtf.
-Output: alokasi risk per TF, simulasi portfolio, dan profil psikologis.
+Input: real per-TF metrics from research_mtf.
+Output: per-TF risk allocation, portfolio simulation, and psychological profile.
 """
 import math
 
-# dari mtf_result2.txt (7 coin, breakout)
+# from mtf_result2.txt (7 coin, breakout)
 TF_DATA = {
     "5m":  {"n": 604, "days": 60,  "wr": 23.2, "pf": 1.07, "totR": 38.2,
             "avgR": 0.063, "mdd": -25.2, "hold_min": 91},
@@ -28,7 +28,7 @@ BASE = 0.25              # % base risk saat ini
 
 
 def kelly_fraction(pf, wr, avg_win=5.0, avg_loss=1.0):
-    """Kelly fraction dari PF & WR (approx)."""
+    """Kelly fraction from PF and WR (approx)."""
     p = wr / 100
     q = 1 - p
     b = avg_win / avg_loss
@@ -55,17 +55,17 @@ print("\n" + "=" * 112)
 print("ALOKASI RISK: 3 MODEL")
 print("=" * 112)
 
-# --- Model A: Risk parity (semua TF risk sama) ---
-print("\n[A] RISK PARITY — semua TF dapat risk sama")
+# --- Model A: Risk parity (every TF gets the same risk) ---
+print("\n[A] RISK PARITY — every TF gets identical risk")
 print(f"{'TF':<6}{'risk%':>8}{'est trades/day':>16}{'est R/day':>11}{'notes':<30}")
 print("-" * 112)
 for tf, d in TF_DATA.items():
     nday = d["n"] / d["days"]
     rday = d["totR"] / d["days"]
-    print(f"{tf:<6}{BASE:>7.2f}%{nday:>16.1f}{rday:>+11.2f}{'risk identik semua TF':<30}")
+    print(f"{tf:<6}{BASE:>7.2f}%{nday:>16.1f}{rday:>+11.2f}{'identical risk across TFs':<30}")
 
-# --- Model B: Conviction-weighted (TF besar = risk lebih besar) ---
-print("\n[B] CONVICTION-WEIGHTED — TF besar risk lebih besar (psikologi trader)")
+# --- Model B: Conviction-weighted (TF large = risk larger) ---
+print("\n[B] CONVICTION-WEIGHTED — TF large risk larger (psikologi trader)")
 print(f"{'TF':<6}{'weight':>8}{'risk%':>8}{'est trades/day':>16}{'est R/day':>11}{'notes':<26}")
 print("-" * 112)
 
@@ -78,13 +78,13 @@ for tf, d in TF_DATA.items():
     conv_alloc[tf] = risk
     nday = d["n"] / d["days"]
     rday = d["totR"] / d["days"]
-    note = {"5m": "noise tinggi, size kecil", "15m": "workhorse",
-            "1h": "conviction tinggi", "4h": "sangat sedikit sinyal"}[tf]
+    note = {"5m": "noise high, size small", "15m": "workhorse",
+            "1h": "high conviction", "4h": "very few signals"}[tf]
     print(f"{tf:<6}{w:>7.2f}{risk:>7.2f}%{nday:>16.1f}{rday:>+11.2f}{note:<26}")
 print(f"{'TOTAL':<6}{1.0:>7.2f}{sum(conv_alloc.values()):>7.2f}%")
 
-# --- Model C: R/day optimized (buang TF lemah) ---
-print("\n[C] R/DAY OPTIMIZED — hanya TF yang punya R/day > 0.5")
+# --- Model C: R/day optimized (drop TF lemah) ---
+print("\n[C] R/DAY OPTIMIZED — only TFs with R/day > 0.5")
 print(f"{'TF':<6}{'R/day':>9}{'status':>10}{'risk%':>8}{'est R/day':>11}")
 print("-" * 112)
 good = {tf: d for tf, d in TF_DATA.items() if d["totR"] / d["days"] > 0.5}
@@ -99,9 +99,9 @@ for tf, d in TF_DATA.items():
         print(f"{tf:<6}{rday:>+9.2f}{'DROP':>10}{0:>7.2f}%{0:>+11.2f}")
 
 print("\n" + "=" * 112)
-print("SIMULASI PORTFOLIO: 30 HARI")
+print("PORTFOLIO SIMULATION: 30 days")
 print("=" * 112)
-print(f"{'MODEL':<26}{'TF aktif':<22}{'est trades':>12}{'est R':>10}{'est USD':>12}{'worst DD':>10}")
+print(f"{'MODEL':<26}{'active TFs':<22}{'est trades':>12}{'est R':>10}{'est USD':>12}{'worst DD':>10}")
 print("-" * 112)
 
 for name, alloc in [("A: Risk parity", {tf: BASE for tf in TF_DATA}),
@@ -125,10 +125,10 @@ print("=" * 112)
 print(f"{'TF':<6}{'trades/day':>12}{'hold time':>12}{'screen time':>14}{'stress level':<22}")
 print("-" * 112)
 prof = {
-    "5m":  ("10.1", "91 menit",  "4-6 jam/hari", "TINGGI - overtrade risk"),
-    "15m": ("7.7",  "3.7 jam",   "2-3 jam/hari", "SEDANG - manageable"),
-    "1h":  ("1.2",  "21 jam",    "30 min/hari",  "RENDAH - sabar"),
-    "4h":  ("0.1",  "54 jam",    "15 min/hari",  "SANGAT RENDAH - nyaris idle"),
+    "5m":  ("10.1", "91 minutes",  "4-6 hours/days", "high - overtrade risk"),
+    "15m": ("7.7",  "3.7 hours",   "2-3 hours/days", "currently - manageable"),
+    "1h":  ("1.2",  "21 hours",    "30 min/days",  "low - sabar"),
+    "4h":  ("0.1",  "54 hours",    "15 min/day",  "VERY low - nearly idle"),
 }
 for tf, (nd, hold, screen, stress) in prof.items():
     print(f"{tf:<6}{nd:>12}{hold:>12}{screen:>14}{stress:<22}")

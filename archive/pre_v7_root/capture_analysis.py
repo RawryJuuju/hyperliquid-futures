@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Hitung capture rate: berapa persen edge yang berhasil ditangkap bot."""
+"""Compute capture rate: what share of the edge the bot actually captured."""
 import json
 
 rows = [json.loads(l) for l in open("/home/ubuntu/hl-futures-engine/fut_trades.jsonl") if l.strip()]
 
-# dari diag_result.txt
+# from diag_result.txt
 bt = {
     "sweep_fade": {"n": 68, "R": -20.4, "pf": 0.67, "wr": 20.6},
     "breakout":   {"n": 307, "R": 44.5, "pf": 1.20, "wr": 34.9},
@@ -12,9 +12,9 @@ bt = {
 }
 
 print("=" * 92)
-print("CAPTURE RATE: live vs backtest pada periode yang sama (17.2 jam)")
+print("CAPTURE RATE: live vs backtest over the same window (17.2 hours)")
 print("=" * 92)
-print(f"{'STRATEGI':<14}{'BT_N':>6}{'LIVE_N':>8}{'CAPTURE%':>10}{'BT_R':>8}{'LIVE_R':>9}{'R_CAPTURE%':>12}")
+print(f"{'strategy':<14}{'BT_N':>6}{'LIVE_N':>8}{'CAPTURE%':>10}{'BT_R':>8}{'LIVE_R':>9}{'R_CAPTURE%':>12}")
 print("-" * 92)
 
 for name, b in bt.items():
@@ -33,49 +33,49 @@ print(f"{'TOTAL':<14}{sum(b['n'] for b in bt.values()):>6}{len(rows):>8}"
       f"{tot_bt:>+8.1f}{tot_live:>+9.1f}{tot_live/tot_bt*100:>11.1f}%")
 
 print("\n" + "=" * 92)
-print("ANALISA: BERAPA BANYAK EDGE YANG HILANG?")
+print("ANALYSIS: HOW MUCH EDGE IS LOST?")
 print("=" * 92)
 print(f"""
-Backtest periode sama : {tot_bt:+.1f}R  (457 sinyal)
+Backtest same window  : {tot_bt:+.1f}R  (457 signals)
 Live actual           : {tot_live:+.1f}R  (46 trade)
 Edge tertangkap       : {tot_live/tot_bt*100:.1f}%
-Edge HILANG           : {tot_bt-tot_live:+.1f}R  ({(1-tot_live/tot_bt)*100:.0f}%)
+Edge LOST            : {tot_bt-tot_live:+.1f}R  ({(1-tot_live/tot_bt)*100:.0f}%)
 
 Penyebab utama:
-1. Slot cuma 6 -> dari 457 sinyal, cuma 46 yang dieksekusi (10%)
-2. Tiap posisi hold sampai TP/SL (bisa berjam-jam) -> throughput rendah
-3. sweep_fade & bollinger makan slot, padahal breakout yang profit
+1. Only 6 slots -> of 457 signals, just 46 were executed (10%)
+2. Every position holds to TP/SL (can be hours) -> low throughput
+3. sweep_fade & bollinger makan slot, padahal breakout that profit
 """)
 
 print("=" * 92)
-print("SIMULASI: KALAU CUMA PAKAI BREAKOUT")
+print("SIMULATION: IF WE USED BREAKOUT ONLY")
 print("=" * 92)
-print(f"{'SKENARIO':<38}{'SINYAL':>10}{'EST_R':>10}{'NOTE':<30}")
+print(f"{'SCENARIO':<38}{'signal':>10}{'EST_R':>10}{'NOTE':<30}")
 print("-" * 92)
 
 # breakout only
-print(f"{'Breakout saja (semua coin)':<38}{307:>10}{44.5:>+10.1f}{'full capture (teoretis)':<30}")
+print(f"{'Breakout only (all coins)':<38}{307:>10}{44.5:>+10.1f}{'full capture (teoretis)':<30}")
 
-# dengan capture rate sama (10%)
+# with capture rate sama (10%)
 cap = 46 / 457
 est = 44.5 * cap
-print(f"{'Breakout saja @ capture 10%':<38}{int(307*cap):>10}{est:>+10.1f}{'realistis dgn slot terbatas':<30}")
+print(f"{'Breakout only @ capture 10%':<38}{int(307*cap):>10}{est:>+10.1f}{'realistis dgn slot terbatas':<30}")
 
-# kalau slot dinaikkan
+# if slot dinaikkan
 for slots, mult in [(6, 1.0), (10, 1.67), (15, 2.5), (20, 3.33)]:
     est_n = min(307, int(46 * mult))
     est_r = 44.5 * (est_n / 307)
-    print(f"{'Breakout, slot '+str(slots):<38}{est_n:>10}{est_r:>+10.1f}{'slot lebih banyak':<30}")
+    print(f"{'Breakout, slot '+str(slots):<38}{est_n:>10}{est_r:>+10.1f}{'more slots':<30}")
 
 print("\n" + "=" * 92)
-print("SIMULASI: MATIKAN sweep_fade + bollinger")
+print("SIMULATION: DISABLE sweep_fade + bollinger")
 print("=" * 92)
-# kalau slot dipakai breakout saja, capture naik
-# 46 trade live sekarang: 23 breakout, 14 sweep, 9 bollinger
-# kalau sweep+bollinger dimatikan, slot untuk breakout naik dari 23 ke ~46
+# if slots were breakout-only, capture rises
+# 46 live trades so far: 23 breakout, 14 sweep, 9 bollinger
+# if sweep+bollinger were disabled, breakout slots rise from 23 to ~46
 mult = 46 / 23
 est_n = min(307, int(23 * mult))
 est_r = 44.5 * (est_n / 307)
-print(f"Sekarang     : 23 breakout + 14 sweep + 9 bollinger = 46 trade, {tot_live:+.1f}R")
+print(f"Current      : 23 breakout + 14 sweep + 9 bollinger = 46 trades, {tot_live:+.1f}R")
 print(f"Breakout only: ~{est_n} trade breakout (slot penuh), est {est_r:+.1f}R")
 print(f"Perbaikan    : {est_r - tot_live:+.1f}R")

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Round 5: cari frekuensi lebih tinggi di ETH tanpa ngerusak PF.
+"""Round 5: find higher frequency on ETH without damaging PF.
 Target: >=40 trade / 90d, PF >= 1.25."""
 from stratlib import fetch, run_v2, stats
 
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     for n,s in sorted(good,key=lambda x:-x[1]["totR"]):
         print(f"  {n:<16} N={s['n']:>3} PF={s['pf']:>5.2f} WR={s['wr']:>5.1f}% TotR={s['totR']:>+6.1f} DD={s['mdd']:>5.1f}")
     if not good:
-        print("  (tidak ada yang lolos — frekuensi vs kualitas trade-off keras)")
-        print("\n=== SEMUA, ranked by TotR ===")
+        print("  (nothing passed — the frequency vs quality trade-off is brutal)")
+        print("\n=== ALL, ranked by TotR ===")
         for n,s in sorted(rows,key=lambda x:-x[1]["totR"])[:8]:
             print(f"  {n:<16} N={s['n']:>3} PF={s['pf']:>5.2f} WR={s['wr']:>5.1f}% TotR={s['totR']:>+6.1f}")

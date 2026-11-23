@@ -2,12 +2,12 @@
 """
 MULTI-TIMEFRAME RESEARCH
 =======================
-Tes strategi breakout di 4 timeframe: 5m, 15m, 1h, 4h.
-Untuk tiap TF ukur: frekuensi, win rate, PF, avg hold time, MFE/MAE.
+test strategy breakout di 4 timeframe: 5m, 15m, 1h, 4h.
+For each TF measure: frequency, win rate, PF, avg hold time, MFE/MAE.
 
-Tujuan: tentukan alokasi risk per TF berdasarkan karakteristik masing-masing.
-Prinsip: TF kecil = banyak sinyal, noise tinggi, risk kecil.
-         TF besar = sedikit sinyal, conviction tinggi, risk besar.
+Goal: tentukan alokasi risk per TF berdasarkan karakteristik masing-masing.
+Principle: lower TF = more signals, higher noise, smaller risk.
+         Higher TF = fewer signals, higher conviction, larger risk.
 """
 import json, urllib.request, time, statistics
 from datetime import datetime, timezone, timedelta
@@ -59,7 +59,7 @@ def atr_series(c, p=14):
 
 
 def align(c_small, c_big):
-    """Map tiap candle small ke index candle big terakhir yang closed."""
+    """Map each small candle to the index of the last closed big candle."""
     ib = 0
     m = []
     for c in c_small:
@@ -71,8 +71,8 @@ def align(c_small, c_big):
 
 def run_breakout(entry_tf, c_entry, c_htf, c_htf2, P, rr, hold_bars, look):
     """
-    entry_tf : tf eksekusi
-    c_entry  : candle tf eksekusi
+    entry_tf : execution timeframe
+    c_entry  : execution-timeframe candle
     c_htf    : candle 1 level di atas
     c_htf2   : candle 2 level di atas (trend filter)
     """
@@ -189,7 +189,7 @@ def metrics(trs):
 if __name__ == "__main__":
     COINS = ["WLD", "INJ", "ZEC", "NEAR", "HYPE", "ENA", "PUMP"]
 
-    # parameter per TF: SL lebih lebar di TF besar, hold lebih lama
+    # per-TF parameters: wider SL on higher TFs, longer hold
     CONFIGS = {
         "5m":  {"look": 10, "atr_mult": 1.5, "min_body": 0.6, "rr": 5.0,
                 "hold": 72,  "days": 60,  "htf": "15m", "htf2": "1h"},
@@ -217,7 +217,7 @@ if __name__ == "__main__":
         print(f"  {tf} done")
 
     print("\n" + "=" * 118)
-    print("HASIL PER TIMEFRAME (7 coin, breakout RR)")
+    print("result PER TIMEFRAME (7 coin, breakout RR)")
     print("=" * 118)
     print(f"{'TF':<6}{'N':>6}{'WR%':>7}{'PF':>7}{'TotR':>9}{'AvgR':>8}{'MaxDD':>8}"
           f"{'TP':>5}{'SL':>5}{'TIME':>6}{'AvgHold':>10}{'AvgMFE':>8}")
@@ -248,7 +248,7 @@ if __name__ == "__main__":
               f"{m['time']:>6}{hold_str:>10}{m['avg_mfe']:>8.2f}")
 
     print("\n" + "=" * 118)
-    print("NORMALISASI: R per hari (frekuensi vs kualitas)")
+    print("NORMALISASI: R per day (frekuensi vs kualitas)")
     print("=" * 118)
     print(f"{'TF':<6}{'N':>6}{'days':>7}{'N/day':>8}{'R/day':>9}{'R/trade':>9}{'PF':>7}{'VERDICT':<18}")
     print("-" * 118)

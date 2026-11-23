@@ -40,7 +40,7 @@ if __name__ == "__main__":
         print(f"  {label:<10} N={st['n']:>3}  WR={st['wr']:>5.1f}%  PF={st['pf']:>5.2f}  TotR={st['totR']:>+6.1f}  MaxDD={st['mdd']:>5.1f}")
 
     print("\n" + "="*92)
-    print("SENSITIVITY: apakah edge tahan kalau parameter digeser? (ETH 90d)")
+    print("SENSITIVITY: does the edge survive parameter shifts? (ETH 90d)")
     print("="*92)
     tests = {
         "ATR 1.0": {**Q4, "atr_mult": 1.0},

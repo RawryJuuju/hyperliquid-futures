@@ -2,17 +2,17 @@
 """
 EXECUTION REALITY TEST
 =====================
-Backtest selama ini entry di CLOSE candle sinyal.
-Realitanya: bot baru tahu candle close SETELAH candle tutup,
-lalu kirim order -> fill di harga yang sudah bergerak.
+Backtests so far entered at the CLOSE of the signal candle.
+In reality the bot only knows the close AFTER the candle closes,
+then sends the order and fills at a price that has already moved.
 
-Test 4 model eksekusi:
-  A. close      : entry di close candle sinyal (optimistis, yang dipakai backtest)
+Tests 4 execution models:
+  A. close      : entry at the signal candle close (optimistic, what backtests use)
   B. next_open  : entry di open candle berikutnya (realistis)
   C. next_open + slip : + slippage 0.05%
   D. delayed 1 bar : entry di close candle berikutnya (pesimistis)
 
-Kalau edge hilang di B/C/D -> backtest overfit ke eksekusi sempurna.
+If the edge dies on B/C/D, the backtest was overfit to perfect execution.
 """
 import json, urllib.request, time
 
@@ -114,7 +114,7 @@ def run(ce, c1, c2, P, rr, hold, look, mode, slip=0.0, slope_min=0.0):
         if not d:
             continue
 
-        # --- ENTRY MODEL ---
+        # --- entry MODEL ---
         if mode == "close":
             entry = cur["c"]
             entry_idx = i
@@ -228,4 +228,4 @@ if __name__ == "__main__":
               f"{m['avgR']:>+8.3f}{m['mdd']:>8.1f}{delta:>+9.1f}")
 
     print("-" * 108)
-    print("Kalau B/C/D jauh lebih buruk dari A -> backtest overfit ke eksekusi sempurna.")
+    print("if B/C/D are far worse than A -> the backtest was overfit to perfect execution.")

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Hitung SL distance (ATR-based) + margin + leverage aman untuk 9 coin."""
+"""Compute SL distance (ATR-based), margin and safe leverage for 9 coins."""
 import json, urllib.request, time
 
 HL = "https://api.hyperliquid.xyz/info"
@@ -42,7 +42,7 @@ print("=" * 108)
 rows = []
 for c in COINS:
     cc = CFG["coins"][c]
-    # ambil atr_mult rata-rata dari semua strategi coin ini
+    # take the average atr_mult across this coin's strategies
     mults = [s["params"]["atr_mult"] for s in cc["strategies"]]
     atr_mult = sum(mults) / len(mults)
 
@@ -74,9 +74,9 @@ for c in COINS:
 print("=" * 108)
 
 print("\n" + "=" * 100)
-print("BERAPA POSISI MUAT? (equity $%.2f, margin cap 60%% = $%.2f)" % (EQUITY, EQUITY * 0.6))
+print("HOW MANY POSITIONS FIT? (equity $%.2f, margin cap 60%% = $%.2f)" % (EQUITY, EQUITY * 0.6))
 print("=" * 100)
-print(f"{'LEV':<6}{'avg margin/pos':>16}{'max posisi':>12}{'liq dist':>11}{'SL max':>9}{'AMAN?':>8}")
+print(f"{'LEV':<6}{'avg margin/pos':>16}{'max position':>12}{'liq dist':>11}{'SL max':>9}{'AMAN?':>8}")
 print("-" * 100)
 
 for lev in [3, 5, 10, 15, 20, 25]:
@@ -88,18 +88,18 @@ for lev in [3, 5, 10, 15, 20, 25]:
     print(f"{lev:<6}x{avg_m:>14.1f}${maxpos:>12}{liq:>10.1f}%{slmax:>8.2f}%{ok:>8}")
 
 print("-" * 100)
-print("avg margin/pos = rata-rata margin per posisi di leverage tersebut")
-print("liq dist       = jarak likuidasi (isolated margin, tanpa maintenance)")
-print("SL max         = SL terlebar dari 9 coin (ATR-based)")
+print("avg margin/pos = average margin per position at that leverage")
+print("liq dist       = liquidation distance (isolated margin, ex-maintenance)")
+print("SL max         = SL terlebar from 9 coin (ATR-based)")
 print("AMAN           = liq dist > 2x SL max")
 
 print("\n" + "=" * 100)
-print("SIMULASI: 6 POSISI BERSAMAAN DI BERBAGAI LEVERAGE")
+print("SIMULATION: 6 SIMULTANEOUS POSITIONS ACROSS LEVERAGE LEVELS")
 print("=" * 100)
 print(f"{'LEV':<6}{'total margin':>14}{'% equity':>11}{'total risk':>12}{'liq buffer':>12}{'STATUS':>10}")
 print("-" * 100)
 
-# ambil 6 coin dengan SL terlebar (worst case margin)
+# take 6 coin with SL terlebar (worst case margin)
 worst6 = sorted(rows, key=lambda r: -r["sl_pct"])[:6]
 tot_risk = sum(r["risk_usd"] for r in worst6)
 
@@ -112,5 +112,5 @@ for lev in [3, 5, 10, 15]:
     print(f"{lev:<6}x{tot_m:>12.0f}${pct:>10.1f}%{tot_risk:>11.2f}${liq:>10.1f}%{status:>10}")
 
 print("-" * 100)
-print(f"total risk 6 posisi (worst case): ${tot_risk:.2f} = {tot_risk/EQUITY*100:.2f}% equity")
+print(f"total risk 6 position (worst case): ${tot_risk:.2f} = {tot_risk/EQUITY*100:.2f}% equity")
 print(f"cap risk saat ini: 2.25% = ${EQUITY*0.0225:.2f}")

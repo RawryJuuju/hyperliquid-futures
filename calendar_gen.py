@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-PnL Calendar generator — baca fut_trades.jsonl, agregasi per hari WIB,
-render HTML kalender bulanan dengan detail per tanggal.
+PnL Calendar generator — reads fut_trades.jsonl, aggregates per WIB day,
+renders a monthly HTML calendar with per-day detail.
 """
 import json, os, calendar
 from datetime import datetime, timezone, timedelta
@@ -74,7 +74,7 @@ def build_calendar_html(daily):
     first_weekday, days_in_month = calendar.monthrange(y, m)
     month_label = datetime(y, m, 1).strftime("%B %Y")
 
-    # total bulan ini
+    # current month total
     m_n = sum(daily[d]["n"] for d in daily if d.startswith(cur_month))
     m_usd = sum(daily[d]["usd"] for d in daily if d.startswith(cur_month))
     m_R = sum(daily[d]["R"] for d in daily if d.startswith(cur_month))
@@ -82,7 +82,7 @@ def build_calendar_html(daily):
     m_l = sum(daily[d]["l"] for d in daily if d.startswith(cur_month))
 
     cells = []
-    # padding awal (Senin = 0)
+    # leading padding (Monday = 0)
     for _ in range(first_weekday):
         cells.append('<div class="cal-cell empty"></div>')
 
@@ -103,7 +103,7 @@ def build_calendar_html(daily):
             f'</div>'
         )
 
-    # detail data untuk JS
+    # per-day detail payload for JS
     detail = {}
     for key, d in daily.items():
         detail[key] = {

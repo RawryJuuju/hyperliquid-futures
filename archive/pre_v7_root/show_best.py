@@ -20,7 +20,7 @@ for k, x in sorted(best.items(), key=lambda kv: -kv[1]["oos_R"]):
           f"{x['oos_pf']:>8.2f}{x['oos_R']:>8.1f}{x['oos_wr']:>7.1f}%{x['oos_mdd']:>8.1f}{x['oos_n']:>4}")
 
 print("\n" + "=" * 118)
-print("PARAMS untuk TOP 8")
+print("PARAMS for TOP 8")
 print("=" * 118)
 for k, x in sorted(best.items(), key=lambda kv: -kv[1]["oos_R"])[:8]:
     print(f"\n{x['family']} | {x['coin']} | OOS_R={x['oos_R']:+.1f} PF={x['oos_pf']:.2f} N={x['oos_n']}")

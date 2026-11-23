@@ -1,14 +1,14 @@
 {
-  "_note": "v4 FINAL \u2014 dual-strategy per koin. Setiap koin bisa jalan 2 strategi sekaligus (paralel, bukan overlap).",
+  "_note": "v4 FINAL — dual strategy per coin. Each coin can run two strategies simultaneously (parallel, not overlapping).",
   "_validated": "2026-10-20",
-  "_method": "walk-forward 120d (IS 60d / OOS 60d), 6 keluarga strategi x 10 koin, 238 survivor",
-  "_combined_test": "OOS 60d: single +173.6R vs combined +242.0R (+39% lebih baik). 6/9 koin improved.",
+  "_method": "walk-forward 120d (IS 60d / OOS 60d), 6 strategy families x 10 coins, 238 survivors",
+  "_combined_test": "OOS 60d: single +173.6R vs combined +242.0R (+39% better). 6/9 coins improved.",
   "_start_equity": 1000.0,
   "_risk_model": {
     "mode": "fixed_fractional",
     "base_risk_pct": 0.75,
-    "_rationale": "Calibrated 2026-11-16: base 0.75% -> 8 posisi = 6% risk (cap 6%). Leverage 10x uniform: margin ~40% equity, liq buffer ~3.5x SL. MC 500x: DD controlled.",
-    "_leverage_note": "Leverage TIDAK mempengaruhi fee drag (fee/risk = 0.08%/SL%). Leverage hanya mengubah margin terkunci & jarak likuidasi.",
+    "_rationale": "Calibrated 2026-11-16: base 0.75% -> 8 positions = 6% risk (6% cap). Uniform 10x leverage: margin ~40% of equity, liquidation buffer ~3.5x SL. Monte Carlo 500x: drawdown controlled.",
+    "_leverage_note": "Leverage does NOT affect fee drag (fee/risk = 0.08%/SL%). Leverage only changes locked margin and liquidation distance.",
     "max_total_open_risk_pct": 6.0,
     "daily_loss_cap_pct": 99.0,
     "weekly_loss_cap_pct": 99.0,
@@ -45,10 +45,10 @@
       "SOL"
     ],
     "_max_per_cluster": 3,
-    "_note": "A: corr 0.89-0.95 (sangat tinggi). B: 0.76-0.88. C: ZEC negatif -0.73 s/d -0.82 (diversifier). D: SOL netral. E: PAXG gold. F: Majors - funding arb only, delta-neutral exposure."
+    "_note": "A: corr 0.89-0.95 (very high). B: 0.76-0.88. C: ZEC negative -0.73 to -0.82 (diversifier). D: SOL neutral. E: PAXG gold. F: majors - funding arb only, delta-neutral exposure."
   },
   "_exit_management": {
-    "_status": "OPTIONAL — HYBRID SCALP→SWING (v1.8.2+). Partial 50% @ 1.5R (NO BE). Runner 50% → Structure TP + Trail 1.5×ATR after 2.5R.",
+    "_status": "OPTIONAL — HYBRID SCALP->SWING (v1.8.2+). Partial 50% @ 1.5R (NO BE). Runner 50% -> structure TP + trail 1.5x ATR after 2.5R.",
     "_backtest": {
       "baseline_no_be_no_partial": {
         "totR": 162.9,
@@ -81,7 +81,7 @@
         "pf": 0.95
       }
     },
-    "_why": "BE KILLS winners that retrace before TP. Win rate up (40→55%) but R destroyed. Hybrid: lock 1.5R on 50%, let 50% run to structure (≥2.5R) with trail 1.5×ATR after 2.5R. NO BE LOCK.",
+    "_why": "BE kills winners that retrace before TP. Win rate rises (40->55%) but R is destroyed. Hybrid: lock 1.5R on 50%, let the remaining 50% run to structure (>=2.5R) with a 1.5x ATR trail after 2.5R. No BE lock.",
     "enabled": true,
     "be_at_R": null,
     "partial_at_R": 1.5,
@@ -90,7 +90,7 @@
       "safe_visual_only": {
         "be_at_R": null,
         "partial_at_R": null,
-        "_note": "Biarkan TP penuh. Dashboard tetap tampilkan locked-profit virtual."
+        "_note": "Leave the full TP in place. Dashboard still shows locked profit as virtual."
       },
       "aggressive_BE": {
         "be_at_R": 1.0,
@@ -464,10 +464,10 @@
   },
   "_total_combined_R": 242.0,
   "_excluded": {
-    "BTC": "PF 0.45-0.60 di semua 6 keluarga \u2014 tidak ada edge",
-    "ema_pullback": "0 survivor dari walk-forward",
-    "rsi_rev": "0 survivor dari walk-forward",
-    "ZEC_bollinger_note": "PF 1.06 marginal tapi menambah +3.3R & menurunkan korelasi portfolio"
+    "BTC": "PF 0.45-0.60 across all 6 families — no edge",
+    "ema_pullback": "0 survivors from walk-forward",
+    "rsi_rev": "0 survivors from walk-forward",
+    "ZEC_bollinger_note": "PF 1.06 marginal but adds +3.3R and lowers portfolio correlation"
   },
   "_expansion_log": {
     "date": "2026-10-20",
@@ -476,13 +476,13 @@
       "INJ"
     ],
     "rejected": {
-      "ZRO": "corr 0.87 vs PUMP \u2014 duplikasi",
-      "STRK": "corr 0.88 vs SOL \u2014 duplikasi",
-      "CRV": "corr 0.92 vs SOL \u2014 duplikasi",
-      "UNI": "corr 0.85 vs SOL \u2014 duplikasi",
-      "LINK": "corr 0.80 vs SOL \u2014 duplikasi",
-      "AAVE": "corr 0.83 vs WLD \u2014 duplikasi",
-      "kPEPE": "PF 1.50 tapi vol $9.5M & fee/risk 20% \u2014 tunda"
+      "ZRO": "corr 0.87 vs PUMP — duplikasi",
+      "STRK": "corr 0.88 vs SOL — duplikasi",
+      "CRV": "corr 0.92 vs SOL — duplikasi",
+      "UNI": "corr 0.85 vs SOL — duplikasi",
+      "LINK": "corr 0.80 vs SOL — duplikasi",
+      "AAVE": "corr 0.83 vs WLD — duplikasi",
+      "kPEPE": "PF 1.50 but $9.5M volume and 20% fee/risk — deferred"
     },
     "total_coins": 11
   },
@@ -522,6 +522,6 @@
       "from": "single TF 5m, 7 coins, 7 slots",
       "to": "3 TF per coin (5m+15m+1h), 7 coins, 21 strategy slots"
     },
-    "slope_filter": "slope_min 1.5 ATR \u2014 backtest +17.4R, PF 1.34->1.43"
+    "slope_filter": "slope_min 1.5 ATR — backtest +17.4R, PF 1.34->1.43"
   }
 }

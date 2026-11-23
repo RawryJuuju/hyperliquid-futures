@@ -2,13 +2,13 @@
 """
 Hyperliquid Futures Bot v4 — DUAL STRATEGY per coin
 ====================================================
-Setiap koin bisa menjalankan 2 strategi sekaligus (paralel).
+Each coin can run two strategies simultaneously (in parallel).
 Hasil walk-forward: combined +242R vs single +173.6R (+39%).
 
-Strategi tersedia:
+Available strategies:
   breakout    : close tembus channel N-bar, searah tren 15m+1h
-  sweep_fade  : sweep level lalu close balik (liquidity grab reversal)
-  bollinger   : fade sentuhan BB extreme saat volatilitas rendah
+  sweep_fade  : sweep a level then close back (liquidity grab reversal)
+  bollinger   : fade extreme BB touches when volatility is low
 
 Mode: active (default) | live
 """
@@ -38,7 +38,7 @@ HL = "https://api.hyperliquid.xyz"
 MODE = os.environ.get("FUT_MODE", "shadow").lower()
 DISPLAY_MODE = "LIVE"
 
-# Per-coin leverage: uniform 10x = liq distance 10% untuk semua
+# Per-coin leverage: uniform 10x = 10% liquidation distance for every asset
 # SL terlebar 1.56% (WLD) -> buffer 6.4x, aman
 LEVERAGE_MAP = {
     "PUMP": 10, "WLD": 10, "ZEC": 10, "ENA": 10, "NEAR": 10, "HYPE": 10,
@@ -47,7 +47,7 @@ LEVERAGE_MAP = {
 }
 LEVERAGE = 10  # default fallback
 
-# Variable Leverage per Horizon (v1.5)
+# Variable leverage per horizon (v1.5)
 # Scalp (5m): higher leverage for quick moves
 # Intraday (15m): medium leverage
 # Swing (1h): lower leverage for wider stops
@@ -66,8 +66,8 @@ VOL_TARGET_DAILY_PCT = 2.0  # target 2% daily portfolio volatility
 VOL_LOOKBACK = 14  # ATR lookback for vol estimation
 
 MAX_RISK_PCT_PRICE = 0.035      # SL max 3.5% (ATR kegedean -> skip)
-MIN_RISK_PCT_PRICE = 0.0015     # SL min 0.15% (sanity only, bukan filter fee)
-MAX_TOTAL_MARGIN_PCT = 0.75     # total margin semua posisi max 75% equity (aggressive mode)
+MIN_RISK_PCT_PRICE = 0.0015     # SL min 0.15% (sanity only, not a fee filter)
+MAX_TOTAL_MARGIN_PCT = 0.75     # total margin across all positions capped at 75% of equity (aggressive mode)
 
 # ============================================================
 #  SESSION-AWARE RISK MULTIPLIERS (v1.7)
@@ -95,7 +95,7 @@ SESSION_MULTIPLIERS = {
     11: {"smc": 0.3, "breakout": 0.0, "funding": 1.0},
     12: {"smc": 0.3, "breakout": 0.0, "funding": 1.0},
     13: {"smc": 0.3, "breakout": 0.0, "funding": 1.0},
-    # US OVERLAP (14-22 WIB): SMC 0.7, Breakout DISABLED (0% WR all sessions)
+    # US OVERLAP (14-22 WIB): SMC 0.7, Breakout DISABLED (0% WR in every session)
     14: {"smc": 0.7, "breakout": 0.0, "funding": 1.0},
     15: {"smc": 0.7, "breakout": 0.0, "funding": 1.0},
     16: {"smc": 0.7, "breakout": 0.0, "funding": 1.0},
@@ -293,7 +293,7 @@ def log_equity(s):
 #  SIGNAL ENGINES — masing-masing return (sig, reason)
 # ============================================================
 def _common(coin, tf="5m"):
-    """Fetch candles untuk TF eksekusi + 2 TF di atasnya sebagai filter tren."""
+    """Fetch candles for the execution timeframe plus two higher timeframes as trend filters."""
     # Hyperliquid supported: 5m, 15m, 30m, 1h, 4h, 1d (but 4h seems broken)
     TF_UP = {"5m": ("15m", "1h"), "15m": ("1h", "1h"), "1h": ("1h", "1h")}
     up1, up2 = TF_UP.get(tf, ("15m", "1h"))
@@ -422,12 +422,12 @@ def sig_bollinger(coin, P):
     if upper is None:
         return None, "bb n/a"
 
-    # regime filter: ATR harus di bawah median 60 bar (ranging)
+    # regime filter: ATR must sit below the 60-bar median (ranging)
     recent = [x for x in [atr(c5[:i], 14) for i in range(max(15, len(c5)-60), len(c5)-1)] if x]
     if len(recent) < 20:
         return None, "atr hist"
     if a > statistics.median(recent) * P["atr_max_ratio"]:
-        return None, "volatil (bukan ranging)"
+        return None, "volatile (not ranging)"
 
     dr = None
     if cur["l"] < lower and cur["c"] > lower:
@@ -728,19 +728,19 @@ def can_open(state, coin, cfg, new_risk_pct, sig_dir=None):
     open_pos = state["open"]
 
     if len(open_pos) >= rm["max_concurrent"]:
-        return False, f"max {rm['max_concurrent']} posisi"
+        return False, f"max {rm['max_concurrent']} positions"
 
     used = sum(p.get("risk_pct_equity", 0) for p in open_pos.values())
     if used + new_risk_pct > rm["max_total_open_risk_pct"]:
         return False, f"open risk {used:.2f}%+{new_risk_pct:.2f}% > {rm['max_total_open_risk_pct']}%"
 
-    # total margin guard — cegah modal terkunci semua
+    # total margin guard — prevents the whole balance from being locked
     cur_margin = sum(p.get("margin", 0) for p in open_pos.values())
     max_margin = state["equity"] * MAX_TOTAL_MARGIN_PCT
     if cur_margin >= max_margin:
         return False, f"margin limit (${cur_margin:.0f}/${max_margin:.0f})"
 
-    # correlation cluster — key adalah "COIN:strategy", ambil coin-nya
+    # correlation cluster — key is "COIN:strategy", take the coin part
     cluster = cfg["coins"][coin]["cluster"]
     same = []
     for slot in open_pos:
@@ -750,24 +750,24 @@ def can_open(state, coin, cfg, new_risk_pct, sig_dir=None):
     if len(same) >= cfg["_correlation_clusters"]["_max_per_cluster"]:
         return False, f"cluster {cluster} full ({len(same)}: {','.join(same)})"
 
-    # BLOCK 1: koin sama + timeframe sama sudah ada posisi (cegah hedge sendiri di TF sama)
-    # Multi-TF: 5m, 15m, dan 1h di coin sama BOLEH jalan bersamaan (beda horizon)
+    # BLOCK 1: same coin and same timeframe already open (prevents self-hedging on one TF)
+    # Multi-TF: 5m, 15m and 1h on the same coin may run concurrently (different horizons)
     new_tf = (state.get("_pending_tf") or "5m")
     for slot in open_pos:
         oc = open_pos[slot].get("coin") or slot.split(":")[0]
         otf = open_pos[slot].get("timeframe", "5m")
         if oc == coin and otf == new_tf:
-            return False, f"{coin} {new_tf} sudah ada posisi ({open_pos[slot]['dir']} @ {slot})"
+            return False, f"{coin} {new_tf} already open ({open_pos[slot]['dir']} @ {slot})"
 
     # BLOCK 2: Anti-Conflict Directional Guard
-    # Mencegah posisi berlawanan di koin yang sama (misal 1h Swing LONG tapi 5m Scalp SHORT)
+    # Prevent opposing positions on the same coin (e.g. 1h swing long vs 5m scalp short)
     if sig_dir:
         for slot in open_pos:
             oc = open_pos[slot].get("coin") or slot.split(":")[0]
             if oc == coin and open_pos[slot].get("dir") != sig_dir:
                 return False, f"{coin} directional conflict ({open_pos[slot]['dir']} @ {slot} vs new {sig_dir})"
 
-    # per-coin cooldown (setelah loss) — skip kalau dinonaktifkan
+    # per-coin cooldown (after a loss) — skipped when disabled
     cd_min = rm.get("coin_cooldown_min", 0)
     if cd_min > 0:
         cd = state.get("coin_cooldown", {}).get(coin, 0)
@@ -884,7 +884,7 @@ def check_exits(state, cfg):
         risk = pos["risk_px"]
         entry = pos["entry"]
 
-        # R saat ini
+        # current R
         r_now = ((p - entry) if d == "LONG" else (entry - p)) / risk
 
         # ---- exit management: HYBRID SCALP->SWING (v1.8.2+) ----
@@ -895,9 +895,9 @@ def check_exits(state, cfg):
             if part_at and not pos.get("partial_done") and r_now >= part_at:
                 frac = part_frac  # 0.5
                 gain = frac * part_at * pos["risk_usd"]
-                # NOTE: gain TIDAK ditambahkan ke equity di sini.
-                # Disimpan di realized_usd dan baru masuk equity saat posisi close
-                # (usd = R*risk_usd + realized_usd). Menambah di sini = double count.
+                # NOTE: the gain is NOT added to equity here.
+                # It is banked in realized_usd and only hits equity when the position closes
+                # (usd = R*risk_usd + realized_usd). Adding it here would double count.
                 pos["partial_done"] = True
                 pos["realized_usd"] = pos.get("realized_usd", 0) + gain
                 pos["risk_usd"] = pos["risk_usd"] * (1 - frac)
@@ -906,7 +906,7 @@ def check_exits(state, cfg):
                 save_state(state)
                 log(f"💰 PARTIAL {coin} {frac*100:.0f}% @ {part_at}R (+${gain:.2f}) -- Runner active")
                 tg(f"💰 *PARTIAL TP* {coin} {d}\n"
-                   f"• Tutup {frac*100:.0f}% di +{part_at}R\n"
+                   f"• Closed {frac*100:.0f}% at +{part_at}R\n"
                    f"• Locked: +${gain:.2f}\n"
                    f"• Runner 50% -> Structure TP + Trail")
 
@@ -950,10 +950,10 @@ def check_exits(state, cfg):
         if hit:
             kind, px = hit
             R = ((px - entry) if d == "LONG" else (entry - px)) / risk
-            # fee realistis: taker 0.045% per side = 0.09% round-trip
-            # + slippage buffer 0.05% (dari execution reality test: -19.6% profit)
-            fee = (entry + px) * 0.0009 / risk
-            slip = (entry + px) * 0.0005 / risk
+            # realistic friction: taker 0.045% per side = 0.09% round-trip on notional,
+            # + 0.05% slippage buffer. Charged once on the exit price, not on (entry+exit).
+            fee = px * 0.0009 / risk
+            slip = px * 0.0005 / risk
             R -= slip
             R -= fee
             usd = R * pos["risk_usd"]
@@ -980,15 +980,15 @@ def check_exits(state, cfg):
         else:
             st["l"] += 1
             state["consec_loss"] = state.get("consec_loss", 0) + 1
-            # per-coin cooldown — hanya kalau diaktifkan
+            # per-coin cooldown — only when enabled
             cd_min = rm.get("coin_cooldown_min", 0)
             if cd_min > 0:
                 state.setdefault("coin_cooldown", {})[coin] = time.time() + cd_min * 60
-            # global cooldown — hanya kalau diaktifkan
+            # global cooldown — only when enabled
             trigger = rm.get("consec_loss_trigger", 999)
             if trigger < 900 and state["consec_loss"] >= trigger:
                 state["cooldown_until"] = time.time() + 45 * 60
-                tg(f"⏸️ *GLOBAL COOLDOWN 45m* — {state['consec_loss']} loss beruntun\n"
+                tg(f"⏸️ *GLOBAL COOLDOWN 45m* — {state['consec_loss']} consecutive losses\n"
                    f"Equity: ${state['equity']:.2f}")
 
         eq_pct = (state["equity"] / state["initial_equity"] - 1) * 100
@@ -1018,7 +1018,7 @@ def check_exits(state, cfg):
 # ============================================================
 def main():
     cfg = load_cfg()
-    # urutkan coin by weight descending -> coin edge tertinggi dapat slot duluan
+    # sort coins by weight descending -> the strongest edge gets a slot first
     coins = sorted(cfg["coins"].keys(), key=lambda c: -cfg["coins"][c]["weight"])
     state = load_state()
     rm = cfg["_risk_model"]
@@ -1051,7 +1051,7 @@ def main():
         tick_start = time.time()
         try:
             if os.path.exists(KILL_SWITCH):
-                log("kill switch — stop"); tg("🛑 Kill switch active."); break
+                log("kill switch — stopping"); tg("🛑 Kill switch active."); break
 
             today = now_wib().strftime("%Y-%m-%d")
             if state.get("day") != today:
@@ -1087,7 +1087,7 @@ def main():
                     engine_params = {**strat["params"], "timeframe": tf}
                     sig, reason = fn(coin, engine_params)
                     if not sig:
-                        # Night session: funding_arb is the only live strategy — log its skips
+                        # night session: funding_arb is the only live strategy — log its skips
                         if strat["name"] == "funding_arb" and reason:
                             log(f"  skip {slot}: {reason}")
                         continue
@@ -1152,7 +1152,7 @@ def main():
             if elapsed > 45:
                 log(f"⚠️ LATENCY WARNING: scan cycle {elapsed:.1f}s (>45s)")
                 tg(f"⚠️ *LATENCY WARNING*\nScan cycle {elapsed:.1f}s\n"
-                   f"Normal <30s. Delay tinggi = edge hilang.")
+                   f"Normal <30s. High delay means lost edge.")
             elif elapsed > 30:
                 log(f"  latency {elapsed:.1f}s (elevated)")
 

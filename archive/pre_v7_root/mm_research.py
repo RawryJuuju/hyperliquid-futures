@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Money Management Research — pakai trade list riil dari config terpilih.
-Hitung: expectancy, correlation antar koin, equity curve di berbagai risk%,
-optimal fixed-fractional, dan simulasi Monte Carlo drawdown.
+Money Management Research — uses the real trade list from the selected config.
+Computes: expectancy, cross-coin correlation, equity curve at various risk%,
+optimal fixed-fractional sizing, and Monte Carlo drawdown simulation.
 """
 import json, random, statistics
 from engine import fetch, FAMILIES

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-FORENSIK: kenapa 34 dari 46 trade kena SL?
-Analisa MFE/MAE per trade dari data candle asli.
+FORENSIK: why 34 of 46 trades hit the stop?
+Per-trade MFE/MAE analysis from raw candle data.
 """
 import json, urllib.request, time
 from datetime import datetime, timezone, timedelta
@@ -37,7 +37,7 @@ rows = [json.loads(l) for l in open("/home/ubuntu/hl-futures-engine/fut_trades.j
 print(f"Total trade: {len(rows)}\n")
 
 print("=" * 118)
-print("FORENSIK PER TRADE: MFE (max profit) vs MAE (max drawdown) sebelum exit")
+print("PER-TRADE FORENSIC: MFE (max profit) vs MAE (max drawdown) before exit")
 print("=" * 118)
 print(f"{'TIME':<9}{'COIN':<6}{'DIR':<6}{'STRAT':<11}{'KIND':<5}{'R':>7}"
       f"{'MFE(R)':>8}{'MAE(R)':>8}{'bars':>6}{'SL hit bar':>11}")
@@ -50,12 +50,12 @@ for r in rows:
     entry = r["entry"]
     exit_p = r["exit"]
     d = r["dir"]
-    # risk = |entry - exit| kalau SL, tapi kalau TP kita perlu rekonstruksi
-    # pakai risk dari R: R = (exit-entry)/risk -> risk = (exit-entry)/R
+    # risk = |entry - exit| on a stop, but for a TP we must reconstruct it
+    # derive risk from R: R = (exit-entry)/risk -> risk = (exit-entry)/R
     if r["R"] == 0:
         continue
     raw_move = (exit_p - entry) if d == "LONG" else (entry - exit_p)
-    # fee sudah dipotong di R, jadi risk dari R sedikit beda. pakai pendekatan
+    # fees are already netted out of R, so the derived risk differs slightly. Approximate
     risk_est = abs(raw_move / r["R"]) if r["R"] != 0 else 0
     if risk_est <= 0:
         continue
@@ -71,7 +71,7 @@ for r in rows:
     if not cs:
         continue
 
-    # cari candle entry (yang paling dekat dengan waktu trade)
+    # find candle entry (that paling dekat with waktu trade)
     entry_ts = int(t0.timestamp() * 1000)
     idx = None
     for i, c in enumerate(cs):
@@ -81,7 +81,7 @@ for r in rows:
     if idx is None:
         continue
 
-    # hitung MFE/MAE dari entry sampai exit
+    # compute MFE/MAE from entry sampai exit
     mfe = 0.0
     mae = 0.0
     sl_bar = None
@@ -124,12 +124,12 @@ if losers:
     avg_mfe = sum(x["mfe"] for x in losers) / len(losers)
     near = [x for x in losers if x["near_miss"]]
     print(f"  avg MFE (max profit sempat diraih) : {avg_mfe:.2f}R")
-    print(f"  trade yang SEMPAT profit >=0.5R    : {len(near)}/{len(losers)} ({len(near)/len(losers)*100:.0f}%)")
-    print(f"  trade yang MFE < 0.3R (langsung mati): {sum(1 for x in losers if x['mfe']<0.3)}")
+    print(f"  trade that SEMPAT profit >=0.5R    : {len(near)}/{len(losers)} ({len(near)/len(losers)*100:.0f}%)")
+    print(f"  trade that MFE < 0.3R (dead on arrival): {sum(1 for x in losers if x['mfe']<0.3)}")
     slbars = [x["sl_bar"] for x in losers if x["sl_bar"] is not None]
     if slbars:
-        print(f"  median bar sampai SL kena          : {sorted(slbars)[len(slbars)//2]} bar ({sorted(slbars)[len(slbars)//2]*5} menit)")
-        print(f"  SL kena < 5 bar (25 menit)         : {sum(1 for b in slbars if b<5)}/{len(slbars)}")
+        print(f"  median bars until SL hit          : {sorted(slbars)[len(slbars)//2]} bar ({sorted(slbars)[len(slbars)//2]*5} minutes)")
+        print(f"  SL hit within 5 bars (25 minutes)         : {sum(1 for b in slbars if b<5)}/{len(slbars)}")
 
 print(f"\nWINNERS ({len(winners)}):")
 if winners:
@@ -137,7 +137,7 @@ if winners:
     print(f"  avg MFE : {avg_mfe:.2f}R")
 
 print("\n" + "=" * 100)
-print("DIAGNOSA PER STRATEGI")
+print("DIAGNOSA PER strategy")
 print("=" * 100)
 from collections import defaultdict
 by_strat = defaultdict(list)
@@ -152,4 +152,4 @@ for s, v in by_strat.items():
     print(f"\n{s}: n={n} WR={w/n*100:.0f}%")
     print(f"  avg MFE     : {avg_mfe:.2f}R")
     print(f"  near-miss   : {near}/{n} (sempat +0.5R lalu berbalik)")
-    print(f"  MFE < 0.3R  : {sum(1 for x in v if x['mfe']<0.3)}/{n} (langsung salah arah)")
+    print(f"  MFE < 0.3R  : {sum(1 for x in v if x['mfe']<0.3)}/{n} (wrong direction immediately)")

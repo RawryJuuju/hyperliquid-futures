@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Round 2 research: cari kombinasi filter yang beneran punya edge.
+Round 2 research: find filter combinations with a genuine edge.
 Fokus: (a) kenapa BTC jelek, (b) filter kualitas entry, (c) exit model terbaik.
 """
 import urllib.request, json, time

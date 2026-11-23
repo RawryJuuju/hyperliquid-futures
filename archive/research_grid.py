@@ -1,5 +1,5 @@
-"""Grid search: cari apakah ADA parameter region yang punya edge positif.
-Test market-entry (fill di close signal) vs limit-retest, banyak RR & ATR."""
+"""Grid search: find whether ANY parameter region has a positive edge.
+Test market entry (fill at the signal close) vs limit retest, across many RR & ATR values."""
 from stratlib2 import fetch, ema_series, atr_series, adx_series, align_htf, stats
 
 
@@ -127,7 +127,7 @@ if __name__ == "__main__":
 
     results.sort(key=lambda x: -x[5])
     print("\n" + "="*104)
-    print(f"{'MODE':<20}{'ENTRY':<8}{'ATR':>5}{'RR':>5}{'BE':>6}{'TotR':>9}{'N':>5}{'PFavg':>8}")
+    print(f"{'MODE':<20}{'entry':<8}{'ATR':>5}{'RR':>5}{'BE':>6}{'TotR':>9}{'N':>5}{'PFavg':>8}")
     print("="*104)
     for r in results[:20]:
         print(f"{r[0]:<20}{r[1]:<8}{r[2]:>5.1f}{r[3]:>5.1f}{str(r[4]):>6}{r[5]:>+9.1f}{r[6]:>5}{r[7]:>8.2f}")

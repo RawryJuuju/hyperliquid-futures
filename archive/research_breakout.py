@@ -1,5 +1,5 @@
-"""Strategy family B: momentum/breakout (bukan mean-reversion).
-Hipotesis: kripto trending, jadi breakout continuation lebih cocok dari fade."""
+"""Strategy family B: momentum/breakout (not mean-reversion).
+Hypothesis: crypto trends, so breakout continuation suits better than fade."""
 import urllib.request, json, time
 from stratlib2 import fetch, ema_series, atr_series, adx_series, align_htf, stats
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Multi-strategy research harness — cari metode yang PROFITABLE, apa pun itu.
-Test 6 keluarga strategi x parameter grid x 14 koin likuid.
+Multi-strategy research harness — find whatever method is PROFITABLE.
+Tests 6 strategy families x parameter grid x 14 liquid coins.
 Walk-forward: IS 60d / OOS 60d.
 """
 import urllib.request, json, time, itertools
@@ -21,7 +21,7 @@ def fetch(coin, interval, days=120):
     now = int(time.time() * 1000)
     p = json.dumps({"type": "candleSnapshot",
                     "req": {"coin": coin, "interval": interval, "startTime": now - n * step}}).encode()
-    # retry dengan backoff untuk 429
+    # retry with backoff for 429
     for attempt in range(6):
         try:
             r = urllib.request.Request(URL, data=p, headers={"Content-Type": "application/json"})

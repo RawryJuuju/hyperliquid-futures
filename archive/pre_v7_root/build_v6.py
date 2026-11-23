@@ -3,7 +3,7 @@
 Build config v6: multi-timeframe breakout.
 15m = core (PF 1.34, R/day 1.92)
 5m  = satellite (PF 1.07, R/day 0.64)
-1h  = conviction (PF 1.51, R/day 0.39, sample kecil)
+1h  = conviction (PF 1.51, R/day 0.39, small sample)
 4h  = dropped (R/day 0.02)
 """
 import json, math
@@ -11,7 +11,7 @@ import json, math
 P = "/home/ubuntu/hl-futures-engine/strategy_config.json"
 c = json.load(open(P))
 
-# parameter per timeframe (dari research_mtf)
+# per-timeframe parameters (from research_mtf)
 TF_PARAMS = {
     "5m":  {"look": 10, "atr_mult": 1.5, "rr": 5.0, "min_body": 0.6,
             "htf_ema": 20, "hold": 72},
@@ -21,7 +21,7 @@ TF_PARAMS = {
             "htf_ema": 20, "hold": 48},
 }
 
-# metrik riil per TF (dari mtf_result2)
+# real per-TF metrics (from mtf_result2)
 TF_METRICS = {
     "5m":  {"pf": 1.07, "avgR": 0.063, "n": 604, "rday": 0.64, "mdd": -25.2},
     "15m": {"pf": 1.34, "avgR": 0.249, "n": 695, "rday": 1.92, "mdd": -21.5},
@@ -51,7 +51,7 @@ for coin in COINS:
             "risk_weight": TF_RISK_WEIGHT[tf],
             "avg_R": m["avgR"],
         })
-    # weight coin: rata-rata avgR * sqrt(n) dari semua TF
+    # coin weight: mean avgR * sqrt(n) across all TFs
     score = sum(max(0, s["avg_R"]) * math.sqrt(s["n"]) for s in strategies) / len(strategies)
     new_coins[coin] = {
         "cluster": old["cluster"],

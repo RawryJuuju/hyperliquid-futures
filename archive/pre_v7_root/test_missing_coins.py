@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tes 4 coin yang hilang (ETH, SOL, XRP, ARB) pakai breakout 15m."""
+"""Test the 4 missing coins (ETH, SOL, XRP, ARB) with breakout 15m."""
 import json, urllib.request, time
 
 HL = "https://api.hyperliquid.xyz/info"
@@ -139,7 +139,7 @@ if __name__ == "__main__":
     P = {"look": 10, "atr_mult": 1.5, "rr": 4.0, "min_body": 0.5}
     DAYS = 90
 
-    print(f"Tes {len(TEST)} coin yang hilang pakai breakout 15m ({DAYS}d)...\n")
+    print(f"Testing {len(TEST)} missing coins with breakout 15m ({DAYS}d)...\n")
     print(f"{'COIN':<7}{'N':>5}{'WR%':>7}{'PF':>7}{'TotR':>9}{'AvgR':>8}{'VERDICT':>12}")
     print("-" * 62)
 
@@ -153,7 +153,7 @@ if __name__ == "__main__":
             if not m:
                 print(f"{c:<7}  no trades")
                 continue
-            v = "LAYAK" if m["pf"] > 1.2 and m["totR"] > 0 else "TIDAK"
+            v = "LAYAK" if m["pf"] > 1.2 and m["totR"] > 0 else "not"
             print(f"{c:<7}{m['n']:>5}{m['wr']:>7.1f}{m['pf']:>7.2f}{m['totR']:>+9.1f}"
                   f"{m['avgR']:>+8.3f}{v:>12}")
         except Exception as e:

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Diagnosa v2: bandingkan backtest periode SAMA vs hasil live.
-Kalau backtest periode itu juga rugi -> periode jelek.
-Kalau backtest untung tapi live rugi -> ada mismatch eksekusi.
+Diagnosis v2: compare the backtest over the SAME window against live results.
+If the backtest for that window also loses, the window was bad.
+If the backtest wins but live loses, execution is mismatched.
 """
 import json, urllib.request, time
 from datetime import datetime, timezone, timedelta
@@ -161,16 +161,16 @@ def run_family(c5, c15, c1h, P, family):
 
 
 if __name__ == "__main__":
-    # rentang LIVE: dari trade pertama sampai terakhir
+    # LIVE range: first trade through last
     rows = [json.loads(l) for l in open("/home/ubuntu/hl-futures-engine/fut_trades.jsonl") if l.strip()]
     t_first = datetime.fromisoformat(rows[0]["t"])
     t_last = datetime.fromisoformat(rows[-1]["t"])
     print(f"Live period: {t_first.strftime('%d/%m %H:%M')} -> {t_last.strftime('%d/%m %H:%M')} WIB")
-    print(f"Duration: {(t_last-t_first).total_seconds()/3600:.1f} jam\n")
+    print(f"Duration: {(t_last-t_first).total_seconds()/3600:.1f} hours\n")
 
     CFG = json.load(open("/home/ubuntu/hl-futures-engine/strategy_config.json"))["coins"]
 
-    # fetch 3 hari terakhir supaya ada warmup untuk EMA/ATR
+    # fetch the last 3 days so EMA/ATR have warmup
     end_ms = int(t_last.timestamp() * 1000) + 3600_000
     start_ms = int(t_first.timestamp() * 1000) - 3 * 86400_000
 
@@ -188,7 +188,7 @@ if __name__ == "__main__":
             print(f"  {c:<6} ERR {e}")
 
     print("\n" + "=" * 100)
-    print("BACKTEST PADA PERIODE LIVE YANG SAMA")
+    print("BACKTEST OVER THE SAME LIVE WINDOW")
     print("=" * 100)
     print(f"{'STRATEGY':<14}{'N':>5}{'WR%':>7}{'PF':>7}{'TotR':>9}{'TP':>5}{'SL':>5}{'TIME':>6}")
     print("-" * 100)
@@ -219,9 +219,9 @@ if __name__ == "__main__":
         tm = sum(1 for t in tr if t["outcome"] == "TIME")
         print(f"{name:<14}{n:>5}{w/n*100:>7.1f}{pf:>7.2f}{tot:>+9.1f}{tp:>5}{sl_:>5}{tm:>6}")
 
-    # bandingkan dengan live
+    # bandingkan with live
     print("\n" + "=" * 100)
-    print("LIVE ACTUAL (periode sama)")
+    print("LIVE ACTUAL (same window)")
     print("=" * 100)
     for name in by_strat:
         lr = [r for r in rows if r["strategy"] == name]

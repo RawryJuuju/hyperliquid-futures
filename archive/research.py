@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 Strategy Research Harness - Scalp
-Tujuan: cari varian entry/exit yang beneran punya edge di data riil Hyperliquid.
-Semua hasil di sini = backtest nyata, bukan opini.
+Goal: find entry/exit variants with a genuine edge on real Hyperliquid data.
+Everything here is a real backtest, not an opinion.
 """
 import urllib.request, json, time, math
 from datetime import datetime, timezone, timedelta
@@ -109,7 +109,7 @@ def run_variant(name, c5, c15, c1h, cfg):
         if cfg.get("max_body_ratio") and body_ratio > cfg["max_body_ratio"]: continue
         if cfg.get("min_vol") and vratio < cfg["min_vol"]: continue
 
-        # --- Entry at 50% retrace of trigger candle (limit) ---
+        # --- entry at 50% retrace of trigger candle (limit) ---
         if direction == "LONG":
             entry = (cur["l"] + cur["c"]) / 2
             stop_ref = cur["l"]
@@ -140,7 +140,7 @@ def run_variant(name, c5, c15, c1h, cfg):
             if direction=="SHORT" and c5[j]["h"] >= entry: fill_i=j; break
         if fill_i is None: continue
 
-        # --- Exit management ---
+        # --- exit management ---
         be_at = cfg.get("be_at")   # move SL to entry after X R
         trail_at = cfg.get("trail_at")
         cur_sl = sl

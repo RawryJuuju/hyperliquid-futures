@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 FORENSIK: why 34 of 46 trades hit the stop?
 Per-trade MFE/MAE analysis from raw candle data.

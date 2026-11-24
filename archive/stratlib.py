@@ -1,3 +1,4 @@
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """Clean strategy library for research. Import this, don't exec other files."""
 import urllib.request, json, time
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """Round 6: VALIDASI FINAL candidate R8 vs R4 vs R2. ETH + BTC, IS/OOS split."""
 from stratlib import fetch, run_v2, stats
 

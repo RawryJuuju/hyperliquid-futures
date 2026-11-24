@@ -1,3 +1,4 @@
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 PAGE = """<!DOCTYPE html>
 <html lang="en">
 <head>

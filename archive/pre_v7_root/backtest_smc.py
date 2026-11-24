@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 backtest_smc.py — Backtest SMC Silver Bullet + ICT Killzone Engine on Hyperliquid
 """

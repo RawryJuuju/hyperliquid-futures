@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 test 2 hipotesis:
 1. does sweep_fade do better with a smaller RR (1:1.5, 1:2, 1:2.5)?

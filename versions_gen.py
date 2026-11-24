@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 Versions page generator — editorial style matching /about.
 Reads versions.json + fut_trades.jsonl, computes per-version stats.

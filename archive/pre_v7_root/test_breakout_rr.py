@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """Test RR variants for BREAKOUT (the profitable strategy)."""
 import json, urllib.request, time
 from datetime import datetime, timezone, timedelta

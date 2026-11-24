@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 Close all open positions at current market price, record to trade ledger,
 update equity. Works on shadow state.

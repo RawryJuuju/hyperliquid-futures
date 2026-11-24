@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 Bandingkan 3 model SL:
   A. ATR-based (current)       : SL = entry ± ATR × mult

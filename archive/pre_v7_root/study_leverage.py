@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 Deep study: leverage, fee drag, margin, liquidation and optimal sizing.
 Goal: settle the final parameters for 9 coins with hard numbers.

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """Multi-coin validation: top-5 volume (BTC ETH ZEC HYPE SOL) with v3 strategy."""
 from stratlib2 import fetch, run_v3, stats
 

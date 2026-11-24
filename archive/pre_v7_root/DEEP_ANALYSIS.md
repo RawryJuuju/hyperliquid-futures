@@ -1,4 +1,6 @@
 # SYSTEMATIC TRADING: WHY LIVE ≠ BACKTEST
+
+<!-- Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu -->
 ## Deep Analysis for the HL Futures System
 
 ---

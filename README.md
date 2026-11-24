@@ -1,5 +1,7 @@
 # Hyperliquid Systematic Futures Trading Engine
 
+<!-- Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu -->
+
 <div align="center">
 
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-38bdf8.svg?style=flat-square&logo=python&logoColor=white)](https://python.org)

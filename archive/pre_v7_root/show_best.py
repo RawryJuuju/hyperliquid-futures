@@ -1,3 +1,4 @@
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 import json
 
 r = json.load(open("/home/ubuntu/hl-futures-engine/research_walkforward.json"))

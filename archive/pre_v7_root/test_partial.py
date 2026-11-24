@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """Test the impact of partial TP + BE on total R. Uses the active config."""
 import json
 from engine import fetch, FAMILIES, metrics

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 HL Futures Terminal — MEXC-style trading UI
 Read-only data endpoints + guarded control endpoint.

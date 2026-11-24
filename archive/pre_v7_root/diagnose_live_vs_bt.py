@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 Diagnosis v2: compare the backtest over the SAME window against live results.
 If the backtest for that window also loses, the window was bad.

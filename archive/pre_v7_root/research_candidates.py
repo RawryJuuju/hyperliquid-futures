@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 candidate coin new: walk-forward 120d (IS 60d / OOS 60d).
 Use the 3 proven strategies plus a compact parameter grid.

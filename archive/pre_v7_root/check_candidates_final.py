@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """Compute actual SL, margin and viability for the 3 finalist candidates."""
 import json, urllib.request, time
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 Money Management Research — uses the real trade list from the selected config.
 Computes: expectancy, cross-coin correlation, equity curve at various risk%,

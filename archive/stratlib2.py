@@ -1,3 +1,4 @@
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """Extended strategy library v2: FVG, BOS, displacement, partials, trailing."""
 import urllib.request, json, time
 

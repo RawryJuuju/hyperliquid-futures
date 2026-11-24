@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """Test the 4 missing coins (ETH, SOL, XRP, ARB) with breakout 15m."""
 import json, urllib.request, time
 

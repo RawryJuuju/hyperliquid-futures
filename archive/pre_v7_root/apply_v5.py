@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """Apply 6 perubahan: matikan sweep_fade+bollinger, breakout RR 1:5, base 0.25%, slot 12."""
 import json
 

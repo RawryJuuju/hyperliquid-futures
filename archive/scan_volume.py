@@ -1,3 +1,4 @@
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 import json, urllib.request
 
 def post(base, payload):

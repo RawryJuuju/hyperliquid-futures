@@ -1,3 +1,4 @@
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """Validate the only surviving edge: sweep_fade + market entry + ATR2.0 + RR3.
 Test across 5 coins, 90d, IS/OOS split."""
 from stratlib2 import fetch, stats

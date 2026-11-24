@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 PnL Calendar generator — reads fut_trades.jsonl, aggregates per WIB day,
 renders a monthly HTML calendar with per-day detail.

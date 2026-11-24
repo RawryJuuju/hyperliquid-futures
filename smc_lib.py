@@ -1,3 +1,4 @@
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 smc_lib.py — Smart Money Concepts (SMC) & ICT Quantitative Engine
 ===================================================================

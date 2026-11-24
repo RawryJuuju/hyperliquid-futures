@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 Multi-strategy research harness — find whatever method is PROFITABLE.
 Tests 6 strategy families x parameter grid x 14 liquid coins.

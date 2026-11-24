@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """Check correlation of new candidates vs the 9 existing coins, plus liquidity and max leverage."""
 import json, statistics
 from engine import fetch, FAMILIES, metrics

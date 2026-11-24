@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """Round 4: konfirmasi ETH-only vs BTC, plus final param lock (Q4) + stress test."""
 from stratlib import fetch, run_v2, stats
 

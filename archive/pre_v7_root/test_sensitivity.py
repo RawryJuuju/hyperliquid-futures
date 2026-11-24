@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """Sensitivity test: does the edge survive when parameters are shifted?"""
 import json, urllib.request, time
 

@@ -1,3 +1,4 @@
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """Grid search: find whether ANY parameter region has a positive edge.
 Test market entry (fill at the signal close) vs limit retest, across many RR & ATR values."""
 from stratlib2 import fetch, ema_series, atr_series, adx_series, align_htf, stats

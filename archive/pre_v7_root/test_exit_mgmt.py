@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 TEST: BE and Partial TP at higher levels (2R, 2.5R, 3R)
 User question: with TP at 4R and 2R of profit booked, why not move the stop to entry?

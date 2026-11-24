@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 Hyperliquid Quantitative TradingView Slate/Grey Dashboard
 Palette: Muted Slate-Grey with Luminous Shiny Light-Blue (Ice Cyan) Accents

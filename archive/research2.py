@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 Round 2 research: find filter combinations with a genuine edge.
 Fokus: (a) kenapa BTC jelek, (b) filter kualitas entry, (c) exit model terbaik.

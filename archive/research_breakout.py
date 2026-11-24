@@ -1,3 +1,4 @@
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """Strategy family B: momentum/breakout (not mean-reversion).
 Hypothesis: crypto trends, so breakout continuation suits better than fade."""
 import urllib.request, json, time

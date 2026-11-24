@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 Build config v6: multi-timeframe breakout.
 15m = core (PF 1.34, R/day 1.92)

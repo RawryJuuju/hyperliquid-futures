@@ -1,4 +1,5 @@
 [Unit]
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 Description=Hyperliquid Futures Dashboard (:8899)
 After=network-online.target
 Wants=network-online.target

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """Round 5: find higher frequency on ETH without damaging PF.
 Target: >=40 trade / 90d, PF >= 1.25."""
 from stratlib import fetch, run_v2, stats

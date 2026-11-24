@@ -1,5 +1,7 @@
 # Trade data Snapshots
 
+<!-- Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu -->
+
 Immutable trade history archives, one per major version milestone.
 
 | File | Version | Trades | Period |

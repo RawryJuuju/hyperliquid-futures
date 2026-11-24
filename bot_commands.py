@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 Telegram command handler for futures bot.
 Commands: /entry, /trade, /perps, /status, /pnl, /positions

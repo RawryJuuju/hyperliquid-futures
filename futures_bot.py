@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 Hyperliquid Futures Bot v4 — DUAL STRATEGY per coin
 ====================================================

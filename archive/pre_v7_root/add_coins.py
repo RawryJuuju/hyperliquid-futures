@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """Tambah ARB + INJ ke portfolio, renormalisasi weight berbasis edge."""
 import json, math
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """Round 3: ETH tuning + out-of-sample validation (IS = first 30d, OOS = last 30d)."""
 from stratlib import fetch, run_v2, stats
 

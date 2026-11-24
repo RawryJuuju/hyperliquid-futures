@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 Walk-forward research: 6 strategies x 14 liquid coins.
 IS = first 60 days, OOS = last 60 days.

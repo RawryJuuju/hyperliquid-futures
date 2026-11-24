@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 Strategy Research Harness - Scalp
 Goal: find entry/exit variants with a genuine edge on real Hyperliquid data.

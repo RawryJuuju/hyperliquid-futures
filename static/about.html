@@ -91,6 +91,16 @@ h2 em{font-style:italic;color:var(--acc2)}
 .chip{font-family:var(--mono);font-size:11.5px;padding:7px 13px;border:1px solid var(--line);border-radius:6px;color:var(--txt2);background:var(--bg2);transition:.2s}
 .chip:hover{border-color:rgba(94,234,212,.3);color:var(--acc)}
 
+.contact{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:26px}
+.cc{display:flex;align-items:center;gap:14px;padding:20px 22px;border:1px solid var(--line);border-radius:12px;
+ background:var(--bg2);text-decoration:none;color:inherit;transition:.22s}
+.cc:hover{border-color:rgba(94,234,212,.32);background:var(--panel);transform:translateY(-2px)}
+.cc .ic{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;flex:0 0 36px;
+ background:rgba(94,234,212,.09);border:1px solid rgba(94,234,212,.2);color:var(--acc);font-family:var(--mono);font-size:14px;font-weight:600}
+.cc .lb{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--txt3);font-family:var(--mono)}
+.cc .hd{font-family:var(--mono);font-size:14px;color:var(--txt);margin-top:3px}
+.cc:hover .hd{color:var(--acc)}
+
 
 .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .btn{padding:13px 28px;border-radius:8px;font-size:13.5px;font-weight:500;text-decoration:none;transition:.22s;border:1px solid transparent;display:inline-flex;align-items:center;gap:9px}
@@ -279,6 +289,23 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;font-si
     <span class="chip">ATR normalization</span>
     <span class="chip">Correlation clustering</span>
     <span class="chip">Multi-timeframe</span>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="sh"><span class="sn">05</span><h2>Contact <em>me</em></h2></div>
+  <div class="prose">
+    <p>Questions about the engine, the validation method, or the data — reach out directly.</p>
+  </div>
+  <div class="contact">
+    <a class="cc" href="https://x.com/Juujutsu_" target="_blank" rel="noopener">
+      <span class="ic">X</span>
+      <span><span class="lb">X / Twitter</span><br><span class="hd">@Juujutsu_</span></span>
+    </a>
+    <a class="cc" href="https://t.me/Juujutsuu" target="_blank" rel="noopener">
+      <span class="ic">T</span>
+      <span><span class="lb">Telegram</span><br><span class="hd">@Juujutsuu</span></span>
+    </a>
   </div>
 </section>
 

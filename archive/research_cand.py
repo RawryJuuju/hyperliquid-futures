@@ -1,3 +1,4 @@
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """Final candidate: sweep_fade market ATR2.0 RR3.0 body0.5 look10 — per coin IS/OOS."""
 from stratlib2 import fetch, stats
 from research_grid import run_grid

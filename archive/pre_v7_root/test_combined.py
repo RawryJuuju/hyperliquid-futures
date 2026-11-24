@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Author: Juuju  |  X: @Juujutsu_  |  Telegram: @Juujutsuu
 """
 Test: does combining 2 strategies per coin (primary + secondary)
 beat a single strategy? Measured on OOS 60d.

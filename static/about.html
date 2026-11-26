@@ -91,7 +91,8 @@ h2 em{font-style:italic;color:var(--acc2)}
 .chip{font-family:var(--mono);font-size:11.5px;padding:7px 13px;border:1px solid var(--line);border-radius:6px;color:var(--txt2);background:var(--bg2);transition:.2s}
 .chip:hover{border-color:rgba(94,234,212,.3);color:var(--acc)}
 
-.contact{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:26px}
+.contact{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px}
+@media(max-width:760px){.contact{grid-template-columns:1fr}}
 .cc{display:flex;align-items:center;gap:14px;padding:20px 22px;border:1px solid var(--line);border-radius:12px;
  background:var(--bg2);text-decoration:none;color:inherit;transition:.22s}
 .cc:hover{border-color:rgba(94,234,212,.32);background:var(--panel);transform:translateY(-2px)}
@@ -305,6 +306,10 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;font-si
     <a class="cc" href="https://t.me/Juujutsuu" target="_blank" rel="noopener">
       <span class="ic">T</span>
       <span><span class="lb">Telegram</span><br><span class="hd">@Juujutsuu</span></span>
+    </a>
+    <a class="cc" href="https://github.com/RawryJuuju/hyperliquid-futures" target="_blank" rel="noopener">
+      <span class="ic">G</span>
+      <span><span class="lb">GitHub</span><br><span class="hd">hyperliquid-futures</span></span>
     </a>
   </div>
 </section>

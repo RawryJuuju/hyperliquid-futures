@@ -230,6 +230,26 @@ def build_version_block(v, st):
     </div>
   </div>"""
 
+    # Duration is derived from the release window, not from the first and last
+    # trade inside it, so a quiet period cannot shrink a release's lifetime.
+    is_active = v.get("status") == "active"
+    try:
+        _start = datetime.fromisoformat(v["start"]) if v.get("start") else st["start_dt"]
+        _end = None if is_active else (datetime.fromisoformat(v["end"]) if v.get("end") else st["end_dt"])
+    except Exception:
+        _start, _end = st["start_dt"], (None if is_active else st["end_dt"])
+
+    if is_active or _end is None:
+        duration_span = ""
+        period = f"{_start:%d %b %H:%M} WIB → ongoing"
+    else:
+        hours = (_end - _start).total_seconds() / 3600
+        if hours >= 48:
+            duration_span = f'<span>Duration <b>{hours / 24:.1f}d</b></span>'
+        else:
+            duration_span = f'<span>Duration <b>{hours:.1f}h</b></span>'
+        period = f"{_start:%d %b %H:%M} → {_end:%d %b %H:%M} WIB"
+
     facts = f"""
   <div class="factrow">
     <span>Avg win <b class="pos">{fmt_money(st['avg_win'])}</b></span>
@@ -237,7 +257,7 @@ def build_version_block(v, st):
     <span>Best <b class="pos">{st['best']['coin']} {fmt_money(st['best']['usd'])}</b></span>
     <span>Worst <b class="neg">{st['worst']['coin']} {fmt_money(st['worst']['usd'])}</b></span>
     <span>Exits <b>SL {st['by_kind'].get('SL',0)} · TP {st['by_kind'].get('TP',0)} · TIME {st['by_kind'].get('TIME',0)}</b></span>
-    <span>Span <b>{st['span_days']*24:.1f}h</b></span>
+    {duration_span}
   </div>"""
 
     cfg = v.get("config_snapshot", {})
@@ -304,7 +324,7 @@ def build_version_block(v, st):
   <div class="sh"><span class="sn">{v['id']}</span><h2>{v['name']}</h2></div>
   <div class="vmeta-row">
     <span class="badge {badge}">{status_txt}</span>
-    <span class="vdate">Released {v.get('released','—')} · {st['start_dt']:%d %b %H:%M} → {st['end_dt']:%d %b %H:%M} WIB</span>
+    <span class="vdate">Released {v.get('released','—')} · {period}</span>
   </div>
   <div class="prose"><p>{v['summary']}</p></div>
 

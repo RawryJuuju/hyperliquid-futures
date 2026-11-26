@@ -207,7 +207,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
   <div class="sh"><span class="sn">v1.8.2</span><h2>Session Recalibration + Hybrid Price-Action Exits</h2></div>
   <div class="vmeta-row">
     <span class="badge b3">ACTIVE</span>
-    <span class="vdate">Released 2026-11-18T09:10:00.000000+07:00 · 18 Nov 10:00 → 26 Nov 18:01 WIB</span>
+    <span class="vdate">Released 2026-11-18T09:10:00.000000+07:00 · 18 Nov 09:10 WIB → ongoing</span>
   </div>
   <div class="prose"><p>Critical session multiplier recalibration based on v1.8 live data (74 trades). EU session (08-14 WIB) identified as toxic: 7.1% WR, -$38.13, -1.418 avg R. ASIA session (04-08 WIB) identified as golden: 85.7% WR, +$8.60, +0.607 avg R. Updated multipliers: ASIA SMC/Breakout 1.0x (was 0.5/1.0), EU SMC 0.3x/Breakout 0.0x (was 1.0/1.0). Hybrid TP/SL: Structure-based targets (next 15m/1h swing ≥2.5R) + ATR trailing (1×ATR_15m after +1.5R). Exit management (BE + partial) DISABLED per backtest evidence (baseline +162.9R vs current -364.3R).</p></div>
 
@@ -252,7 +252,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
     <span>Best <b class="pos">TAO $+6.71</b></span>
     <span>Worst <b class="neg">SUI $-5.39</b></span>
     <span>Exits <b>SL 327 · TP 141 · TIME 100</b></span>
-    <span>Span <b>200.0h</b></span>
+    
   </div>
   
   <div class="cfgsnap">
@@ -289,7 +289,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
   <div class="sh"><span class="sn">v1.8</span><h2>Breakout Optimization & Double Penalty Cap</h2></div>
   <div class="vmeta-row">
     <span class="badge b3">SUPERSEDED</span>
-    <span class="vdate">Released 2026-11-17T13:35:00.000000+07:00 · 17 Nov 14:01 → 18 Nov 08:37 WIB</span>
+    <span class="vdate">Released 2026-11-17T13:35:00.000000+07:00 · 17 Nov 13:35 → 18 Nov 09:10 WIB</span>
   </div>
   <div class="prose"><p>Breakout strategy optimization via coin blacklist + slope_min increase + double penalty cap. Removed breakout from 5 worst coins (HYPE, ENA, AVAX, PUMP, ARB) contributing -4.52 combined (0-37% WR). Increased slope_min from 1.5 to 2.5 on remaining breakout slots to filter weak setups. Capped double penalty: when DD reduce factor is active, volatility targeting is skipped (vol_scale=1.0) to prevent compounding risk reduction that shrinks positions below effective size. PAXG already removed in prior hotfix (-1.12, 0% WR breakout). Total active coins: 31 (PAXG removed, 5 coins breakout disabled).</p></div>
 
@@ -334,7 +334,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
     <span>Best <b class="pos">TAO $+3.20</b></span>
     <span>Worst <b class="neg">INJ $-2.26</b></span>
     <span>Exits <b>SL 36 · TP 21 · TIME 10</b></span>
-    <span>Span <b>18.6h</b></span>
+    <span>Duration <b>19.6h</b></span>
   </div>
   
   <div class="cfgsnap">
@@ -371,7 +371,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
   <div class="sh"><span class="sn">v1.7</span><h2>Post-Only Execution, Vol Targeting, Funding Arb & Session Gating</h2></div>
   <div class="vmeta-row">
     <span class="badge b3">SUPERSEDED</span>
-    <span class="vdate">Released 2026-11-15T20:00:00.000000+07:00 · 16 Nov 03:16 → 17 Nov 13:32 WIB</span>
+    <span class="vdate">Released 2026-11-15T20:00:00.000000+07:00 · 15 Nov 20:00 → 17 Nov 13:35 WIB</span>
   </div>
   <div class="prose"><p>Two releases shipped back to back with no trades between them. Institutional-grade execution and portfolio expansion. Post-only limit orders guarantee maker rebates (0.002% vs 0.02% taker = 10x fee savings). Volatility-targeted position sizing scales risk inversely to realized ATR volatility (target 2% daily portfolio vol, capped 0.5x-2.0x). New Funding Rate Arbitrage strategy on BTC/ETH/SOL (delta-neutral perp positions collecting funding when >0.01%/8h = 13.7% APR). Universe expanded to 13 assets with new Cluster F for majors. Total strategy slots: 33 (30 directional + 3 funding arb). Capital efficiency breakthrough via session-aware risk gating. Based on 528 live trades + Binance volume data + institutional quant research (Moskowitz 2012, Cartea-Jaimungal 2015). Implements WIB-hour risk multipliers per strategy family: Night (22-04) disables all directional (SMC/Breakout), only Funding Arb active; Asia Open (04-08) runs Breakout full, SMC half; EU Overlap (08-14) GOLDEN WINDOW - all strategies full size; US Overlap (14-22) boosts Swing 1h to 1.2x, cuts Breakout 15m to 0.5x, SMC 5m to 0.7x. Eliminates -$152 night bleed, boosts US swing alpha. Zero new strategies, pure risk gating overlay.</p></div>
 
@@ -416,7 +416,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
     <span>Best <b class="pos">PAXG $+4.74</b></span>
     <span>Worst <b class="neg">PAXG $-7.87</b></span>
     <span>Exits <b>SL 101 · TP 47 · TIME 8</b></span>
-    <span>Span <b>34.3h</b></span>
+    <span>Duration <b>41.6h</b></span>
   </div>
   
   <div class="cfgsnap">
@@ -453,7 +453,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
   <div class="sh"><span class="sn">v1.5</span><h2>Regime Detection + Limit Order Engine + Variable Leverage</h2></div>
   <div class="vmeta-row">
     <span class="badge b3">SUPERSEDED</span>
-    <span class="vdate">Released 2026-11-15T15:50:43.398131+07:00 · 15 Nov 16:00 → 15 Nov 16:36 WIB</span>
+    <span class="vdate">Released 2026-11-15T15:50:43.398131+07:00 · 15 Nov 15:50 → 15 Nov 20:00 WIB</span>
   </div>
   <div class="prose"><p>Complete architectural overhaul introducing institutional-grade regime detection for macro directional bias, limit order engine at key structural levels (FVG, Order Block, Breakout), and variable leverage per horizon (Scalp 15x, Intraday 10x, Swing 5x). Bot now reads market regime (BULL/BEAR/CHOP) across 1h/15m timeframes and biases entries accordingly. Limit orders placed at FVG/sweep zones for 0.15-0.25R improvement over market. Leverage scales with horizon duration: aggressive 15x for 5m scalp, moderate 10x for 15m intraday, conservative 5x for 1h swing.</p></div>
 
@@ -498,7 +498,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
     <span>Best <b class="pos">AVAX $+3.09</b></span>
     <span>Worst <b class="neg">WLD $+0.45</b></span>
     <span>Exits <b>SL 2 · TP 10 · TIME 0</b></span>
-    <span>Span <b>0.6h</b></span>
+    <span>Duration <b>4.2h</b></span>
   </div>
   
   <div class="cfgsnap">
@@ -535,7 +535,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
   <div class="sh"><span class="sn">v1.4</span><h2>Symmetric Multi-Horizon Stacking & Risk Normalization</h2></div>
   <div class="vmeta-row">
     <span class="badge b3">SUPERSEDED</span>
-    <span class="vdate">Released 2026-11-13T19:58:29.308244+07:00 · 13 Nov 20:01 → 15 Nov 15:29 WIB</span>
+    <span class="vdate">Released 2026-11-13T19:58:29.308244+07:00 · 13 Nov 19:58 → 15 Nov 15:50 WIB</span>
   </div>
   <div class="prose"><p>Core structural architectural upgrade unlocking Multi-Horizon Strategy Stacking across 3 distinct time horizons (Scalp 5m, Intraday 15m, and Swing 1h) simultaneously on each asset without internal hedging conflict. Eliminates risk asymmetry by strictly normalizing risk dollar allocations to an exact 0.45% base risk per trade across all timeframes, fixes timeframe parameter propagation bug in breakout engines, and calibrates breakout take-profit targets from unrealistic 4.0-5.0R down to high-expectancy 1:2.5R.</p></div>
 
@@ -580,7 +580,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
     <span>Best <b class="pos">SUI $+4.51</b></span>
     <span>Worst <b class="neg">AVAX $-3.61</b></span>
     <span>Exits <b>SL 134 · TP 54 · TIME 9</b></span>
-    <span>Span <b>43.5h</b></span>
+    <span>Duration <b>43.9h</b></span>
   </div>
   
   <div class="cfgsnap">
@@ -617,7 +617,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
   <div class="sh"><span class="sn">v1.3</span><h2>Asymmetric Scale-Out & Toxic Asset Purge</h2></div>
   <div class="vmeta-row">
     <span class="badge b3">SUPERSEDED</span>
-    <span class="vdate">Released 2026-11-13T17:41:24.535410+07:00 · 13 Nov 18:02 → 13 Nov 19:30 WIB</span>
+    <span class="vdate">Released 2026-11-13T17:41:24.535410+07:00 · 13 Nov 17:41 → 13 Nov 19:58 WIB</span>
   </div>
   <div class="prose"><p>Core execution perfection addressing post-v1.2 empirical findings: delisted high-volatility chop assets (HYPE and PUMP, which drove -$39.28 USD in drag), upgraded Dynamic Scale-Out ratio to 33% Partial Take Profit at +1.0R (leaving 67% runner volume to capture full +2.0R expansions), and deployed an autonomous 45-minute per-coin loss cooldown to prevent revenge-trading during chop cycles.</p></div>
 
@@ -662,7 +662,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
     <span>Best <b class="pos">HYPE $+7.43</b></span>
     <span>Worst <b class="neg">TAO $-3.22</b></span>
     <span>Exits <b>SL 5 · TP 5 · TIME 1</b></span>
-    <span>Span <b>1.5h</b></span>
+    <span>Duration <b>2.3h</b></span>
   </div>
   
   <div class="cfgsnap">
@@ -699,7 +699,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
   <div class="sh"><span class="sn">v1.2</span><h2>Dynamic Scale-Out & Calibrated RR</h2></div>
   <div class="vmeta-row">
     <span class="badge b3">SUPERSEDED</span>
-    <span class="vdate">Released 2026-11-13T07:11:17.597974+07:00 · 13 Nov 07:15 → 13 Nov 17:35 WIB</span>
+    <span class="vdate">Released 2026-11-13T07:11:17.597974+07:00 · 13 Nov 07:11 → 13 Nov 17:41 WIB</span>
   </div>
   <div class="prose"><p>Major risk execution refinement introducing Dynamic Scale-Out (50% Partial Take Profit at +1.0R), calibrated RR target (1:2.0 from 1:3.5), positive fee-buffered Breakeven trailing (+0.15R), and strict 1h counter-trend Short filtering to lock profits before intraday mean-reversion pullbacks.</p></div>
 
@@ -744,7 +744,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
     <span>Best <b class="pos">WLD $+7.49</b></span>
     <span>Worst <b class="neg">PAXG $-3.94</b></span>
     <span>Exits <b>SL 78 · TP 19 · TIME 2</b></span>
-    <span>Span <b>10.3h</b></span>
+    <span>Duration <b>10.5h</b></span>
   </div>
   
   <div class="cfgsnap">
@@ -781,7 +781,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
   <div class="sh"><span class="sn">1.1</span><h2>SMC Silver Bullet & Kinetic Trend</h2></div>
   <div class="vmeta-row">
     <span class="badge b3">SUPERSEDED</span>
-    <span class="vdate">Released 2026-11-13 · 13 Nov 01:04 → 13 Nov 07:03 WIB</span>
+    <span class="vdate">Released 2026-11-13 · 13 Nov 00:52 → 13 Nov 07:11 WIB</span>
   </div>
   <div class="prose"><p>Major algorithmic upgrade integrating Smart Money Concepts (SMC) & ICT quantitative mechanisms alongside HTF breakout momentum across a 12-asset multi-asset universe (including Gold PAXG, AVAX, TAO, SUI). Implements algorithmic Fair Value Gaps (FVG), BSL/SSL Liquidity Sweeps, Market Structure Shifts (MSS), dynamic Trailing Breakeven at +1.5R, and session Killzone filters.</p></div>
 
@@ -826,7 +826,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
     <span>Best <b class="pos">HYPE $+6.86</b></span>
     <span>Worst <b class="neg">HYPE $-3.99</b></span>
     <span>Exits <b>SL 30 · TP 1 · TIME 4</b></span>
-    <span>Span <b>6.0h</b></span>
+    <span>Duration <b>6.3h</b></span>
   </div>
   
   <div class="cfgsnap">
@@ -863,7 +863,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
   <div class="sh"><span class="sn">1.0</span><h2>Baseline Breakout</h2></div>
   <div class="vmeta-row">
     <span class="badge b3">ARCHIVED</span>
-    <span class="vdate">Released 2026-10-20 · 20 Oct 05:01 → 23 Oct 07:50 WIB</span>
+    <span class="vdate">Released 2026-10-20 · 20 Oct 05:01 → 23 Oct 23:59 WIB</span>
   </div>
   <div class="prose"><p>First production release, closed 23 Oct 2026. Single strategy family (breakout) across three horizons on seven coins. Fixed-fractional risk at 0.25% per trade with a 2.25% aggregate open-risk ceiling. Closed out at -9.06% after 157 trades over 74.8 hours of continuous operation.</p></div>
 
@@ -908,7 +908,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
     <span>Best <b class="pos">ENA $+17.83</b></span>
     <span>Worst <b class="neg">PUMP $-6.84</b></span>
     <span>Exits <b>SL 114 · TP 29 · TIME 11</b></span>
-    <span>Span <b>74.8h</b></span>
+    <span>Duration <b>3.8d</b></span>
   </div>
   
   <div class="cfgsnap">

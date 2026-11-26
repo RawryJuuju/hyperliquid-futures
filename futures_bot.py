@@ -37,7 +37,12 @@ TG_CHAT = "1341231370"
 HL = "https://api.hyperliquid.xyz"
 
 MODE = os.environ.get("FUT_MODE", "active").lower()
-DISPLAY_MODE = "LIVE"
+
+# Hyperliquid perps base-tier fee: 0.045% taker per side -> 0.090% round-trip.
+# Set FEE_ROUNDTRIP = 0.0006 for maker entry (post-only) + taker exit,
+# or 0.0003 for full maker. Taker round-trip is the conservative default.
+FEE_ROUNDTRIP = float(os.environ.get("FEE_ROUNDTRIP", "0.0009"))
+DISPLAY_MODE = "ACTIVE"
 
 # Per-coin leverage: uniform 10x = 10% liquidation distance for every asset
 # SL terlebar 1.56% (WLD) -> buffer 6.4x, aman
@@ -951,11 +956,9 @@ def check_exits(state, cfg):
         if hit:
             kind, px = hit
             R = ((px - entry) if d == "LONG" else (entry - px)) / risk
-            # realistic friction: taker 0.045% per side = 0.09% round-trip on notional,
-            # + 0.05% slippage buffer. Charged once on the exit price, not on (entry+exit).
-            fee = px * 0.0009 / risk
-            slip = px * 0.0005 / risk
-            R -= slip
+            # Hyperliquid perps base tier: taker 0.045% per side = 0.090% round-trip.
+            # Charged once against the exit notional.
+            fee = px * FEE_ROUNDTRIP / risk
             R -= fee
             usd = R * pos["risk_usd"]
             if pos.get("realized_usd"):

@@ -241,13 +241,22 @@ def build_version_block(v, st):
   </div>"""
 
     cfg = v.get("config_snapshot", {})
+
+    def cfglist(val):
+        """Config snapshots store these either as a list or as a pre-joined string."""
+        if val is None:
+            return ""
+        if isinstance(val, (list, tuple)):
+            return ", ".join(str(x) for x in val)
+        return str(val)
+
     cfgblock = f"""
   <div class="cfgsnap">
     <div class="ct">Configuration</div>
     <div class="cfgrow">
-      <span>Coins <b>{', '.join(cfg.get('coins', []))}</b></span>
-      <span>Timeframes <b>{', '.join(cfg.get('timeframes', []))}</b></span>
-      <span>Strategies <b>{', '.join(cfg.get('strategies', []))}</b></span>
+      <span>Coins <b>{cfglist(cfg.get('coins'))}</b></span>
+      <span>Timeframes <b>{cfglist(cfg.get('timeframes'))}</b></span>
+      <span>Strategies <b>{cfglist(cfg.get('strategies'))}</b></span>
       <span>Risk / trade <b>{cfg.get('base_risk_pct')}%</b></span>
       <span>Max open risk <b>{cfg.get('max_open_risk_pct')}%</b></span>
       <span>Leverage <b>{cfg.get('leverage')}x</b></span>

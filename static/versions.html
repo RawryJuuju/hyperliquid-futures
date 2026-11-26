@@ -195,7 +195,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
   </p>
 
   <div class="stats">
-    <div class="stat"><div class="sv">10</div><div class="sl">Releases</div></div>
+    <div class="stat"><div class="sv">9</div><div class="sl">Releases</div></div>
     <div class="stat"><div class="sv">0</div><div class="sl">Live Now</div></div>
     <div class="stat"><div class="sv">1302</div><div class="sl">Trades Logged</div></div>
     <div class="stat"><div class="sv">$+179.40</div><div class="sl">Net PnL</div></div>
@@ -368,12 +368,12 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
 </section>
 
 <section id="vv1-7">
-  <div class="sh"><span class="sn">v1.7</span><h2>Session-Aware Risk Gating & Capital Efficiency</h2></div>
+  <div class="sh"><span class="sn">v1.7</span><h2>Post-Only Execution, Vol Targeting, Funding Arb & Session Gating</h2></div>
   <div class="vmeta-row">
     <span class="badge b3">SUPERSEDED</span>
-    <span class="vdate">Released 2026-11-15T21:30:00.000000+07:00 · 16 Nov 03:16 → 17 Nov 13:32 WIB</span>
+    <span class="vdate">Released 2026-11-15T20:00:00.000000+07:00 · 16 Nov 03:16 → 17 Nov 13:32 WIB</span>
   </div>
-  <div class="prose"><p>Capital efficiency breakthrough via session-aware risk gating. Based on 528 live trades + Binance volume data + institutional quant research (Moskowitz 2012, Cartea-Jaimungal 2015). Implements WIB-hour risk multipliers per strategy family: Night (22-04) disables all directional (SMC/Breakout), only Funding Arb active; Asia Open (04-08) runs Breakout full, SMC half; EU Overlap (08-14) GOLDEN WINDOW - all strategies full size; US Overlap (14-22) boosts Swing 1h to 1.2x, cuts Breakout 15m to 0.5x, SMC 5m to 0.7x. Eliminates -$152 night bleed, boosts US swing alpha. Zero new strategies, pure risk gating overlay.</p></div>
+  <div class="prose"><p>Two releases shipped back to back with no trades between them. Institutional-grade execution and portfolio expansion. Post-only limit orders guarantee maker rebates (0.002% vs 0.02% taker = 10x fee savings). Volatility-targeted position sizing scales risk inversely to realized ATR volatility (target 2% daily portfolio vol, capped 0.5x-2.0x). New Funding Rate Arbitrage strategy on BTC/ETH/SOL (delta-neutral perp positions collecting funding when >0.01%/8h = 13.7% APR). Universe expanded to 13 assets with new Cluster F for majors. Total strategy slots: 33 (30 directional + 3 funding arb). Capital efficiency breakthrough via session-aware risk gating. Based on 528 live trades + Binance volume data + institutional quant research (Moskowitz 2012, Cartea-Jaimungal 2015). Implements WIB-hour risk multipliers per strategy family: Night (22-04) disables all directional (SMC/Breakout), only Funding Arb active; Asia Open (04-08) runs Breakout full, SMC half; EU Overlap (08-14) GOLDEN WINDOW - all strategies full size; US Overlap (14-22) boosts Swing 1h to 1.2x, cuts Breakout 15m to 0.5x, SMC 5m to 0.7x. Eliminates -$152 night bleed, boosts US swing alpha. Zero new strategies, pure risk gating overlay.</p></div>
 
   <div class="quote">Deployed to production. Session gating active on all 33 strategy slots. Night directional = OFF, EU/US optimized, Funding Arb 24/7.<span>Post-mortem</span></div>
   
@@ -434,7 +434,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
   </div>
     <div class="changelog">
     <div class="ct">Changes in this release</div>
-    <ul><li>Session-Aware Risk Multipliers (v1.7): WIB-hour based risk scaling per strategy family. Night (22-04) = directional OFF/funding ON; Asia (04-08) = breakout 1.0x, SMC 0.5x; EU (08-14) = ALL 1.0x (golden window); US (14-22) = SMC 0.7x, Breakout 15m 0.5x, Swing 1h 1.2x, Funding 1.0x.</li><li>Night Bleed Elimination: Historical -$152 PnL from 22-04 WIB (26.9% WR) now fully disabled. No directional trades during low-volume chop.</li><li>US Overlap Optimization: Swing 1h boosted to 1.2x during 14-22 WIB where trend follow-through is strongest. Breakout 15m cut to 0.5x to reduce adverse selection in choppy US mid-session.</li><li>Asia Open Tuning: Breakout 15m/1h full size (range expansion works), SMC 5m half size (fakeout prone during Tokyo open).</li><li>EU Overlap Golden Window: All strategies full size 08-14 WIB where volume, trend sustainability, and signal quality peak.</li><li>Funding Arb 24/7 Unchanged: Delta-neutral funding collection runs all sessions, unaffected by directional gating.</li><li>Implementation: 30 lines in can_open() and size_position() — zero config changes, zero new parameters.</li></ul>
+    <ul><li>Post-Only Limit Orders (v1.7): All limit orders now use post_only=true flag on Hyperliquid, guaranteeing maker rebate (0.002%) vs taker fee (0.02%). Fallback to market order if limit unfilled after 2 bars.</li><li>Volatility-Targeted Position Sizing (v1.7): Position risk scaled by realized volatility ratio (target_vol / current_vol). Higher volatility -> smaller position, lower volatility -> larger position. Target: 2% daily portfolio volatility. ATR(14) based. Capped at 0.5x-2.0x multiplier.</li><li>Funding Rate Arbitrage Strategy (v1.7): New delta-neutral alpha source. Scans BTC/ETH/SOL funding rates hourly. When |funding| > 0.01%/8h (13.7% APR), takes directional perp position aligned with collecting funding (SHORT when funding > 0, LONG when funding < 0). Wide stops (2-5% ATR-based), 48h max hold. Cluster F (max 3 concurrent).</li><li>Universe Expansion to 13 Assets: Added BTC, ETH, SOL as Cluster F (funding arb only). Total: 10 directional (3 horizons each = 30 slots) + 3 funding arb (1h only = 3 slots) = 33 strategy slots.</li><li>Cluster F Correlation Management: New cluster for majors with 3 max concurrent. Funding arb positions are delta-neutral by nature, low correlation to directional strategies.</li><li>Leverage for Majors: BTC/ETH/SOL at 5x (1h funding arb horizon only). Conservative for wide-stop funding positions.</li><li>Session-Aware Risk Multipliers (v1.7): WIB-hour based risk scaling per strategy family. Night (22-04) = directional OFF/funding ON; Asia (04-08) = breakout 1.0x, SMC 0.5x; EU (08-14) = ALL 1.0x (golden window); US (14-22) = SMC 0.7x, Breakout 15m 0.5x, Swing 1h 1.2x, Funding 1.0x.</li><li>Night Bleed Elimination: Historical -$152 PnL from 22-04 WIB (26.9% WR) now fully disabled. No directional trades during low-volume chop.</li><li>US Overlap Optimization: Swing 1h boosted to 1.2x during 14-22 WIB where trend follow-through is strongest. Breakout 15m cut to 0.5x to reduce adverse selection in choppy US mid-session.</li><li>Asia Open Tuning: Breakout 15m/1h full size (range expansion works), SMC 5m half size (fakeout prone during Tokyo open).</li><li>EU Overlap Golden Window: All strategies full size 08-14 WIB where volume, trend sustainability, and signal quality peak.</li><li>Funding Arb 24/7 Unchanged: Delta-neutral funding collection runs all sessions, unaffected by directional gating.</li><li>Implementation: 30 lines in can_open() and size_position() — zero config changes, zero new parameters.</li></ul>
   </div>
   
   <details class="tradelog">
@@ -447,16 +447,6 @@ footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;
       </table>
     </div>
   </details>
-</section>
-
-<section id="vv1-6">
-  <div class="sh"><span class="sn">v1.6</span><h2>Post-Only Limits + Vol Targeting + Funding Arb + BTC/ETH/SOL Expansion</h2></div>
-  <div class="vmeta-row">
-    <span class="badge b3">SUPERSEDED</span>
-    <span class="vdate">Released 2026-11-15T20:00:00.000000+07:00</span>
-  </div>
-  <div class="prose"><p>Institutional-grade execution and portfolio expansion. Post-only limit orders guarantee maker rebates (0.002% vs 0.02% taker = 10x fee savings). Volatility-targeted position sizing scales risk inversely to realized ATR volatility (target 2% daily portfolio vol, capped 0.5x-2.0x). New Funding Rate Arbitrage strategy on BTC/ETH/SOL (delta-neutral perp positions collecting funding when >0.01%/8h = 13.7% APR). Universe expanded to 13 assets with new Cluster F for majors. Total strategy slots: 33 (30 directional + 3 funding arb).</p></div>
-  <p class="empty">No trades recorded for this release yet.</p>
 </section>
 
 <section id="vv1-5">

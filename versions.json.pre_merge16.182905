@@ -1,0 +1,484 @@
+{
+  "versions": [
+    {
+      "id": "v1.8.2",
+      "name": "Session Recalibration + Hybrid Price-Action Exits",
+      "status": "active",
+      "start": "2026-11-18T09:10:00.000000+07:00",
+      "end": null,
+      "initial_equity": 1063.39,
+      "final_equity": 1179.4,
+      "released": "2026-11-18T09:10:00.000000+07:00",
+      "closed": null,
+      "summary": "Critical session multiplier recalibration based on v1.8 live data (74 trades). EU session (08-14 WIB) identified as toxic: 7.1% WR, -$38.13, -1.418 avg R. ASIA session (04-08 WIB) identified as golden: 85.7% WR, +$8.60, +0.607 avg R. Updated multipliers: ASIA SMC/Breakout 1.0x (was 0.5/1.0), EU SMC 0.3x/Breakout 0.0x (was 1.0/1.0). Hybrid TP/SL: Structure-based targets (next 15m/1h swing ≥2.5R) + ATR trailing (1×ATR_15m after +1.5R). Exit management (BE + partial) DISABLED per backtest evidence (baseline +162.9R vs current -364.3R).",
+      "verdict": "Deployed to production. EU session risk reduced 90%, ASIA doubled. SMC exits now structure-aware with trailing. No breakout in EU.",
+      "changes": [
+        "Session Multiplier Recalibration (v1.8.2): ASIA 04-08 SMC 1.0x/BRK 1.0x (was 0.5/1.0). EU 08-13 SMC 0.3x/BRK 0.0x (was 1.0/1.0). US 14-21 unchanged (SMC 0.7/BRK 0.5). NIGHT 22-03 unchanged (0.0/0.0). Funding 24/7 1.0x. Based on 74 v1.8 trades session analysis.",
+        "Hybrid Price-Action TP/SL (v1.8.2): SMC structure-based TP = next 15m/1h swing high/low (min 2.5R, fallback 3R measured move). ATR trailing: activates at +1.5R, trails at 1×ATR_15m. Replaces fixed 2R TP / 1R SL. Breakout/Funding unchanged.",
+        "Exit Management Disabled (v1.8.2): BE trigger (1.2R) and partial TP (33% @ 1.0R) turned OFF. Backtest proof: baseline no-BE/no-partial = +162.9R (40.7% WR, PF 1.13) vs with BE+partial = -364.3R (33.9% WR, PF 0.63). BE killed winners that retraced before TP.",
+        "SMC RR Base Raised: 2.0 → 2.5 minimum. Structure targets often exceed 3R on clean trends."
+      ],
+      "config_snapshot": {
+        "coins": "WLD, INJ, ZEC, NEAR, ENA, ARB, AVAX, TAO, SUI, BTC, ETH, SOL (31 total, PAXG removed)",
+        "breakout_enabled": "ZEC, WLD, NEAR, SUI, INJ, TAO (6 coins, 12 slots) — EU session DISABLED",
+        "breakout_disabled": "HYPE, ENA, AVAX, PUMP, ARB (5 coins, 10 slots removed)",
+        "timeframes": "5m (Scalp), 15m (Intraday), 1h (Swing + Funding Arb)",
+        "strategies": "smc_silver_bullet (5m), breakout (15m/1h), funding_arb (1h on BTC/ETH/SOL)",
+        "base_risk": "0.75% flat per trade (vol-adjusted, session-adjusted, DD-adjusted)",
+        "max_open_risk": "6.0%",
+        "leverage_5m": "15x (INJ 5x)",
+        "leverage_15m": "10x (INJ 5x)",
+        "leverage_1h": "5x (all, incl BTC/ETH/SOL)",
+        "slots": "28 directional + 3 funding = 31 strategy slots",
+        "partial_take_profit": "DISABLED (was 33% @ 1.0R)",
+        "breakeven_trigger": "DISABLED (was 1.2R + 0.15R fee buffer)",
+        "coin_cooldown": "45 minutes post-SL",
+        "anti_hedging_guard": "Strict directional synchronization",
+        "regime_detection": "EMA20/50 alignment on 1h+15m",
+        "limit_entry_fvg": "0.25R improvement (SMC)",
+        "limit_entry_breakout": "0.15R improvement (Breakout)",
+        "post_only_limits": "True (maker rebate 0.002%)",
+        "vol_targeting": "2% daily portfolio vol, ATR(14), 0.5x-2.0x scale (disabled when DD reduce active)",
+        "funding_arb_min_rate": "0.01%/8h (13.7% APR)",
+        "funding_arb_max_hold": "48 hours",
+        "session_gating": "WIB-hour multipliers: Night dir=0/fund=1, Asia smc=1.0/brk=1.0, EU smc=0.3/brk=0.0, US smc=0.7/brk15=0.5/brk1h=1.2/fund=1",
+        "breakout_slope_min": "2.5 (raised from 1.5)",
+        "smc_tp_structure": "Next 15m/1h swing (min 2.5R, fallback 3R measured move)",
+        "smc_trail_atr": "1×ATR_15m after +1.5R"
+      },
+      "notes": [
+        "EU session was the single largest PnL drag in v1.8: 14 trades, 7.1% WR, -$38.13, -1.418 avg R. SMC 11.1% WR, Breakout 0% WR.",
+        "ASIA session dominant: 14 trades, 85.7% WR, +$8.60, +0.607 avg R. SMC 81.8% WR, Breakout 100% WR (1 trade).",
+        "Exit management backtest over 120d: baseline +162.9R vs BE+partial -364.3R. BE+partial increases WR (40→55%) but destroys R expectancy.",
+        "Structure TP captures full trend moves (often 3-5R) vs fixed 2R cap. Trailing protects open profit after +1.5R.",
+        "Breakout completely disabled in EU (08-13) — 0% WR in v1.8. Re-evaluate after 20+ trades in other sessions.",
+        "No version bump for config-only changes (risk config, session multipliers). v1.8.2 = code + config changes."
+      ]
+    },
+    {
+      "id": "v1.8",
+      "name": "Breakout Optimization & Double Penalty Cap",
+      "status": "superseded",
+      "start": "2026-11-17T13:35:00.000000+07:00",
+      "end": "2026-11-18T09:10:00.000000+07:00",
+      "initial_equity": 1045.81,
+      "final_equity": 1063.39,
+      "released": "2026-11-17T13:35:00.000000+07:00",
+      "closed": "2026-11-18T09:10:00.000000+07:00",
+      "summary": "Breakout strategy optimization via coin blacklist + slope_min increase + double penalty cap. Removed breakout from 5 worst coins (HYPE, ENA, AVAX, PUMP, ARB) contributing -4.52 combined (0-37% WR). Increased slope_min from 1.5 to 2.5 on remaining breakout slots to filter weak setups. Capped double penalty: when DD reduce factor is active, volatility targeting is skipped (vol_scale=1.0) to prevent compounding risk reduction that shrinks positions below effective size. PAXG already removed in prior hotfix (-1.12, 0% WR breakout). Total active coins: 31 (PAXG removed, 5 coins breakout disabled).",
+      "verdict": "Deployed to production. Breakout now only on ZEC, WLD, NEAR, SUI, INJ, TAO with stricter slope filter. Risk sizing no longer double-penalized during drawdown.",
+      "changes": [
+        "Breakout Coin Blacklist (v1.8): breakout disabled on HYPE, ENA, AVAX, PUMP, ARB — 5 coins responsible for -4.52 combined PnL (avg WR 20.8%). Breakout retained only on ZEC (+0.66), WLD (+0.36), NEAR (+0.81), SUI (+0.09), INJ (-0.19), TAO (-0.06).",
+        "Slope Min Increase (v1.8): Breakout slope_min raised from 1.5 to 2.5 across all remaining coins. Filters low-momentum channel breaks that frequently fake out. Based on 185 historical breakout trades analysis showing sub-2.5 slope = negative expectancy.",
+        "Double Penalty Cap (v1.8): When drawdown reduction is active (DD >= reduce_after_dd_pct), volatility targeting scale (vol_scale) is set to 1.0 instead of compounding. Previously: DD reduce (0.5x) * vol_scale (0.53x BTC) = 0.265x effective risk. Now: DD reduce only (0.5x). Prevents positions shrinking to ineffective size during drawdown recovery.",
+        "PAXG Removal (hotfix): Gold (PAXG) completely removed from universe. Breakout PAXG was 0% WR, -1.12 across 5 trades. SMC PAXG also negative (-.26, 16.7% WR). Gold volatility profile incompatible with crypto-optimized engines."
+      ],
+      "config_snapshot": {
+        "coins": "WLD, INJ, ZEC, NEAR, ENA, ARB, AVAX, TAO, SUI, BTC, ETH, SOL (31 total, PAXG removed)",
+        "breakout_enabled": "ZEC, WLD, NEAR, SUI, INJ, TAO (6 coins, 12 slots)",
+        "breakout_disabled": "HYPE, ENA, AVAX, PUMP, ARB (5 coins, 10 slots removed)",
+        "timeframes": "5m (Scalp), 15m (Intraday), 1h (Swing + Funding Arb)",
+        "strategies": "smc_silver_bullet (5m), breakout (15m/1h), funding_arb (1h on BTC/ETH/SOL)",
+        "base_risk": "0.75% flat per trade (vol-adjusted, session-adjusted, DD-adjusted)",
+        "max_open_risk": "6.0%",
+        "leverage_5m": "15x (INJ 5x)",
+        "leverage_15m": "10x (INJ 5x)",
+        "leverage_1h": "5x (all, incl BTC/ETH/SOL)",
+        "slots": "28 directional + 3 funding = 31 strategy slots",
+        "partial_take_profit": "33% @ 1.0R",
+        "breakeven_trigger": "1.2R (+0.15R fee buffer)",
+        "coin_cooldown": "45 minutes post-SL",
+        "anti_hedging_guard": "Strict directional synchronization",
+        "regime_detection": "EMA20/50 alignment on 1h+15m",
+        "limit_entry_fvg": "0.25R improvement (SMC)",
+        "limit_entry_breakout": "0.15R improvement (Breakout)",
+        "post_only_limits": "True (maker rebate 0.002%)",
+        "vol_targeting": "2% daily portfolio vol, ATR(14), 0.5x-2.0x scale (disabled when DD reduce active)",
+        "funding_arb_min_rate": "0.01%/8h (13.7% APR)",
+        "funding_arb_max_hold": "48 hours",
+        "session_gating": "WIB-hour multipliers: Night dir=0/fund=1, Asia smc=0.5/brk=1, EU all=1, US smc=0.7/brk15=0.5/brk1h=1.2/fund=1",
+        "breakout_slope_min": "2.5 (raised from 1.5)"
+      },
+      "notes": [
+        "Breakout was the single worst strategy: 185 trades, -5.79, 30.8% WR, -0.258 avg R.",
+        "5 worst breakout coins (HYPE/ENA/AVAX/PUMP/ARB) = -4.52 = 85% of breakout losses.",
+        "ZEC, WLD, NEAR, SUI breakout were positive — kept with stricter filter.",
+        "Double penalty fix restores position sizing during drawdown: BTC risk went from 0.20% -> 0.375% equity.",
+        "No new strategies. Pure optimization of existing breakout + risk model."
+      ]
+    },
+    {
+      "id": "v1.7",
+      "name": "Session-Aware Risk Gating & Capital Efficiency",
+      "status": "superseded",
+      "start": "2026-11-15T21:30:00.000000+07:00",
+      "end": "2026-11-17T13:35:00.000000+07:00",
+      "initial_equity": 1027.52,
+      "final_equity": 1045.81,
+      "released": "2026-11-15T21:30:00.000000+07:00",
+      "closed": "2026-11-17T13:35:00.000000+07:00",
+      "summary": "Capital efficiency breakthrough via session-aware risk gating. Based on 528 live trades + Binance volume data + institutional quant research (Moskowitz 2012, Cartea-Jaimungal 2015). Implements WIB-hour risk multipliers per strategy family: Night (22-04) disables all directional (SMC/Breakout), only Funding Arb active; Asia Open (04-08) runs Breakout full, SMC half; EU Overlap (08-14) GOLDEN WINDOW - all strategies full size; US Overlap (14-22) boosts Swing 1h to 1.2x, cuts Breakout 15m to 0.5x, SMC 5m to 0.7x. Eliminates -$152 night bleed, boosts US swing alpha. Zero new strategies, pure risk gating overlay.",
+      "verdict": "Deployed to production. Session gating active on all 33 strategy slots. Night directional = OFF, EU/US optimized, Funding Arb 24/7.",
+      "changes": [
+        "Session-Aware Risk Multipliers (v1.7): WIB-hour based risk scaling per strategy family. Night (22-04) = directional OFF/funding ON; Asia (04-08) = breakout 1.0x, SMC 0.5x; EU (08-14) = ALL 1.0x (golden window); US (14-22) = SMC 0.7x, Breakout 15m 0.5x, Swing 1h 1.2x, Funding 1.0x.",
+        "Night Bleed Elimination: Historical -$152 PnL from 22-04 WIB (26.9% WR) now fully disabled. No directional trades during low-volume chop.",
+        "US Overlap Optimization: Swing 1h boosted to 1.2x during 14-22 WIB where trend follow-through is strongest. Breakout 15m cut to 0.5x to reduce adverse selection in choppy US mid-session.",
+        "Asia Open Tuning: Breakout 15m/1h full size (range expansion works), SMC 5m half size (fakeout prone during Tokyo open).",
+        "EU Overlap Golden Window: All strategies full size 08-14 WIB where volume, trend sustainability, and signal quality peak.",
+        "Funding Arb 24/7 Unchanged: Delta-neutral funding collection runs all sessions, unaffected by directional gating.",
+        "Implementation: 30 lines in can_open() and size_position() — zero config changes, zero new parameters."
+      ],
+      "config_snapshot": {
+        "coins": "WLD, INJ, ZEC, NEAR, ENA, ARB, PAXG, AVAX, TAO, SUI, BTC, ETH, SOL",
+        "timeframes": "5m (Scalp), 15m (Intraday), 1h (Swing + Funding Arb)",
+        "strategies": "smc_silver_bullet (5m), breakout (15m), breakout (1h), funding_arb (1h on BTC/ETH/SOL)",
+        "base_risk": "0.45% flat per trade (vol-adjusted, session-adjusted)",
+        "max_open_risk": "6.0%",
+        "leverage_5m": "15x (INJ 5x, PAXG 10x)",
+        "leverage_15m": "10x (INJ 5x, PAXG 8x)",
+        "leverage_1h": "5x (all, incl BTC/ETH/SOL)",
+        "slots": 33,
+        "partial_take_profit": "33% @ 1.0R",
+        "breakeven_trigger": "1.2R (+0.15R fee buffer)",
+        "coin_cooldown": "45 minutes post-SL",
+        "anti_hedging_guard": "Strict directional synchronization",
+        "regime_detection": "EMA20/50 alignment on 1h+15m",
+        "limit_entry_fvg": "0.25R improvement (SMC)",
+        "limit_entry_breakout": "0.15R improvement (Breakout)",
+        "post_only_limits": "True (maker rebate 0.002%)",
+        "vol_targeting": "2% daily portfolio vol, ATR(14), 0.5x-2.0x scale",
+        "funding_arb_min_rate": "0.01%/8h (13.7% APR)",
+        "funding_arb_max_hold": "48 hours",
+        "session_gating": "WIB-hour multipliers: Night dir=0/fund=1, Asia smc=0.5/brk=1, EU all=1, US smc=0.7/brk15=0.5/brk1h=1.2/fund=1"
+      },
+      "notes": [
+        "Session gating eliminates the single largest PnL drag: -$152 from night (22-04 WIB).",
+        "US Overlap swing 1h boost (1.2x) targets the strongest trend-follow-through window.",
+        "Breakout 15m reduced in US (0.5x) — adverse selection in post-only limits during chop.",
+        "EU Overlap 08-14 WIB remains the only session where all 3 horizons have edge simultaneously.",
+        "Funding arb runs 24/7 — uncorrelated alpha, session-independent.",
+        "Backtest on 528 trades: projected +$390 delta vs no session filter (-$275 -> +$115)."
+      ]
+    },
+    {
+      "id": "v1.6",
+      "name": "Post-Only Limits + Vol Targeting + Funding Arb + BTC/ETH/SOL Expansion",
+      "status": "superseded",
+      "start": "2026-11-15T20:00:00.000000+07:00",
+      "end": "2026-11-15T21:30:00.000000+07:00",
+      "initial_equity": 1027.52,
+      "final_equity": 1027.52,
+      "released": "2026-11-15T20:00:00.000000+07:00",
+      "closed": null,
+      "summary": "Institutional-grade execution and portfolio expansion. Post-only limit orders guarantee maker rebates (0.002% vs 0.02% taker = 10x fee savings). Volatility-targeted position sizing scales risk inversely to realized ATR volatility (target 2% daily portfolio vol, capped 0.5x-2.0x). New Funding Rate Arbitrage strategy on BTC/ETH/SOL (delta-neutral perp positions collecting funding when >0.01%/8h = 13.7% APR). Universe expanded to 13 assets with new Cluster F for majors. Total strategy slots: 33 (30 directional + 3 funding arb).",
+      "verdict": "Deployed to production. Post-only execution active, vol targeting calibrated, funding arb scanning BTC/ETH/SOL every hour.",
+      "changes": [
+        "Post-Only Limit Orders (v1.6): All limit orders now use post_only=true flag on Hyperliquid, guaranteeing maker rebate (0.002%) vs taker fee (0.02%). Fallback to market order if limit unfilled after 2 bars.",
+        "Volatility-Targeted Position Sizing (v1.6): Position risk scaled by realized volatility ratio (target_vol / current_vol). Higher volatility -> smaller position, lower volatility -> larger position. Target: 2% daily portfolio volatility. ATR(14) based. Capped at 0.5x-2.0x multiplier.",
+        "Funding Rate Arbitrage Strategy (v1.6): New delta-neutral alpha source. Scans BTC/ETH/SOL funding rates hourly. When |funding| > 0.01%/8h (13.7% APR), takes directional perp position aligned with collecting funding (SHORT when funding > 0, LONG when funding < 0). Wide stops (2-5% ATR-based), 48h max hold. Cluster F (max 3 concurrent).",
+        "Universe Expansion to 13 Assets: Added BTC, ETH, SOL as Cluster F (funding arb only). Total: 10 directional (3 horizons each = 30 slots) + 3 funding arb (1h only = 3 slots) = 33 strategy slots.",
+        "Cluster F Correlation Management: New cluster for majors with 3 max concurrent. Funding arb positions are delta-neutral by nature, low correlation to directional strategies.",
+        "Leverage for Majors: BTC/ETH/SOL at 5x (1h funding arb horizon only). Conservative for wide-stop funding positions."
+      ],
+      "config_snapshot": {
+        "coins": "WLD, INJ, ZEC, NEAR, ENA, ARB, PAXG, AVAX, TAO, SUI, BTC, ETH, SOL",
+        "timeframes": "5m (Scalp), 15m (Intraday), 1h (Swing + Funding Arb)",
+        "strategies": "smc_silver_bullet (5m), breakout (15m), breakout (1h), funding_arb (1h on BTC/ETH/SOL)",
+        "base_risk": "0.45% flat per trade (vol-adjusted)",
+        "max_open_risk": "6.0%",
+        "leverage_5m": "15x (INJ 5x, PAXG 10x)",
+        "leverage_15m": "10x (INJ 5x, PAXG 8x)",
+        "leverage_1h": "5x (all, incl BTC/ETH/SOL)",
+        "slots": 33,
+        "partial_take_profit": "33% @ 1.0R",
+        "breakeven_trigger": "1.2R (+0.15R fee buffer)",
+        "coin_cooldown": "45 minutes post-SL",
+        "anti_hedging_guard": "Strict directional synchronization",
+        "regime_detection": "EMA20/50 alignment on 1h+15m",
+        "limit_entry_fvg": "0.25R improvement (SMC)",
+        "limit_entry_breakout": "0.15R improvement (Breakout)",
+        "post_only_limits": "True (maker rebate 0.002%)",
+        "vol_targeting": "2% daily portfolio vol, ATR(14), 0.5x-2.0x scale",
+        "funding_arb_min_rate": "0.01%/8h (13.7% APR)",
+        "funding_arb_max_hold": "48 hours"
+      },
+      "notes": [
+        "Post-only limits = 10x fee reduction on filled orders. Direct PnL boost.",
+        "Vol targeting prevents oversized positions in high-vol regimes (protects during chop).",
+        "Funding arb adds uncorrelated alpha - collects funding 24/7 when rates are skewed.",
+        "BTC/ETH/SOL funding arb only, no directional SMC/breakout (historical PF 0.45-0.60)."
+      ]
+    },
+    {
+      "id": "v1.5",
+      "name": "Regime Detection + Limit Order Engine + Variable Leverage",
+      "status": "superseded",
+      "start": "2026-11-15T15:50:43.398131+07:00",
+      "end": "2026-11-15T20:00:00.000000+07:00",
+      "initial_equity": 995.73,
+      "final_equity": 1027.52,
+      "released": "2026-11-15T15:50:43.398131+07:00",
+      "closed": null,
+      "summary": "Complete architectural overhaul introducing institutional-grade regime detection for macro directional bias, limit order engine at key structural levels (FVG, Order Block, Breakout), and variable leverage per horizon (Scalp 15x, Intraday 10x, Swing 5x). Bot now reads market regime (BULL/BEAR/CHOP) across 1h/15m timeframes and biases entries accordingly. Limit orders placed at FVG/sweep zones for 0.15-0.25R improvement over market. Leverage scales with horizon duration: aggressive 15x for 5m scalp, moderate 10x for 15m intraday, conservative 5x for 1h swing.",
+      "verdict": "Active on live production. All 10 assets running 3-tier horizon with regime-aware directional bias, limit order execution, and variable leverage.",
+      "changes": [
+        "Multi-Timeframe Regime Detection: Classifies market as BULL (1h+15m aligned uptrend), BEAR (1h+15m aligned downtrend), or CHOP (conflicting/flat). Signals against regime are executed as market orders for speed; with-regime signals use limit orders for better fill",
+        "Limit Order Engine: SMC Silver Bullet entries placed at FVG midpoint (0.25R improvement); Breakout entries at breakout level + 0.15R improvement. Both capped at 0.5% from market price to avoid missed fills",
+        "Variable Leverage per Horizon: 5m Scalp = 15x (quick in/out, tight stops), 15m Intraday = 10x (balanced), 1h Swing = 5x (wider stops, longer hold). INJ capped at 5x (exchange limit), PAXG adjusted for commodity volatility",
+        "Regime-Biased Directional Filter: In BULL regime, SHORT signals require stronger confirmation or are deprioritized; in BEAR regime, LONG signals face same scrutiny. CHOP regime = neutral, all signals allowed but position sizes reduced via risk model",
+        "Telemetry Upgrade: Signal notifications now include Regime, Strength, Bias, Entry Type (limit_fvg/limit_breakout/market), and Variable Leverage"
+      ],
+      "config_snapshot": {
+        "coins": "WLD, INJ, ZEC, NEAR, ENA, ARB, PAXG, AVAX, TAO, SUI",
+        "timeframes": "5m (Scalp), 15m (Intraday), 1h (Swing)",
+        "strategies": "smc_silver_bullet (5m), breakout (15m), breakout (1h)",
+        "base_risk": "0.45% flat per trade",
+        "max_open_risk": "6.0%",
+        "leverage_5m": "15x (INJ 5x, PAXG 10x)",
+        "leverage_15m": "10x (INJ 5x, PAXG 8x)",
+        "leverage_1h": "5x (all)",
+        "slots": 30,
+        "partial_take_profit": "33% @ 1.0R",
+        "breakeven_trigger": "1.2R (+0.15R fee buffer)",
+        "coin_cooldown": "45 minutes post-SL",
+        "anti_hedging_guard": "Strict directional synchronization",
+        "regime_detection": "EMA20/50 alignment on 1h+15m",
+        "limit_entry_fvg": "0.25R improvement (SMC)",
+        "limit_entry_breakout": "0.15R improvement (Breakout)"
+      },
+      "notes": [
+        "Regime detection runs on every signal evaluation (cached candles).",
+        "Limit orders only placed when signal direction aligns with regime bias (or CHOP).",
+        "Leverage scaling dramatically improves capital efficiency: same risk dollar, smaller margin lockup on swing."
+      ]
+    },
+    {
+      "id": "v1.4",
+      "name": "Symmetric Multi-Horizon Stacking & Risk Normalization",
+      "status": "superseded",
+      "start": "2026-11-13T19:58:29.308244+07:00",
+      "end": "2026-11-15T15:50:43.398131+07:00",
+      "initial_equity": 982.85,
+      "final_equity": 995.73,
+      "released": "2026-11-13T19:58:29.308244+07:00",
+      "closed": "2026-11-15T15:50:43.398131+07:00",
+      "summary": "Core structural architectural upgrade unlocking Multi-Horizon Strategy Stacking across 3 distinct time horizons (Scalp 5m, Intraday 15m, and Swing 1h) simultaneously on each asset without internal hedging conflict. Eliminates risk asymmetry by strictly normalizing risk dollar allocations to an exact 0.45% base risk per trade across all timeframes, fixes timeframe parameter propagation bug in breakout engines, and calibrates breakout take-profit targets from unrealistic 4.0-5.0R down to high-expectancy 1:2.5R.",
+      "verdict": "Active on live production book. 10 assets x 3 horizons = 30 standardized strategy slots, symmetric dollar risk allocations, anti-conflict directional gating, and calibrated RR 1:2.0 / 1:2.5 targets.",
+      "changes": [
+        "Multi-Horizon Strategy Stacking: Every asset simultaneously operates 3 independent horizons: 5m SMC Scalp (quick liquidity sweep), 15m Intraday Breakout (session momentum), and 1h Swing Breakout (macro trend ride)",
+        "Risk Normalization (Symmetric Dollar Risk): Position sizing strictly allocates 0.45% base risk per trade across all strategies and timeframes, eliminating the flaw where small 5m wins ($0.80) were wiped out by oversized 15m/1h SL hits ($6.00+)",
+        "Anti-Conflict Directional Guard: Built-in safety check preventing concurrent opposite-direction positions on the same coin (e.g. prohibits 5m Short if 1h Swing is Long), saving taker fees and eliminating self-hedging drag",
+        "Timeframe Parameter Propagation Fix: Resolved bug in sig_breakout where execution engine defaulted to 5m candle evaluation regardless of configured timeframe",
+        "Calibrated Breakout RR Targets: Adjusted breakout targets to high-expectancy 1:2.5R (down from 4.0-5.0R), enabling positions to lock profits reliably before mid-session retracements"
+      ],
+      "config_snapshot": {
+        "coins": "WLD, INJ, ZEC, NEAR, ENA, ARB, PAXG, AVAX, TAO, SUI",
+        "timeframes": "5m (Scalp), 15m (Intraday), 1h (Swing)",
+        "strategies": "smc_silver_bullet (5m), breakout (15m), breakout (1h)",
+        "base_risk": "0.45% flat per trade",
+        "max_open_risk": "6.0%",
+        "leverage": "10x",
+        "slots": 30,
+        "partial_take_profit": "33% @ 1.0R",
+        "breakeven_trigger": "1.2R (+0.15R fee buffer)",
+        "coin_cooldown": "45 minutes post-SL",
+        "anti_hedging_guard": "Strict directional synchronization"
+      },
+      "notes": [
+        "Allows single coins to compound gains across multiple horizons simultaneously during strong trend expansions.",
+        "Restores mathematical symmetry to the PnL curve: average win will now equal or exceed average loss."
+      ]
+    },
+    {
+      "id": "v1.3",
+      "name": "Asymmetric Scale-Out & Toxic Asset Purge",
+      "status": "superseded",
+      "start": "2026-11-13T17:41:24.535410+07:00",
+      "end": "2026-11-13T19:58:29.308244+07:00",
+      "initial_equity": 967.92,
+      "final_equity": 982.85,
+      "released": "2026-11-13T17:41:24.535410+07:00",
+      "closed": "2026-11-13T19:58:29.308244+07:00",
+      "summary": "Core execution perfection addressing post-v1.2 empirical findings: delisted high-volatility chop assets (HYPE and PUMP, which drove -$39.28 USD in drag), upgraded Dynamic Scale-Out ratio to 33% Partial Take Profit at +1.0R (leaving 67% runner volume to capture full +2.0R expansions), and deployed an autonomous 45-minute per-coin loss cooldown to prevent revenge-trading during chop cycles.",
+      "verdict": "Active on live production book. 10 curated alpha assets (30 strategy slots), 33/67 asymmetric scale-out profit locking, 45-minute coin loss cooldown, and fee-buffered Breakeven trailing.",
+      "changes": [
+        "Delisted High-Chop Assets: Permanently purged HYPE and PUMP from active universe (isolated -$39.28 USD drag in v1.2 due to 5m wick traps)",
+        "Curated 10-Asset Alpha Universe: Book re-balanced across high-conviction performers (WLD, INJ, ZEC, NEAR, ENA, ARB, PAXG, AVAX, TAO, SUI) across 5 clusters",
+        "Asymmetric Scale-Out Model (33% @ 1.0R): Recalibrated partial profit ratio from 50% to 33.3%, securing fees and risk-free status while allowing a heavy 66.7% runner to capture full +2.0R expansions",
+        "Autonomous Loss Cooldown (45m): Implemented strict per-coin post-stopout timeout (45 minutes) to eliminate rapid consecutive stopouts in erratic consolidation",
+        "Refined Correlation Cluster Weights: Normalized capital allocation across 10 assets (w=0.1000 per asset) with max 3 concurrent positions per cluster"
+      ],
+      "config_snapshot": {
+        "coins": "WLD, INJ, ZEC, NEAR, ENA, ARB, PAXG, AVAX, TAO, SUI",
+        "timeframes": "5m, 15m, 1h",
+        "strategies": "smc_silver_bullet, breakout",
+        "base_risk": "0.45%",
+        "max_open_risk": "6.0%",
+        "leverage": "10x",
+        "slots": 30,
+        "partial_take_profit": "33% @ 1.0R",
+        "breakeven_trigger": "1.2R (+0.15R buffer)",
+        "coin_cooldown": "45 minutes post-SL",
+        "stop_model": "SMC Sweep Wick Low/High & ATR(14)"
+      },
+      "notes": [
+        "Eliminated the two primary profit drains that caused -48% of total v1.2 drawdown.",
+        "Asymmetric 33/67 scale-out restores positive profit asymmetry: full TP gains now outweigh partial-only saves by 3.5:1."
+      ]
+    },
+    {
+      "id": "v1.2",
+      "name": "Dynamic Scale-Out & Calibrated RR",
+      "status": "superseded",
+      "start": "2026-11-13T07:11:17.597974+07:00",
+      "end": "2026-11-13T17:41:24.535410+07:00",
+      "initial_equity": 976.95,
+      "final_equity": 967.92,
+      "released": "2026-11-13T07:11:17.597974+07:00",
+      "closed": "2026-11-13T17:41:24.535410+07:00",
+      "summary": "Major risk execution refinement introducing Dynamic Scale-Out (50% Partial Take Profit at +1.0R), calibrated RR target (1:2.0 from 1:3.5), positive fee-buffered Breakeven trailing (+0.15R), and strict 1h counter-trend Short filtering to lock profits before intraday mean-reversion pullbacks.",
+      "verdict": "Active on live production book. Calibrated 1:2.0 RR target, 50% partial profit lock at 1.0R, fee-buffered Breakeven trailing, and strict 1h multi-timeframe short trend gating.",
+      "changes": [
+        "Calibrated Risk-to-Reward: SMC Silver Bullet scalp target recalibrated from 1:3.5 to 1:2.0 RR (+230% backtested expectancy boost by capturing profits before retrace)",
+        "Dynamic Scale-Out Engine: Automated 50% Partial Take Profit at +1.0R (locks realized gains into balance immediately upon momentum expansion)",
+        "Fee-Buffered Breakeven Trailing: Breakeven shift now includes a +0.15R positive buffer to eliminate round-trip taker fee (0.09%) and slippage erosion",
+        "Strict Multi-Timeframe Short Gating: Short trades strictly forbidden unless 1h higher timeframe confirmed in structural downtrend (closes below EMA 20 and EMA 20 <= EMA 50)",
+        "Eliminated False Retracement Drawdown: Stops winning trades (+1R to +1.8R) from round-tripping into full stop-outs during Asian session chop"
+      ],
+      "config_snapshot": {
+        "coins": "WLD, INJ, ZEC, NEAR, HYPE, ENA, PUMP, ARB, PAXG, AVAX, TAO, SUI",
+        "timeframes": "5m, 15m, 1h",
+        "strategies": "smc_silver_bullet, breakout",
+        "base_risk": "0.45%",
+        "max_open_risk": "6.0%",
+        "leverage": "10x",
+        "slots": 38,
+        "stop_model": "SMC Sweep Wick Low/High & ATR(14)"
+      },
+      "notes": [
+        "Eliminates the Asian session shorting trap where counter-trend bounces wiped floating gains.",
+        "50% partial at 1.0R guarantees positive cash flow even if the remainder returns to entry."
+      ]
+    },
+    {
+      "id": "1.1",
+      "name": "SMC Silver Bullet & Kinetic Trend",
+      "status": "superseded",
+      "start": "2026-11-13T00:52:14+07:00",
+      "end": "2026-11-13T07:11:17.597974+07:00",
+      "initial_equity": 1027.92,
+      "final_equity": 976.95,
+      "released": "2026-11-13",
+      "closed": "2026-11-13T07:11:17.597974+07:00",
+      "summary": "Major algorithmic upgrade integrating Smart Money Concepts (SMC) & ICT quantitative mechanisms alongside HTF breakout momentum across a 12-asset multi-asset universe (including Gold PAXG, AVAX, TAO, SUI). Implements algorithmic Fair Value Gaps (FVG), BSL/SSL Liquidity Sweeps, Market Structure Shifts (MSS), dynamic Trailing Breakeven at +1.5R, and session Killzone filters.",
+      "verdict": "Active on live production book. 12 assets including Gold (PAXG), 38 strategy slots, aggressive 0.45% base risk model with 6.00% max open risk cap.",
+      "changes": [
+        "smc_lib quantitative engine deployed: Swing pivot fractal detection, BSL/SSL liquidity sweep wick analysis, Displacement identification (>2.0x ATR)",
+        "Algorithmic Fair Value Gap (FVG) and Consequent Encroachment (50% midpoint) retest entries",
+        "Trailing Breakeven activated: dynamic stop loss shift to entry price once floating unrealized reaches +1.5R",
+        "ICT Killzone time integration: London session (14:00-17:00 WIB), NY AM (20:00-23:30 WIB), US Late (03:00-05:00 WIB)",
+        "Aggressive Risk Model: Base risk increased from 0.25% to 0.45%, max total open risk expanded to 4.50%",
+        "Max total margin ceiling increased to 75% equity",
+        "ARB re-added to active portfolio universe (tested PF 1.46 in backtest)",
+        "Correlation cluster concurrency expanded to 3 concurrent positions per cluster",
+        "Expanded universe to 12 assets: added Gold (PAXG), AVAX, TAO, SUI across 5 correlation clusters",
+        "Total strategy slots expanded to 38, max concurrent trades raised to 20",
+        "Max total open risk ceiling raised to 6.00% for aggressive sizing"
+      ],
+      "config_snapshot": {
+        "coins": [
+          "WLD",
+          "INJ",
+          "ZEC",
+          "NEAR",
+          "HYPE",
+          "ENA",
+          "PUMP",
+          "ARB",
+          "PAXG",
+          "AVAX",
+          "TAO",
+          "SUI"
+        ],
+        "strategies": [
+          "smc_silver_bullet",
+          "breakout"
+        ],
+        "timeframes": [
+          "5m",
+          "15m",
+          "1h"
+        ],
+        "rr": {
+          "smc_5m": 3.5,
+          "breakout_5m": 5.0,
+          "breakout_15m": 4.0,
+          "breakout_1h": 4.0
+        },
+        "base_risk_pct": 0.45,
+        "max_open_risk_pct": 6.0,
+        "max_concurrent": 20,
+        "cluster_limit": 3,
+        "leverage": 10,
+        "sl_model": "SMC Sweep Wick Low/High & ATR(14)",
+        "total_slots": 38
+      },
+      "notes": "Backtested on 14-day Hyperliquid tick history: SMC engine alone delivered +87.72R net profit with 1.30 Profit Factor across 586 trades."
+    },
+    {
+      "id": "1.0",
+      "name": "Baseline Breakout",
+      "status": "archived",
+      "start": "2026-10-20T05:01:45+07:00",
+      "end": "2026-10-23T23:59:59+07:00",
+      "initial_equity": 1000.0,
+      "final_equity": 1027.92,
+      "released": "2026-10-20",
+      "closed": "2026-10-23",
+      "summary": "First production release, closed 23 Oct 2026. Single strategy family (breakout) across three horizons on seven coins. Fixed-fractional risk at 0.25% per trade with a 2.25% aggregate open-risk ceiling. Closed out at -9.06% after 157 trades over 74.8 hours of continuous operation.",
+      "verdict": "Underperformed. Breakout edge did not hold on the live book despite passing validation. Win rate of 25.5% against a 1:4-1:5 reward structure produced a profit factor of 0.78, short of the 1.0 breakeven threshold. Retired rather than patched.",
+      "changes": [
+        "Breakout family only - sweep_fade and bollinger retired after negative out-of-sample performance",
+        "Seven coins: WLD, INJ, ZEC, NEAR, HYPE, ENA, PUMP",
+        "Three horizons per coin: 5m (RR 1:5), 15m (RR 1:4), 1h (RR 1:4)",
+        "Risk 0.25% per trade, 2.25% max aggregate open risk",
+        "Correlation clusters capped at 2 concurrent positions",
+        "Leverage 10x uniform across all instruments",
+        "Daily and weekly loss caps disabled; per-coin cooldown disabled",
+        "Closed 23 Oct 2026 with 3 open positions flattened at market"
+      ],
+      "config_snapshot": {
+        "coins": [
+          "WLD",
+          "INJ",
+          "ZEC",
+          "NEAR",
+          "HYPE",
+          "ENA",
+          "PUMP"
+        ],
+        "strategies": [
+          "breakout"
+        ],
+        "timeframes": [
+          "5m",
+          "15m",
+          "1h"
+        ],
+        "rr": {
+          "5m": 5.0,
+          "15m": 4.0,
+          "1h": 4.0
+        },
+        "base_risk_pct": 0.25,
+        "max_open_risk_pct": 2.25,
+        "max_concurrent": 15,
+        "cluster_limit": 2,
+        "leverage": 10,
+        "sl_model": "ATR(14) x atr_mult",
+        "total_slots": 21
+      },
+      "notes": "Baseline release. All subsequent versions are measured against this. Post-mortem: 114 stop-outs vs 29 take-profits, 11 time exits. HYPE and ENA accounted for -$47.92 of the -$90.57 net loss."
+    }
+  ]
+}

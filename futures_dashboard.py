@@ -334,6 +334,17 @@ def calendar_page():
         return HTMLResponse(f"<h1>Calendar error</h1><pre>{e}</pre>", status_code=500)
 
 
+@app.api_route("/pnl", methods=["GET", "HEAD"], response_class=HTMLResponse)
+def pnl_page():
+    try:
+        import importlib
+        import pnl_gen
+        importlib.reload(pnl_gen)
+        return HTMLResponse(pnl_gen.render())
+    except Exception as e:
+        return HTMLResponse(f"<h1>Performance error</h1><pre>{e}</pre>", status_code=500)
+
+
 @app.api_route("/about", methods=["GET", "HEAD"])
 def about():
     return RedirectResponse(url="/", status_code=301)
@@ -495,6 +506,7 @@ a.pill{display:inline-flex;align-items:center;gap:4px}
     <span class="pill p-green" id="modePill">ACTIVE</span>
     <a href="/versions" class="pill p-grey" title="Versions">VERSIONS</a>
     <a href="/calendar" class="pill p-grey" title="PnL Calendar">PNL CALENDAR</a>
+    <a href="/pnl" class="pill p-grey" title="All-time Performance">PNL</a>
     <a href="/" class="pill p-cyan" title="About">ABOUT ↗</a>
   </div>
   <div class="tb-metrics">
